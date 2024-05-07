@@ -36,6 +36,8 @@ if ( ! class_exists( 'WC_MNM_Variable_APFS_Switching_Compatibility' ) ) :
 
 			// Add current variation ID to switch link.
 			add_filter( 'woocommerce_subscriptions_switch_url', array( __CLASS__, 'container_type_switch_configuration_url' ), 10, 4 );
+			// Remove subscription options from variation data only when editing.
+			add_action( 'wc_ajax_mnm_get_edit_container_order_item_form', array( __CLASS__, 'remove_variable_subscription_options' ), 1 );
 
 		}
 
@@ -63,6 +65,16 @@ if ( ! class_exists( 'WC_MNM_Variable_APFS_Switching_Compatibility' ) ) :
 			return $form_data;
 		}
 
+
+		/**
+		 * Remove subscription options
+		 * 
+		 * Simple subscription options aren't added because `woocommerce_before_add_to_cart_button` doesn't exist in edit in `variable-edit-container.php` template.
+		 * But we need to remove the filter that adds them to the variation data when in the ajax editing context.
+		 */
+		public static function remove_variable_subscription_options() {
+			remove_filter( 'woocommerce_available_variation', array( 'WCS_ATT_Display_Product', 'add_subscription_options_to_variation_data' ), 1, 3 );
+		}
 	
 		/**
 		 * Add variation ID to switch link.
