@@ -493,7 +493,7 @@ trait WC_MNM_Container_Data_Store {
 	 */
 	public function query_containers_by_product( $product ) {
 
-		$product_id = $product instanceof WC_Product ? $product->get_id : absint( $product );
+		$product_id = $product instanceof WC_Product ? $product->get_id() : absint( $product );
 
 		global $wpdb;
 
@@ -510,7 +510,8 @@ trait WC_MNM_Container_Data_Store {
 				INNER JOIN {$wpdb->prefix}posts as p ON items.product_id = p.ID
 				WHERE items.product_id = %d OR p.post_parent = %d
 				ORDER BY items.menu_order ASC",
-                    $product_id
+                    $product_id,
+					$product_id
                 ) 
             );
 
