@@ -69,9 +69,11 @@ const MixAndMatch = ( { target } ) => {
 
 			// Read the config from either the URL or the data-attributes.
 			let initConfig = Form.getAttribute( 'data-container_config' );
+			const parsedJson = 'undefined' !== typeof initConfig ? JSON.parse(initConfig) : '';
+			const hasConfig = typeof parsedJson === 'object' && parsedJson !== null && !Array.isArray(parsedJson) && Object.keys(parsedJson).length > 0;
 
 			// If nothing in the data-attributes, check the URL params.
-			if ( ! initConfig ) {
+			if ( ! hasConfig ) {
 
 				// Create a URLSearchParams object from the query string
 				const params = new URLSearchParams(window.location.search);
