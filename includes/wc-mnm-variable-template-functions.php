@@ -111,16 +111,16 @@ if ( ! function_exists( 'wc_mnm_template_single_variation' ) ) {
 
 		if ( $product && $product->is_type( 'variable-mix-and-match' ) ) {
 
-			$variation_id = isset( $_POST['variation_id'] ) ? absint( $_POST['variation_id'] ) : 0;
-
 			ob_start();
+
+			// do we need to look for variation id in post/request??
 
 			?>
 
 			<div
 				class="wc-mnm-variation wc-mix-and-match-root woocommerce-variation"
 				data-product_id="<?php echo esc_attr( $product->get_id() ); ?>"
-				data-variation_id=<?php echo esc_attr( $variation_id ); ?>
+				data-variation_id="0"
 			></div>
 
 			<?php
