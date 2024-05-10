@@ -36,9 +36,11 @@ do_action( 'wc_mnm_before_edit_container_order_item_form', $product, $order_item
     action="<?php echo esc_url( apply_filters( 'wc_mnm_edit_container_order_item_form_action', '' ) ); ?>"
     method="post"
     enctype="multipart/form-data"
+	data-container_config="<?php echo wc_esc_json( wp_json_encode( $configuration ) ); ?>"
+	data-container_id="<?php echo esc_attr( $order_item->get_variation_id() ? $order_item->get_variation_id() : $order_item->get_product_id() ); ?>"
     data-product_id="<?php echo absint( $product->get_id() ); ?>"
     data-product_variations="<?php echo wc_esc_json( wp_json_encode( $available_variations ) ); ?>"
-	data-container_config="<?php echo wc_esc_json( wp_json_encode( $configuration ) ); ?>"
+	data-source="<?php echo esc_attr( $source ); ?>"
 	data-validation_context="<?php echo esc_attr( $context ); ?>"
 >
 	<?php do_action( 'wc_mnm_edit_container_order_item_before_variations_form', $product, $order_item, $order, $source ); ?>
