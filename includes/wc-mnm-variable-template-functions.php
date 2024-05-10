@@ -263,9 +263,6 @@ if ( ! function_exists( 'wc_mnm_template_edit_variable_container_order_item' ) )
 		// Get Available variations?
 		$get_variations = count( $product->get_children() ) <= apply_filters( 'woocommerce_ajax_variation_threshold', 30, $product );
 
-		// Input name.
-		$name = wc_mnm_get_child_input_name( $variation->get_id() ); // @todo - do we need this?
-
 		// Initialize form state based on the actual configuration of the container.
 		$configuration = WC_Mix_and_Match_Order::get_current_container_configuration( $order_item, $order );
 		$configuration = wp_list_pluck( $configuration, 'quantity' );
