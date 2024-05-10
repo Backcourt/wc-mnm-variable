@@ -31,7 +31,7 @@ if ( ! class_exists( 'WC_MNM_Variable_APFS_Switching_Compatibility' ) ) :
 		 */
 		public static function add_hooks() {
 			
-			// Add variations to switch link.
+			// Add variation attributes to switch link.
 			add_filter( 'wc_mnm_get_posted_container_form_data', array( __CLASS__, 'get_posted_container_form_data' ), 10, 3 );
 
 			// Remove subscription options from variation data only when editing.
