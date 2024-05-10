@@ -34,8 +34,6 @@ if ( ! class_exists( 'WC_MNM_Variable_APFS_Switching_Compatibility' ) ) :
 			// Add variations to switch link.
 			add_filter( 'wc_mnm_get_posted_container_form_data', array( __CLASS__, 'get_posted_container_form_data' ), 10, 3 );
 
-			// Add current variation ID to switch link.
-			add_filter( 'woocommerce_subscriptions_switch_url', array( __CLASS__, 'container_type_switch_configuration_url' ), 10, 4 );
 			// Remove subscription options from variation data only when editing.
 			add_action( 'wc_ajax_mnm_get_edit_container_order_item_form', array( __CLASS__, 'remove_variable_subscription_options' ), 1 );
 
@@ -74,36 +72,6 @@ if ( ! class_exists( 'WC_MNM_Variable_APFS_Switching_Compatibility' ) ) :
 		 */
 		public static function remove_variable_subscription_options() {
 			remove_filter( 'woocommerce_available_variation', array( 'WCS_ATT_Display_Product', 'add_subscription_options_to_variation_data' ), 1, 3 );
-		}
-	
-		/**
-		 * Add variation ID to switch link.
-		 *
-		 * @param  string           $url
-		 * @param  int              $item_id
-		 * @param  WC_Order_Item    $item
-		 * @param  WC_Subscription  $subscription
-		 * @return string
-		 */
-		public static function container_type_switch_configuration_url( $url, $item_id, $item, $subscription ) {
-
-			if ( wc_mnm_is_container_order_item( $item, $subscription ) ) {
-
-				$configuration = WC_Mix_and_Match_Order::get_current_container_configuration( $item, $subscription );
-
-				if ( ! empty( $configuration ) ) {
-
-					$variation_id = $item->get_variation_id();
-
-					if ( $variation_id ) {
-						$url = add_query_arg( 'variation_id', $variation_id, $url );
-					}
-
-				}
-
-			}
-
-			return $url;
 		}
 
 
