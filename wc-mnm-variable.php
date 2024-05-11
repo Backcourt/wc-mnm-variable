@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Mix and Match - Variable Mix and Match
  * Plugin URI: 
  * Description: Variable mix and match product type
- * Version: 2.0.0-rc.4
+ * Version: 2.0.0
  * Author: Kathy Darling
  * Author URI: http://kathyisawesome.com/
  * Text Domain: wc-mnm-variable
@@ -30,7 +30,7 @@ use Automattic\Jetpack\Constants;
 
 class WC_MNM_Variable {
 
-	const VERSION = '2.0.0-rc.4';
+	const VERSION = '2.0.0';
 	const REQ_WC_VERSION  = '8.0.0';
 	const REQ_MNM_VERSION = '2.6.0';
 
