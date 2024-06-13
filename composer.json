@@ -16,13 +16,13 @@
         "@makepot-audit --skip-audit"
       ],
       "phpcs": [
-          "phpcs . -s -p -n --sniffs=PEAR.Functions.FunctionCallSignature"
+          "phpcs . -s -p -n --extensions=php"
       ],
       "phpcs-pre-commit": [
         "phpcs . -s -p -n"
       ],
       "phpcb": [
-          "phpcbf . --sniffs=PEAR.Functions.FunctionCallSignature"
+          "phpcbf . --extensions=php"
       ]
     },
     "config": {
