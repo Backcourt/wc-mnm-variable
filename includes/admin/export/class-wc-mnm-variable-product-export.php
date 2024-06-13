@@ -46,12 +46,11 @@ class WC_MNM_Variable_Product_Export {
 		add_filter( 'woocommerce_product_export_product_column_wc_mnm_content_source', array( __CLASS__, 'remove_inherited_content' ), 20, 2 );
 		add_filter( 'woocommerce_product_export_product_column_wc_mnm_child_category_ids', array( __CLASS__, 'remove_inherited_content' ), 20, 2 );
 		add_filter( 'woocommerce_product_export_product_column_wc_mnm_child_items', array( __CLASS__, 'remove_inherited_content' ), 20, 2 );
-		
 	}
 
 	/**
 	 * Registers the mix and match variation product type with the exporter.
-	 * 
+	 *
 	 * @props WooCommerce Subscriptions
 	 *
 	 * @param array $types The product type keys and labels.
@@ -67,7 +66,7 @@ class WC_MNM_Variable_Product_Export {
 	 *
 	 * In the database mix and match variations appear exactly the same as standard product variations. To
 	 * enforce this distinction when exporting mix and match variations, we exclude products with a standard variable product as a parent and vice versa.
-	 * 
+	 *
 	 * @props WooCommerce Subscriptions
 	 *
 	 * @param array $args The product export query args.
@@ -100,14 +99,14 @@ class WC_MNM_Variable_Product_Export {
 			// This does mean our variations will export when attempting to export subscription_variation products
 			$args['parent_exclude'] = wc_get_products(
 				array(
-					'type'   => [ 'variable', 'variable-subscription' ], 
+					'type'   => [ 'variable', 'variable-subscription' ],
 					'limit'  => -1,
 					'return' => 'ids',
 				)
 			);
 
 			$args['type'][] = 'variation';
-		// Exporting standard product variations but not mix and match variations. Exclude child variations of variable mix and match products.
+			// Exporting standard product variations but not mix and match variations. Exclude child variations of variable mix and match products.
 		} elseif ( $export_variations && ! $export_mix_and_match_variations ) {
 			$args['parent_exclude'] = wc_get_products(
 				array(
@@ -183,7 +182,7 @@ class WC_MNM_Variable_Product_Export {
 		if ( $product->is_type( 'variable-mix-and-match' ) && $product->is_sharing_content( 'edit' ) ) {
 			// Use the WC_Product_CSV_Exporter formatting for term IDs.
 			$exporter = new WC_Product_CSV_Exporter();
-			$value = WC_MNM_Product_Export::prepare_child_category_ids_for_export( $product );
+			$value    = WC_MNM_Product_Export::prepare_child_category_ids_for_export( $product );
 		}
 
 		return $value;
@@ -238,11 +237,11 @@ class WC_MNM_Variable_Product_Export {
 		return $value;
 	}
 
-
-	/*-----------------------------------------------------------------------------------*/
-	/*  Variation-specific columns                                                       */
-	/*-----------------------------------------------------------------------------------*/
-
+	/**
+	 *--------------------------------------------------------------------------
+	 * Variation-specific columns  
+	 *--------------------------------------------------------------------------
+	 */
 
 	/**
 	 * Inherited contents only need to be exported at the parent level.
@@ -259,6 +258,5 @@ class WC_MNM_Variable_Product_Export {
 
 		return $value;
 	}
-
 }
 WC_MNM_Variable_Product_Export::init();

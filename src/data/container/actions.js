@@ -12,7 +12,7 @@ const { SET_CONTAINER_ID, HYDRATE_CONTAINER, RESET_CONFIG, SET_CONTEXT, SET_CONF
 
 /**
  * Set the container ID.
- * 
+ *
  * Because this happens whenever the variation change is detected in Woo, it's our proxy for variation changed events.
  */
 export const setContainerId =
@@ -36,7 +36,7 @@ export const setContainerId =
 			// The resolver only dispatches HYPDATE (and therefore VALIDATE) on first resolution and we need to re-validate/update messaging on every switch.
 			dispatch( { type: VALIDATE } );
 		}
-		
+
 	};
 
 // Set the product.

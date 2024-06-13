@@ -25,4 +25,3 @@ addAction( 'wc.mnm.initialize.variable-mix-and-match', 'wc-mix-and-match', funct
 
 // Trigger the page on load.
 doAction( 'wc.mnm.initialize.variable-mix-and-match' );
-

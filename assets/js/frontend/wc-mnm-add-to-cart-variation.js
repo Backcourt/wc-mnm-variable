@@ -80,14 +80,13 @@
 
 			const newData = {
 				variation_id: $form[0].getAttribute( 'data-variation_id' ) || 0,
-				config: parsed,	
+				config: parsed,
 			};
 
 			return { ...data, ...newData };
 		} );
 
 	};
-
 
 	/**
 	 * Triggered when an attribute field changes.
@@ -167,7 +166,6 @@
 			] );
 		}
 	};
-
 
 	// Uncheck all radio buttons when reset.
 	WC_MNM_Variation_Form.prototype.onReset = function ( event ) {

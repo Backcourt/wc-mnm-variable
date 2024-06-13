@@ -29,8 +29,6 @@ class WC_MNM_Variable_REST_API {
 		// Register WP REST API custom variation fields.
 		add_filter( 'woocommerce_rest_product_variation_schema', array( 'WC_Mix_and_Match_REST_API', 'filter_product_schema' ) );
 		add_filter( 'woocommerce_rest_prepare_product_variation_object', array( 'WC_Mix_and_Match_REST_API', 'prepare_product_response' ), 10, 3 );
-
 	}
-
 }
 WC_MNM_Variable_REST_API::init();

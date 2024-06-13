@@ -80,7 +80,7 @@ const ChildItems = ( props ) => {
 
 	/**
 	 * Additional content
-	 * 
+	 *
 	 * addFilter(
      * 'wcMNM.ChildItems',
      * 'wc-mix-and-match-products/child-items',

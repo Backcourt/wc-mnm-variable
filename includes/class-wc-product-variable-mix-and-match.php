@@ -15,9 +15,10 @@ class WC_Product_Variable_Mix_and_Match extends WC_Product_Variable {
 
 	use WC_MNM_Product;
 	use WC_MNM_Container_Child_Items;
-	
+
 	/**
 	 *  Define type-specific properties.
+	 *
 	 * @var array
 	 */
 	protected $extended_data = array(
@@ -36,7 +37,7 @@ class WC_Product_Variable_Mix_and_Match extends WC_Product_Variable {
 		parent::__construct( $product );
 	}
 
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Getters.
@@ -119,11 +120,11 @@ class WC_Product_Variable_Mix_and_Match extends WC_Product_Variable {
 		return apply_filters( 'woocommerce_product_single_add_to_cart_text', $text, $this );
 	}
 
-	/*
-	|--------------------------------------------------------------------------
-	| Setters.
-	|--------------------------------------------------------------------------
-	*/
+	/**
+	 *--------------------------------------------------------------------------
+	 * Setters
+	 *--------------------------------------------------------------------------
+	 */
 
 	/**
 	 * Shared contents setter.
@@ -135,16 +136,15 @@ class WC_Product_Variable_Mix_and_Match extends WC_Product_Variable {
 		$this->set_prop( 'share_content', wc_string_to_bool( $value ) );
 	}
 
-	/*
-	|--------------------------------------------------------------------------
-	| Conditionals
-	|--------------------------------------------------------------------------
-	*/
+	/**
+	 *--------------------------------------------------------------------------
+	 * Conditionals
+	 *--------------------------------------------------------------------------
+	 */
 
 	/**
 	 * Checks the product type to see if it is either this product's type or the parent's product type.
 	 *
-	 * @access public
 	 * @param mixed $type Array or string of types
 	 * @return bool
 	 */

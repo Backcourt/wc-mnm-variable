@@ -33,7 +33,7 @@ const OutOfStock = () => {
 						) }
 			</div>
 		</>
-		
+
 	);
 };
 

@@ -5,7 +5,7 @@ import { _x } from '@wordpress/i18n';
 
 /**
  * Get the categories for the container
- * 
+ *
  * @param {obj} state The current state.
  * @return [array]
  */
@@ -16,7 +16,7 @@ export const getCategories = ( state ) => {
 
 /**
  * Get the container's child items
- * 
+ *
  * @param {obj} state The current state.
  * @return []{obj} An array of child item objects from the REST response.
  */
@@ -37,7 +37,7 @@ export const getConfiguration = ( state ) => {
 
 /**
  * Get the current container object
- * 
+ *
  * @param {obj} state The current state.
  * @return {obj}
  */
@@ -49,7 +49,7 @@ export const getContainer = ( state ) => {
 
 /**
  * Get a container object by ID
- * 
+ *
  * @param {obj} state The current state.
  * @param int The container ID
  * @return {obj}
@@ -60,7 +60,7 @@ export const getContainerById = (state, id) => {
 
 /**
  * Get a current container's ID
- * 
+ *
  * @param {obj} state The current state.
  * @return int
  */
@@ -70,7 +70,7 @@ export const getContainerId = ( state ) => {
 
 /**
  * Get a current container's context
- * 
+ *
  * @param {obj} state The current state.
  * @return int
  */
@@ -90,7 +90,7 @@ export const getErrorMessages = ( state ) => {
 
 /**
  * Max container size
- * 
+ *
  * @param {obj} state The current state.
  * @return mixed int|string
  */
@@ -117,7 +117,7 @@ export const getMessages = ( state, type ) => {
 
 /**
  * Min container size.
- * 
+ *
  * @param {obj} state The current state.
  * @return mixed int|string
  */
@@ -140,7 +140,7 @@ export const getQty = ( state, childId ) => {
 
 /**
  * Get the current Selections - an array of all selected child items
- * 
+ *
  * @param {obj} state The current state.
  * @return [array] Array of select item objects.
  */
@@ -150,9 +150,9 @@ export const getSelections = ( state ) => {
 
 /**
  * Get a current subtotal
- * 
+ *
  * NB: Currently Variable MNM does not support per-item pricing.
- * 
+ *
  * @param {obj} state The current state.
  * @return int
  */
@@ -162,9 +162,9 @@ export const getSubTotal = ( state ) => {
 
 /**
  * Get a current Total
- * 
+ *
  * NB: Currently Variable MNM does not support per-item pricing.
- * 
+ *
  * @param {obj} state The current state.
  * @return int
  */
@@ -194,7 +194,7 @@ export const getTotalQuantity = ( state ) => {
 
 /**
  * Does the container have child items?
- * 
+ *
  * @param {obj} state The current state.
  * @return bool
  */
@@ -214,7 +214,7 @@ export const hasConfiguration = ( state ) => {
 
 /**
  * Is a container resolved yet?
- * 
+ *
  * @param {obj} state The current state.
  * @return bool
  */
@@ -225,7 +225,7 @@ export const hasContainer = ( state ) => {
 
 /**
  * Is the container in stock
- * 
+ *
  * @param {obj} state The current state.
  * @return bool
  */
@@ -236,7 +236,7 @@ export const isInStock = ( state ) => {
 
 /**
  * Is the app resolving a container?
- * 
+ *
  * @param {obj} state The current state.
  * @return int
  */
@@ -246,7 +246,7 @@ export const isLoading = ( state ) => {
 
 /**
  * Is the container purchasable
- * 
+ *
  * @param {obj} state The current state.
  * @return bool
  */
@@ -257,7 +257,7 @@ export const isPurchasable = ( state ) => {
 
 /**
  * Does the container have a valid config?
- * 
+ *
  * @param {obj} state The current state.
  * @return bool
  */

@@ -12,7 +12,7 @@ const ProductImage = ( {
 	element = 'div',
 } ) => {
 	const imageSrc = image.src ? image.src : PLACEHOLDER_IMG_SRC;
-	
+
 	const Element = element;
 
 	const imageProps = image.src
@@ -38,7 +38,7 @@ const ProductImage = ( {
 
 	if ( permalink ) {
 		return (
-			
+
 			<Element className="wc-mnm-variation__child-item-thumbnail product-thumbnail">
 				<div className="mnm_child_product_images mnm_image">
 					<figure className="mnm_child_product_image woocommerce-product-gallery__image">

@@ -40,22 +40,22 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 	<?php if ( empty( $available_variations ) && false !== $available_variations ) : ?>
 		<p class="stock out-of-stock"><?php echo esc_html( apply_filters( 'woocommerce_out_of_stock_message', __( 'This product is currently out of stock and unavailable.', 'wc-mnm-variable' ) ) ); ?></p>
 	<?php else : ?>
-		<?php if ( count( $attributes ) === 1 && ! empty( $available_variations ) && count( $available_variations ) <= apply_filters( 'wc_mnm_variation_swatches_threshold', 3, $product ) ) :?>
+		<?php if ( count( $attributes ) === 1 && ! empty( $available_variations ) && count( $available_variations ) <= apply_filters( 'wc_mnm_variation_swatches_threshold', 3, $product ) ) : ?>
 
 			<?php
 			// Working with a single attribute here.
 			$attribute = key( $attributes );
-			
+
 			wc_mnm_template_variation_attribute_options(
 				array(
 					'attribute' => $attribute,
 					'product'   => $product,
-				)				
+				)
 			);
 
 			?>
 
-		<?php else: ?>
+		<?php else : ?>
 			<table class="variations wc-mnm-variations" cellspacing="0" role="presentation">
 				<tbody>
 					<?php foreach ( $attributes as $attribute_name => $options ) : ?>

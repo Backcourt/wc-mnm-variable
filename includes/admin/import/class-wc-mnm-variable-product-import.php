@@ -24,7 +24,7 @@ class WC_MNM_Variable_Product_Import {
 	 */
 	public static function init() {
 
-		//  Handle Mix and Match variations.
+		// Handle Mix and Match variations.
 		add_filter( 'woocommerce_product_import_process_item_data', array( __CLASS__, 'import_as_variation' ) );
 		add_filter( 'woocommerce_product_import_pre_insert_product_object', array( __CLASS__, 'restore_variation_type' ), 0, 2 );
 
@@ -40,7 +40,6 @@ class WC_MNM_Variable_Product_Import {
 
 		// Remove props for variations.
 		add_filter( 'wc_mnm_import_set_props', array( __CLASS__, 'unset_variation_props' ), 10, 2 );
-	
 	}
 
 	/**
@@ -49,7 +48,7 @@ class WC_MNM_Variable_Product_Import {
 	 * Mix and Match variations are the exact same as standard variations. What sets them apart is the fact they are linked
 	 * to a variable mix and match parent rather than a standard variable product. With that in mind, we need to import them just
 	 * like a variation.
-	 * 
+	 *
 	 * @props WooCommerce Subscriptions
 	 * @see WC_Product_Importer::get_product_object()
 	 *
@@ -58,7 +57,7 @@ class WC_MNM_Variable_Product_Import {
 	 */
 	public static function import_as_variation( $data ) {
 		if ( isset( $data['type'] ) && 'mix-and-match-variation' === $data['type'] ) {
-			$data['type'] = 'variation';
+			$data['type']                    = 'variation';
 			$data['mix-and-match-variation'] = true; // Store original type for later.
 		}
 
@@ -101,14 +100,13 @@ class WC_MNM_Variable_Product_Import {
 	public static function map_columns( $columns ) {
 
 		$columns['variable-mix-and-match'] = array(
-				'name'    => __( 'Variable Mix and Match Products', 'wc-mnm-variable' ),
-				'options' => array(
-					'wc_mnm_variable_share_content' => __( 'Variable MnM Share Content', 'wc-mnm-variable' ),
-				)
-			);
+			'name'    => __( 'Variable Mix and Match Products', 'wc-mnm-variable' ),
+			'options' => array(
+				'wc_mnm_variable_share_content' => __( 'Variable MnM Share Content', 'wc-mnm-variable' ),
+			),
+		);
 
 		return apply_filters( 'wc_mnm_variable_csv_product_import_mapping_options', $columns );
-
 	}
 
 	/**
@@ -136,21 +134,20 @@ class WC_MNM_Variable_Product_Import {
 	 */
 	public static function append_formatting_callbacks( $callbacks, $importer ) {
 
-		$mnm_callbacks = array( 
+		$mnm_callbacks = array(
 			'wc_mnm_variable_share_content' => array( $importer, 'parse_bool_field' ),
 		);
 
 		$mapped_keys_reverse = array_flip( $importer->get_mapped_keys() );
 
 		// Add all our callbacks by array index.
-		foreach( $mnm_callbacks as $mnm_key => $mnm_callback ) {
-			if ( isset( $mapped_keys_reverse[$mnm_key] ) ) {
-				$callbacks[$mapped_keys_reverse[$mnm_key]] = $mnm_callback;
+		foreach ( $mnm_callbacks as $mnm_key => $mnm_callback ) {
+			if ( isset( $mapped_keys_reverse[ $mnm_key ] ) ) {
+				$callbacks[ $mapped_keys_reverse[ $mnm_key ] ] = $mnm_callback;
 			}
 		}
 
 		return $callbacks;
-
 	}
 
 	/**
@@ -186,7 +183,6 @@ class WC_MNM_Variable_Product_Import {
 			if ( ! empty( $props ) ) {
 				$product->set_props( $props );
 			}
-
 		}
 
 		return $product;
@@ -205,12 +201,10 @@ class WC_MNM_Variable_Product_Import {
 			unset( $props['packing_mode'] );
 			unset( $props['weight_cumulative'] );
 			unset( $props['priced_per_product'] );
-			unset( $props['discount'] );  
+			unset( $props['discount'] );
 		}
 
 		return $props;
-
 	}
-
 }
 WC_MNM_Variable_Product_Import::init();

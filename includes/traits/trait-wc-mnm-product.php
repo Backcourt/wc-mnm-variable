@@ -18,6 +18,7 @@ trait WC_MNM_Product {
 
 	/**
 	 *  Define type-specific properties.
+	 *
 	 * @var array
 	 */
 	protected $shared_props = array(
@@ -28,7 +29,7 @@ trait WC_MNM_Product {
 		'packing_mode'              => 'together',
 		'weight_cumulative'         => false,
 	);
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Getters.
@@ -286,5 +287,4 @@ trait WC_MNM_Product {
 		 */
 		return 'view' === $context ? apply_filters( 'wc_mnm_container_is_weight_cumulative', $is_weight_cumulative, $this ) : $is_weight_cumulative;
 	}
-
 }

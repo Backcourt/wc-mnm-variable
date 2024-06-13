@@ -91,7 +91,7 @@ class WC_Product_Variable_Mix_and_Match_Data_Store_CPT extends WC_Product_Variab
 
 				// Get a global value for layout/location props (always use global options in customizer).
 				if ( array_key_exists( $property, $this->global_props ) ) {
-					$value = get_option( $this->global_props[$property] );
+					$value = get_option( $this->global_props[ $property ] );
 				} else {
 					$value = get_post_meta( $product->get_id(), $meta_key, true );
 				}
@@ -99,7 +99,6 @@ class WC_Product_Variable_Mix_and_Match_Data_Store_CPT extends WC_Product_Variab
 				$product->{$function}( $value );
 			}
 		}
-
 	}
 
 	/**
@@ -115,8 +114,8 @@ class WC_Product_Variable_Mix_and_Match_Data_Store_CPT extends WC_Product_Variab
 		$id                 = $product->get_id();
 		$meta_keys_to_props = array_flip( $this->get_props_to_meta_keys() );
 
-		$props_to_update    = $force ? $meta_keys_to_props : $this->get_props_to_update( $product, $meta_keys_to_props );
-		
+		$props_to_update = $force ? $meta_keys_to_props : $this->get_props_to_update( $product, $meta_keys_to_props );
+
 		foreach ( $props_to_update as $meta_key => $property ) {
 
 			$property_get_fn = 'get_' . $property;
@@ -143,5 +142,4 @@ class WC_Product_Variable_Mix_and_Match_Data_Store_CPT extends WC_Product_Variab
 	public function get_props_to_meta_keys() {
 		return $this->props_to_meta_keys;
 	}
-
 }

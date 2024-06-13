@@ -24,7 +24,7 @@ export function getContainerById( containerId ) {
 				let container = preloadedVariableData.find(
 					( obj ) => obj.id === containerId
 				);
-			
+
 				if ( typeof container !== 'object' ) {
 					container = await apiFetch( {
 						path: `/wc/store/v1/products/${ containerId }`,
@@ -35,7 +35,7 @@ export function getContainerById( containerId ) {
 				dispatch.hydrateContainer( container );
 
 				return container;
-				
+
 			}
 		} catch ( error ) {
 			// @todo: Handle an error here eventually.

@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $product;
 
-$attribute_keys  = array_keys( $attributes );
+$attribute_keys = array_keys( $attributes );
 
 /**
  * wc_mnm_before_edit_container_form hook.
@@ -31,15 +31,15 @@ $attribute_keys  = array_keys( $attributes );
 do_action( 'wc_mnm_before_edit_container_order_item_form', $product, $order_item, $order, $source );
 ?>
 <form
-    class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>"
-    data-product_type="<?php echo esc_attr( $product->get_type() ); ?>"
-    action="<?php echo esc_url( apply_filters( 'wc_mnm_edit_container_order_item_form_action', '' ) ); ?>"
-    method="post"
-    enctype="multipart/form-data"
+	class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>"
+	data-product_type="<?php echo esc_attr( $product->get_type() ); ?>"
+	action="<?php echo esc_url( apply_filters( 'wc_mnm_edit_container_order_item_form_action', '' ) ); ?>"
+	method="post"
+	enctype="multipart/form-data"
 	data-container_config="<?php echo wc_esc_json( wp_json_encode( $configuration ) ); ?>"
 	data-container_id="<?php echo esc_attr( $order_item->get_variation_id() ? $order_item->get_variation_id() : $order_item->get_product_id() ); ?>"
-    data-product_id="<?php echo absint( $product->get_id() ); ?>"
-    data-product_variations="<?php echo wc_esc_json( wp_json_encode( $available_variations ) ); ?>"
+	data-product_id="<?php echo absint( $product->get_id() ); ?>"
+	data-product_variations="<?php echo wc_esc_json( wp_json_encode( $available_variations ) ); ?>"
 	data-source="<?php echo esc_attr( $source ); ?>"
 	data-validation_context="<?php echo esc_attr( $context ); ?>"
 >
@@ -53,17 +53,17 @@ do_action( 'wc_mnm_before_edit_container_order_item_form', $product, $order_item
 			<?php
 			// Working with a single attribute here.
 			$attribute = key( $attributes );
-			
+
 			wc_mnm_template_variation_attribute_options(
 				array(
 					'attribute' => $attribute,
 					'product'   => $product,
-				)				
+				)
 			);
 
 			?>
 
-		<?php else: ?>
+		<?php else : ?>
 			<table class="variations" cellspacing="0" role="presentation">
 				<tbody>
 					<?php foreach ( $attributes as $attribute_name => $options ) : ?>

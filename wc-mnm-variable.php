@@ -1,18 +1,18 @@
 <?php
 /**
  * Plugin Name: WooCommerce Mix and Match - Variable Mix and Match
- * Plugin URI: 
+ * Plugin URI: https://github.com/kathyisawesome/wc-mnm-variable
  * Description: Variable mix and match product type
  * Version: 2.0.0
  * Author: Kathy Darling
  * Author URI: http://kathyisawesome.com/
  * Text Domain: wc-mnm-variable
  * Domain Path: /languages
- * 
+ *
  * GitHub Plugin URI: https://github.com/kathyisawesome/wc-mnm-variable
  * Primary Branch: trunk
  * Release Asset: true
- * 
+ *
  * WC requires at least: 8.0.0
  * WC tested up to: 8.3.0
  * Requires at least: 6.0.0
@@ -30,7 +30,7 @@ use Automattic\Jetpack\Constants;
 
 class WC_MNM_Variable {
 
-	const VERSION = '2.0.0';
+	const VERSION         = '2.0.0';
 	const REQ_WC_VERSION  = '8.0.0';
 	const REQ_MNM_VERSION = '2.6.0';
 
@@ -87,7 +87,7 @@ class WC_MNM_Variable {
 
 		// Load translation files.
 		add_action( 'init', [ $this, 'load_plugin_textdomain' ] );
-		
+
 		/**
 		 * Admin hooks
 		 */
@@ -100,7 +100,7 @@ class WC_MNM_Variable {
 
 		// Admin.
 		add_action( 'admin_enqueue_scripts', [ $this, 'admin_scripts' ], 20 );
-		
+
 		// Product data stores.
 		add_filter( 'woocommerce_data_stores', [ $this, 'data_stores' ] );
 
@@ -148,13 +148,12 @@ class WC_MNM_Variable {
 		// Force table/dropdowns layout of attributes when editing in admin.
 		add_action( 'wc_mnm_edit_container_order_item_in_shop_order', array( __CLASS__, 'force_edit_container_styles' ), 0, 4 );
 		add_action( 'wc_mnm_edit_container_order_item_in_shop_subscription', array( __CLASS__, 'force_edit_container_styles' ), 0, 4 );
-		
+
 		// Admin order style tweaks for variable mix and match.
 		add_action( 'admin_enqueue_scripts', [ $this, 'admin_inline_styles' ], 20 );
 
 		// Handle change variation.
 		add_filter( 'wc_mnm_get_product_from_edit_order_item', [ $this, 'switch_variation' ], 10, 4 );
-
 	}
 
 	/**
@@ -181,7 +180,6 @@ class WC_MNM_Variable {
 		// REST API.
 		include_once 'includes/rest-api/class-wc-mnm-variable-rest-api.php';
 		include_once 'includes/rest-api/class-wc-mnm-variable-store-api.php';
-
 	}
 
 	/**
@@ -217,7 +215,7 @@ class WC_MNM_Variable {
 	 * Make the plugin translation ready
 	 */
 	public function load_plugin_textdomain() {
-		load_plugin_textdomain( 'wc-mnm-variable' , false , dirname( plugin_basename( __FILE__ ) ) .  '/languages/' );
+		load_plugin_textdomain( 'wc-mnm-variable', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 
 	/*
@@ -233,7 +231,7 @@ class WC_MNM_Variable {
 		if ( ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) && ! defined( 'IFRAME_REQUEST' ) ) {
 			$term_exists = \get_term_by( 'slug', 'variable-mix-and-match', 'product_type' );
 			if ( null === $term_exists ) {
-				wp_insert_term( __( 'Variable Mix and Match','wc-mnm-variable' ), 'product_type', array( 'slug' => 'variable-mix-and-match' ) );
+				wp_insert_term( __( 'Variable Mix and Match', 'wc-mnm-variable' ), 'product_type', array( 'slug' => 'variable-mix-and-match' ) );
 			}
 		}
 	}
@@ -246,10 +244,10 @@ class WC_MNM_Variable {
 
 	/**
 	 * Register the new product type
-	 * 
+	 *
 	 * @param array $product_types
 	 * @return array
-	 */ 
+	 */
 	public function product_selector_filter( $product_types ) {
 		$product_types['variable-mix-and-match'] = __( 'Variable Mix and Match', 'wc-mnm-variable' );
 		return $product_types;
@@ -266,12 +264,11 @@ class WC_MNM_Variable {
 
 		// WooCommerce product admin page
 		if ( 'product' == $screen->id && 'post' == $screen->base ) {
-			$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+			$suffix      = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 			$script_path = 'assets/js/admin/wc-mnm-variable-mix-and-match-metabox' . $suffix . '.js';
 
 			wp_enqueue_script( 'wc-mnm-variable-mix-and-match-metabox', plugins_url( $script_path, __FILE__ ), array( 'wc-admin-variation-meta-boxes' ), WC_Mix_and_Match()->get_file_version( $this->get_plugin_path() . '/' . $script_path, self::VERSION ), true );
 		}
-
 	}
 
 	/*
@@ -282,7 +279,7 @@ class WC_MNM_Variable {
 
 	/**
 	 * Use Variable product data store.
-	 * 
+	 *
 	 * @param array $stores key/value pairs of store name => class name
 	 * @return array
 	 */
@@ -296,7 +293,7 @@ class WC_MNM_Variable {
 
 	/**
 	 * Switch variation type.
-	 * 
+	 *
 	 * Checks the classname being used for a product variation to see if it should be a mix and match product
 	 * variation, and if so, returns this as the class which should be instantiated (instead of the default
 	 * WC_Product_Variation class).
@@ -323,24 +320,21 @@ class WC_MNM_Variable {
 				$terms = get_the_terms( $post->post_parent, 'product_type' );
 
 				$parent_product_type = ! empty( $terms ) && ! is_wp_error( $terms ) ? sanitize_title( current( $terms )->name ) : 'simple';
-	
+
 				if ( 'variable-mix-and-match' === $parent_product_type ) {
 					$product_type = 'mix-and-match-variation';
 					wp_cache_set( $cache_key, $product_type, 'products' );
 				}
-
 			}
-			
 		}
 
-		return $product_type;	
-
+		return $product_type;
 	}
 
 
 	/**
 	 * Switch variation class.
-	 * 
+	 *
 	 * Checks the classname being used for a product variation to see if it should be a mix and match product
 	 * variation, and if so, returns this as the class which should be instantiated (instead of the default
 	 * WC_Product_Variation class).
@@ -357,26 +351,23 @@ class WC_MNM_Variable {
 		$cached_product_type = wp_cache_get( $cache_key, 'products' );
 
 		if ( ! $cached_product_type ) {
-	
+
 			$post = get_post( $product_id );
 
 			if ( $post instanceof WP_Post ) {
-	
+
 				if ( 'product_variation' === $post->post_type ) {
-	
+
 					$terms = get_the_terms( $post->post_parent, 'product_type' );
-	
+
 					$parent_product_type = ! empty( $terms ) && ! is_wp_error( $terms ) ? sanitize_title( current( $terms )->name ) : 'simple';
-		
+
 					if ( 'variable-mix-and-match' === $parent_product_type ) {
 						$cached_product_type = 'mix-and-match-variation';
 						wp_cache_set( $cache_key, $cached_product_type, 'products' );
 					}
-	
 				}
-				
 			}
-	
 		}
 
 		if ( 'mix-and-match-variation' === $cached_product_type ) {
@@ -398,20 +389,20 @@ class WC_MNM_Variable {
 	 * Register scripts
 	 */
 	public function frontend_scripts( $auto_enqueue = false ) {
-		$suffix         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '': '.min';
-		
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
 		$style_path    = 'assets/dist/frontend/style-variable-mnm.css';
 		$style_url     = $this->get_plugin_url() . $style_path;
 		$style_version = WC_Mix_and_Match()->get_file_version( $this->get_plugin_path() . $style_path, self::VERSION );
 
 		wp_enqueue_style( 'dashicons' );
-        wp_enqueue_style( 'wc-mnm-variable-frontend', $style_url, [ 'wc-mnm-frontend' ], $style_version );
+		wp_enqueue_style( 'wc-mnm-variable-frontend', $style_url, [ 'wc-mnm-frontend' ], $style_version );
 
 		wp_style_add_data( 'wc-mnm-variable-frontend', 'rtl', 'replace' );
 
 		// We need a core script and it isn't registered in the admin. A bit hacky, but no other way to do this.
 		if ( is_admin() ) {
-			$script_url = apply_filters( 'woocommerce_get_asset_url', plugins_url( 'assets/js/frontend/add-to-cart-variation' . $suffix . '.js' , WC_PLUGIN_FILE ), 'assets/js/frontend/add-to-cart-variation' );
+			$script_url = apply_filters( 'woocommerce_get_asset_url', plugins_url( 'assets/js/frontend/add-to-cart-variation' . $suffix . '.js', WC_PLUGIN_FILE ), 'assets/js/frontend/add-to-cart-variation' );
 			wp_register_script( 'wc-add-to-cart-variation', $script_url, [ 'jquery', 'wp-util', 'jquery-blockui' ], Constants::get_constant( 'WC_VERSION' ) );
 			// We also need the wp.template for this script :).
 			wc_get_template( 'single-product/add-to-cart/variation.php' );
@@ -430,23 +421,23 @@ class WC_MNM_Variable {
 		$script_url     = $this->get_plugin_url() . $script_path;
 		$script_version = WC_Mix_and_Match()->get_file_version( $this->get_plugin_path() . $script_path, self::VERSION );
 
-		wp_register_script( 'wc-mnm-add-to-cart-variation', $script_url, [ 'wc-add-to-cart-variation' ], $script_version, true );	
+		wp_register_script( 'wc-mnm-add-to-cart-variation', $script_url, [ 'wc-add-to-cart-variation' ], $script_version, true );
 
 		// Grab localization strings from core MNM.
 		$mnm_params = WC_Mix_and_Match()->display::get_add_to_cart_parameters();
 
-		$params = array( 
-			'wc_ajax_url'     => \WC_AJAX::get_endpoint( '%%endpoint%%' ),
-			'form_nonce'      => wp_create_nonce( 'wc_mnm_container_form' ),
-			'i18n_form_error' => __( 'Failed to initialize form. If this issue persists, please reload the page and try again.', 'wc-mnm-variable' ),
-			'i18n_form_cleared' => __( 'Your chosen container size has changed so your selections have been reset.', 'wc-mnm-variable' ),
-			'i18n_selection_prompt' => __( 'Choose %d selections', 'wc-mnm-variable' ),
+		$params = array(
+			'wc_ajax_url'                    => \WC_AJAX::get_endpoint( '%%endpoint%%' ),
+			'form_nonce'                     => wp_create_nonce( 'wc_mnm_container_form' ),
+			'i18n_form_error'                => __( 'Failed to initialize form. If this issue persists, please reload the page and try again.', 'wc-mnm-variable' ),
+			'i18n_form_cleared'              => __( 'Your chosen container size has changed so your selections have been reset.', 'wc-mnm-variable' ),
+			'i18n_selection_prompt'          => __( 'Choose %d selections', 'wc-mnm-variable' ),
 			'i18n_selection_prompt_singular' => __( 'Choose %d selection', 'wc-mnm-variable' ),
-			'display_thumbnails' => wc_string_to_bool( get_option( 'wc_mnm_display_thumbnail', 'yes' ) ),
-			'display_short_description'  => wc_string_to_bool( get_option( 'wc_mnm_display_short_description', 'no' ) ),
-			'display_plus_minus_buttons' => wc_string_to_bool( get_option( 'wc_mnm_display_plus_minus_buttons', 'no' ) ),
-			'display_layout' => is_admin() ? 'tabular' : get_option( 'wc_mnm_layout','tabular' ),
-			'num_columns'                => (int) apply_filters( 'wc_mnm_grid_layout_columns', get_option( 'wc_mnm_number_columns', 3 ) ),
+			'display_thumbnails'             => wc_string_to_bool( get_option( 'wc_mnm_display_thumbnail', 'yes' ) ),
+			'display_short_description'      => wc_string_to_bool( get_option( 'wc_mnm_display_short_description', 'no' ) ),
+			'display_plus_minus_buttons'     => wc_string_to_bool( get_option( 'wc_mnm_display_plus_minus_buttons', 'no' ) ),
+			'display_layout'                 => is_admin() ? 'tabular' : get_option( 'wc_mnm_layout', 'tabular' ),
+			'num_columns'                    => (int) apply_filters( 'wc_mnm_grid_layout_columns', get_option( 'wc_mnm_number_columns', 3 ) ),
 		);
 
 		$params = apply_filters( 'wc_mnm_variable_add_to_cart_script_parameters', wp_parse_args( $params, $mnm_params ) );
@@ -465,20 +456,19 @@ class WC_MNM_Variable {
 				'version'      => WC_Mix_and_Match()->get_file_version( $this->get_plugin_path() . '/' . $script_path ),
 			);
 
-		$dependencies = array_merge( $script_asset[ 'dependencies' ], [ 'wc-price-format' ] );
+		$dependencies = array_merge( $script_asset['dependencies'], [ 'wc-price-format' ] );
 
 		wp_register_script(
 			'wc-mnm-add-to-cart-reactified',
 			$script_url,
 			$dependencies,
-			$script_asset[ 'version' ],
+			$script_asset['version'],
 			true
 		);
 
 		if ( $auto_enqueue ) {
 			$this->load_scripts();
 		}
-
 	}
 
 
@@ -487,7 +477,7 @@ class WC_MNM_Variable {
 	 */
 	public function load_scripts() {
 		wp_enqueue_script( 'wc-add-to-cart-variation' );
-        wp_enqueue_script( 'wc-mnm-add-to-cart-variation' );
+		wp_enqueue_script( 'wc-mnm-add-to-cart-variation' );
 		wp_enqueue_script( 'wc-mnm-add-to-cart-reactified' );
 	}
 
@@ -500,7 +490,7 @@ class WC_MNM_Variable {
 	public function force_form_location( $value ) {
 		return 'default';
 	}
-	
+
 
 	/*
 	|--------------------------------------------------------------------------
@@ -577,14 +567,14 @@ class WC_MNM_Variable {
 
 		return $product_type;
 	}
-	
+
 
 	/*
 	|--------------------------------------------------------------------------
 	| Ajax callbacks.
 	|--------------------------------------------------------------------------
 	*/
-	
+
 	/**
 	 * Return the specific MNM variation template
 	 *
@@ -592,19 +582,19 @@ class WC_MNM_Variable {
 	 * @return string
 	 */
 	public function get_variation_template_html( $product ) {
-		
+
 		if ( is_numeric( $product ) ) {
 			$product = wc_get_product( intval( $product ) );
 		}
 
 		$html = '';
-		
+
 		if ( $product && $product->is_type( 'mix-and-match-variation' ) ) {
 			ob_start();
 			do_action( 'wc_mnm_variation_add_to_cart', $product );
 			$html = ob_get_clean();
 		}
-		
+
 		return $html;
 	}
 
@@ -614,14 +604,13 @@ class WC_MNM_Variable {
 	public function get_container_form() {
 
 		$variation_id = isset( $_POST['variation_id'] ) ? intval( $_POST['variation_id'] ) : 0;
-		
+
 		/**
 		 * `wc_mnm_get_ajax_product_variation` filter for editing variation object.
-		 * 
+		 *
 		 * @param obj WC_Product_Variation $product
 		 */
 		$product = apply_filters( 'wc_mnm_get_ajax_product_variation', wc_get_product( $variation_id ) );
-
 
 		if ( ! $product ) {
 			$error = esc_html__( 'This product does not exist and so can not be configured', 'wc-mnm-variable' );
@@ -630,7 +619,7 @@ class WC_MNM_Variable {
 
 		/*
 		 * `wc_mnm_container_form_fragments` filter
-		 * 
+		 *
 		 * @param  array $fragments
 		 * @param  $product WC_Product
 		 */
@@ -647,7 +636,7 @@ class WC_MNM_Variable {
 
 	/**
 	 * Load the scripts required for order editing.
-	 * 
+	 *
 	 * @param int $item_id The subscription line item ID.
 	 * @param WC_Order_Item|array $item The subscription line item.
 	 * @param WC_Subscription $subscription The subscription.
@@ -670,12 +659,11 @@ class WC_MNM_Variable {
 		}
 
 		return $is_editable;
-
 	}
 
 	/**
 	 * Force default tabular attributes layout.
-	 * 
+	 *
 	 * @param  $product  WC_Product_Mix_and_Match_Variation
 	 * @param  $order_item WC_Order_Item
 	 * @param  $order      WC_Order
@@ -684,7 +672,7 @@ class WC_MNM_Variable {
 	public static function force_edit_container_styles( $product, $order_item, $order, $source ) {
 		if ( 'metabox' === $source ) {
 			add_filter( 'wc_mnm_variation_swatches_threshold', '__return_zero' );
-		}	
+		}
 	}
 
 	/**
@@ -693,7 +681,7 @@ class WC_MNM_Variable {
 	public function admin_inline_styles() {
 
 		// Inline styles.
-		$custom_css = "
+		$custom_css = '
 			.wc-mnm-backbone-modal form.edit_container > .variations th {
 				text-align: left;
 			}
@@ -718,14 +706,13 @@ class WC_MNM_Variable {
 				margin-right: 1rem;
 			}
 			.wc-mnm-backbone-modal form.edit_container .blockUI.blockOverlay::before { border: none; }
-		";
+		';
 		wp_add_inline_style( 'wc-mnm-admin-order-style', $custom_css );
-
 	}
 
 	/**
 	 * Switch the product object if variation.
-	 * 
+	 *
 	 * @param obj WC_Product $product
 	 * @param obj WC_Order_Item
 	 * @param obj WC_Order
@@ -735,12 +722,11 @@ class WC_MNM_Variable {
 	public static function switch_variation( $product, $container_item, $subscription, $source ) {
 
 		// Detect a variation switch.
-		if ( ! empty( $_POST[ 'variation_id' ] ) && intval( $_POST[ 'variation_id' ] ) !== $container_item->get_variation_id() ) {
-			$product = wc_get_product( intval( $_POST[ 'variation_id' ] ) );
+		if ( ! empty( $_POST['variation_id'] ) && intval( $_POST['variation_id'] ) !== $container_item->get_variation_id() ) {
+			$product = wc_get_product( intval( $_POST['variation_id'] ) );
 		}
 
 		return $product;
-
 	}
 
 
@@ -776,9 +762,10 @@ class WC_MNM_Variable {
 	 * @return string
 	 */
 	public function get_plugin_basename() {
-		return plugin_basename( __FILE__ );	
+		return plugin_basename( __FILE__ );
 	}
 }
+
 /*
 |--------------------------------------------------------------------------
 | Launch the whole plugin.

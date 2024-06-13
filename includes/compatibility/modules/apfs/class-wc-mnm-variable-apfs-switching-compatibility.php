@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * The Main WC_MNM_Variable_APFS_Switching_Compatibility class
- **/
+ */
 if ( ! class_exists( 'WC_MNM_Variable_APFS_Switching_Compatibility' ) ) :
 
 	class WC_MNM_Variable_APFS_Switching_Compatibility {
@@ -30,13 +30,12 @@ if ( ! class_exists( 'WC_MNM_Variable_APFS_Switching_Compatibility' ) ) :
 		 * Hooks for MNM support.
 		 */
 		public static function add_hooks() {
-			
+
 			// Add variation attributes to switch link.
 			add_filter( 'wc_mnm_get_posted_container_form_data', array( __CLASS__, 'get_posted_container_form_data' ), 10, 3 );
 
 			// Remove subscription options from variation data only when editing.
 			add_action( 'wc_ajax_mnm_get_edit_container_order_item_form', array( __CLASS__, 'remove_variable_subscription_options' ), 1 );
-
 		}
 
 
@@ -57,24 +56,21 @@ if ( ! class_exists( 'WC_MNM_Variable_APFS_Switching_Compatibility' ) ) :
 				if ( ! empty( $attributes ) ) {
 					$form_data = array_merge( $form_data, $attributes );
 				}
-
 			}
-		
+
 			return $form_data;
 		}
 
 
 		/**
 		 * Remove subscription options
-		 * 
+		 *
 		 * Simple subscription options aren't added because `woocommerce_before_add_to_cart_button` doesn't exist in edit in `variable-edit-container.php` template.
 		 * But we need to remove the filter that adds them to the variation data when in the ajax editing context.
 		 */
 		public static function remove_variable_subscription_options() {
 			remove_filter( 'woocommerce_available_variation', array( 'WCS_ATT_Display_Product', 'add_subscription_options_to_variation_data' ), 1, 3 );
 		}
-
-
 	} // End class: do not remove or there will be no more guacamole for you.
 
 endif; // End class_exists check.

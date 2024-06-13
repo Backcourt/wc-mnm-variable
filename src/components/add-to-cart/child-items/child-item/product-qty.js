@@ -206,7 +206,7 @@ const ProductQty = ({
 							max
 						);
 					}
-					
+
 					newQty = newQty > 0 ? newQty : 0;
 
 					// Space left to fill.
@@ -255,7 +255,7 @@ const ProductQty = ({
 				if ( ! isDecreasing ) {
 					newQty = max;
 				}
-				
+
 				setValidationMessages( [
 					WC_MNM_ADD_TO_CART_VARIATION_PARAMS.i18n_child_item_max_qty_message.replace(
 						'%d',
@@ -293,7 +293,7 @@ const ProductQty = ({
 		} else {
 			return;
 		}
-		
+
 	}
 
 	// Required Hidden Quantity.

@@ -25,12 +25,10 @@ class WC_MNM_Variable_Compatibility {
 		add_action( 'before_woocommerce_init', [ __CLASS__, 'declare_features_compatibility' ] );
 
 		add_filter( 'wc_mnm_compatibility_modules', [ __CLASS__, 'load_modules' ] );
-		
 	}
 
 	/**
 	 * Declare WooCommerce Features compatibility.
-	 *
 	 */
 	public static function declare_features_compatibility() {
 
@@ -43,7 +41,6 @@ class WC_MNM_Variable_Compatibility {
 
 		// Cart/Checkout Blocks compatibility.
 		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', WC_MNM_Variable::get_instance()->get_plugin_basename(), true );
-
 	}
 
 	/**
@@ -60,8 +57,6 @@ class WC_MNM_Variable_Compatibility {
 		}
 
 		return $module_paths;
-
 	}
-
 }
 WC_MNM_Variable_Compatibility::init();

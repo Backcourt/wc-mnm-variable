@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Trait WC_MNM_Container_Child_Items.
- *
  */
 trait WC_MNM_Container_Data_Store {
 
@@ -28,15 +27,15 @@ trait WC_MNM_Container_Data_Store {
 		'_mnm_child_category_ids',
 	);
 
-	
+
 	/**
 	 * Maps extended properties to meta keys.
 	 *
 	 * @var array
 	 */
 	protected $shared_props_to_meta_keys = array(
-		'content_source'            => '_mnm_content_source',
-		'child_category_ids'        => '_mnm_child_category_ids',
+		'content_source'     => '_mnm_content_source',
+		'child_category_ids' => '_mnm_child_category_ids',
 	);
 
 	/**
@@ -45,8 +44,8 @@ trait WC_MNM_Container_Data_Store {
 	 * @var array
 	 */
 	protected $global_props = array(
-		'layout'                     => 'wc_mnm_layout',
-		'add_to_cart_form_location'  => 'wc_mnm_add_to_cart_form_location',
+		'layout'                    => 'wc_mnm_layout',
+		'add_to_cart_form_location' => 'wc_mnm_add_to_cart_form_location',
 	);
 
 	/**
@@ -85,7 +84,7 @@ trait WC_MNM_Container_Data_Store {
 
 				// Get a global value for layout/location props (always use global options in customizer).
 				if ( array_key_exists( $property, $this->global_props ) && ( is_customize_preview() || ! $product->has_layout_override() ) ) {
-					$value = get_option( $this->global_props[$property] );
+					$value = get_option( $this->global_props[ $property ] );
 				} else {
 					$value = get_post_meta( $product->get_id(), $meta_key, true );
 				}
@@ -101,7 +100,6 @@ trait WC_MNM_Container_Data_Store {
 			$product->set_regular_price( $min_price );
 			$product->set_sale_price( '' );
 		}
-
 	}
 
 	/**
@@ -115,9 +113,18 @@ trait WC_MNM_Container_Data_Store {
 		parent::update_post_meta( $product, $force );
 
 		$id                 = $product->get_id();
-		$meta_keys_to_props = array_flip( array_diff_key( $this->get_props_to_meta_keys(), array( 'price' => 1, 'min_raw_price' => 1, 'min_raw_regular_price' => 1 ) ) );
+		$meta_keys_to_props = array_flip(
+			array_diff_key(
+				$this->get_props_to_meta_keys(),
+				array(
+					'price'                 => 1,
+					'min_raw_price'         => 1,
+					'min_raw_regular_price' => 1,
+				)
+			)
+		);
 
-		$props_to_update    = $force ? $meta_keys_to_props : $this->get_props_to_update( $product, $meta_keys_to_props );
+		$props_to_update = $force ? $meta_keys_to_props : $this->get_props_to_update( $product, $meta_keys_to_props );
 
 		foreach ( $props_to_update as $meta_key => $property ) {
 
@@ -210,12 +217,12 @@ trait WC_MNM_Container_Data_Store {
 
 		if ( 'wc_product_meta_lookup' === $table ) {
 
-			$min_price_meta   = (array) get_post_meta( $id, '_price', false );
-			$max_price_meta   = (array) get_post_meta( $id, '_mnm_max_price', false );
-			$manage_stock = get_post_meta( $id, '_manage_stock', true );
-			$stock        = 'yes' === $manage_stock ? wc_stock_amount( get_post_meta( $id, '_stock', true ) ) : null;
-			$price        = wc_format_decimal( get_post_meta( $id, '_price', true ) );
-			$sale_price   = wc_format_decimal( get_post_meta( $id, '_sale_price', true ) );
+			$min_price_meta = (array) get_post_meta( $id, '_price', false );
+			$max_price_meta = (array) get_post_meta( $id, '_mnm_max_price', false );
+			$manage_stock   = get_post_meta( $id, '_manage_stock', true );
+			$stock          = 'yes' === $manage_stock ? wc_stock_amount( get_post_meta( $id, '_stock', true ) ) : null;
+			$price          = wc_format_decimal( get_post_meta( $id, '_price', true ) );
+			$sale_price     = wc_format_decimal( get_post_meta( $id, '_sale_price', true ) );
 
 			return array(
 				'product_id'     => absint( $id ),
@@ -285,7 +292,6 @@ trait WC_MNM_Container_Data_Store {
 
 			do_action( 'woocommerce_product_object_updated_props', $product, $updated_props );
 		}
-
 	}
 
 
@@ -310,25 +316,24 @@ trait WC_MNM_Container_Data_Store {
 				_prime_post_caches( $child_items_data );
 			}
 
-			foreach( $child_items_data as $product_id ) {
+			foreach ( $child_items_data as $product_id ) {
 
 				/**
 				 * Products without a DB entry, are keyed by their product ID.
 				 * @ See WC_MNM_Child_Item::get_child_item_id()
 				 */
 				if ( ! in_array( 'product-' . $product_id, $child_items ) ) {
-					$child_items['product-' . $product_id ] = new WC_MNM_Child_Item(
+					$child_items[ 'product-' . $product_id ] = new WC_MNM_Child_Item(
 						array(
 							'product_id'   => $product_id,
 							'variation_id' => 0, // Querying by category currently does not support variations.
 							'container_id' => $product->get_id(),
 						),
-                        $product 
-                    );
+						$product
+					);
 				}
 			}
-
-	   } else {
+		} else {
 
 			// If sharing content we need to query by the parent's ID.
 			$query_container_id = $product->get_parent_id() && $product->is_sharing_content() ? $product->get_parent_id() : $product->get_id();
@@ -341,32 +346,30 @@ trait WC_MNM_Container_Data_Store {
 
 			/**
 			 * For now, lets key shared contents the same key construct as category contents.
-			 * 
+			 *
 			 * If you generate the WC_MNM_Child_Item from the child item ID, then the props will be read from the database and container_id will be the ID of the parent variable product, which breaks things.
-			 * If you generate the WC_MNM_Child_Item from props then the array key is the child item DB, but the WC_MNM_Child_Item doesn't have a matching get_id(). Hesitant to set_id() as any 
+			 * If you generate the WC_MNM_Child_Item from props then the array key is the child item DB, but the WC_MNM_Child_Item doesn't have a matching get_id(). Hesitant to set_id() as any
 			 * save actions on the child item object might add info to the DB that we don't need.
-			 * 
+			 *
 			 * Especially struggling in WC_Mix_and_Match_Cart::set_mnm_cart_item() at $container->get_child_item( $cart_item['child_item_id'] ) cannot find the child item with the id + array key mismatch.
 			 */
 			if ( $product->get_parent_id() && $product->is_sharing_content() ) {
 
-				foreach( $child_items_data as $item_key => $item_data ) {
-					$child_items['product-' . ( $item_data['variation_id'] ? $item_data['variation_id'] : $item_data['product_id'] ) ] = new WC_MNM_Child_Item( 
+				foreach ( $child_items_data as $item_key => $item_data ) {
+					$child_items[ 'product-' . ( $item_data['variation_id'] ? $item_data['variation_id'] : $item_data['product_id'] ) ] = new WC_MNM_Child_Item(
 						array(
 							'product_id'   => $item_data['product_id'],
 							'variation_id' => $item_data['variation_id'],
 							'container_id' => $product->get_id(),
 						),
-                        $product 
-                    );
+						$product
+					);
 				}
-
 			} else {
-				foreach( $child_items_data as $item_key => $item_data ) {
-					$child_items[$item_key] = new WC_MNM_Child_Item( $item_key, $product );
+				foreach ( $child_items_data as $item_key => $item_data ) {
+					$child_items[ $item_key ] = new WC_MNM_Child_Item( $item_key, $product );
 				}
 			}
-
 		}
 
 		return $child_items;
@@ -395,8 +398,8 @@ trait WC_MNM_Container_Data_Store {
 		if ( false === $child_items ) {
 
 			$child_items = $wpdb->get_results(
-                $wpdb->prepare(
-                    "
+				$wpdb->prepare(
+					"
 					SELECT items.child_item_id, items.product_id as p_id,
 					CASE
 						WHEN p.post_parent > 0 THEN p.post_parent
@@ -412,9 +415,9 @@ trait WC_MNM_Container_Data_Store {
 				WHERE items.container_id = %d
 				GROUP BY items.product_id
 				ORDER BY items.menu_order ASC",
-                    $product_id
-                ) 
-            );
+					$product_id
+				)
+			);
 
 			foreach ( $child_items as $child_item ) {
 				wp_cache_set( 'wc-mnm-child-item-' . $child_item->child_item_id, $child_item, 'wc-mnm-child-items' );
@@ -423,7 +426,6 @@ trait WC_MNM_Container_Data_Store {
 			if ( 0 < $product_id ) {
 				wp_cache_set( 'wc-mnm-child-items-' . $product_id, $child_items, 'products' );
 			}
-
 		}
 
 		if ( ! empty( $child_items ) ) {
@@ -440,11 +442,9 @@ trait WC_MNM_Container_Data_Store {
 					$results[ $child_item->child_item_id ] = $child_item->p_id;
 				}
 			}
-			
 		}
 
 		return $results;
-
 	}
 
 	/**
@@ -464,7 +464,7 @@ trait WC_MNM_Container_Data_Store {
 		if ( ! empty( $cat_ids ) ) {
 
 			$args = apply_filters(
-                'wc_mnm_query_products_by_categories_args',
+				'wc_mnm_query_products_by_categories_args',
 				array(
 					'type'                 => WC_Mix_and_Match_Helpers::get_supported_product_types(),
 					'category_id'          => (array) $cat_ids,
@@ -481,7 +481,6 @@ trait WC_MNM_Container_Data_Store {
 		}
 
 		return $child_items_data;
-
 	}
 
 
@@ -503,26 +502,24 @@ trait WC_MNM_Container_Data_Store {
 		if ( false === $container_ids ) {
 
 			$container_ids = $wpdb->get_results(
-                $wpdb->prepare(
-                    "
+				$wpdb->prepare(
+					"
 				SELECT items.child_item_id, items.container_id
 				FROM {$wpdb->prefix}wc_mnm_child_items AS items 
 				INNER JOIN {$wpdb->prefix}posts as p ON items.product_id = p.ID
 				WHERE items.product_id = %d OR p.post_parent = %d
 				ORDER BY items.menu_order ASC",
-                    $product_id,
+					$product_id,
 					$product_id
-                ) 
-            );
+				)
+			);
 
 			if ( 0 < $product_id ) {
 				wp_cache_set( 'wc-mnm-container-products-' . $product_id, $container_ids, 'products' );
 			}
-
 		}
 
 		return ! empty( $container_ids ) ? array_unique( wp_list_pluck( $container_ids, 'container_id', 'child_item_id' ) ) : array();
-
 	}
 
 	/**
@@ -545,6 +542,4 @@ trait WC_MNM_Container_Data_Store {
 	protected function is_global_prop( $product, $property ) {
 		return isset( $this->global_props ) && array_key_exists( $property, $this->global_props );
 	}
-
 }
-

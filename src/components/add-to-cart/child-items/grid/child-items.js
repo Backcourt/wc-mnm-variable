@@ -35,4 +35,3 @@ const ChildItems = ( { childItems } ) => {
 	);
 };
 export default ChildItems;
-

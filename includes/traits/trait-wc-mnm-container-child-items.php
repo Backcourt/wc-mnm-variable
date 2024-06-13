@@ -13,36 +13,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Trait WC_MNM_Container_Child_Items.
- *
  */
 trait WC_MNM_Container_Child_Items {
 
 	/**
 	 * Array of child item objects.
+	 *
 	 * @var null|WC_MNM_Child_Item[]
 	 */
 	private $child_items = null;
 
 	/**
 	 * Child items that need deleting are stored here.
+	 *
 	 * @var array
 	 */
 	protected $child_items_to_delete = array();
 
 	/**
 	 * Indicates whether child items need saving.
+	 *
 	 * @var array
 	 */
 	private $child_items_changed = false;
 
 	/**
 	 *  Define type-specific properties.
+	 *
 	 * @var array
 	 */
 	protected $contents_props = array(
-		'content_source'            => 'products',
-		'child_category_ids'        => array(),
-		'child_items_stock_status'  => 'outofstock', // 'instock' | 'onbackorder' | 'outofstock' - This prop is not saved as meta.
+		'content_source'           => 'products',
+		'child_category_ids'       => array(),
+		'child_items_stock_status' => 'outofstock', // 'instock' | 'onbackorder' | 'outofstock' - This prop is not saved as meta.
 	);
 
 	/**
@@ -50,8 +53,8 @@ trait WC_MNM_Container_Child_Items {
 	 */
 	public function load_defaults( $reset_child_items = false ) {
 
-		$this->is_synced          = false;
-		$this->container_price_data   = array();
+		$this->is_synced             = false;
+		$this->container_price_data  = array();
 		$this->container_price_cache = array();
 
 		if ( $reset_child_items ) {
@@ -113,7 +116,6 @@ trait WC_MNM_Container_Child_Items {
 		 * @param  WC_Product_Mix_and_Match  $this
 		 */
 		return 'view' === $context ? apply_filters( 'wc_mnm_child_product_ids', $child_product_ids, $this ) : $child_product_ids;
-
 	}
 
 	/**
@@ -146,7 +148,6 @@ trait WC_MNM_Container_Child_Items {
 					$this->child_items[ $item_key ] = $child_item;
 
 				}
-
 			}
 
 			WC_Mix_and_Match_Helpers::cache_set( $this->get_id(), $this->child_items, 'child_items' );
@@ -160,7 +161,6 @@ trait WC_MNM_Container_Child_Items {
 		 * @param  WC_Product_Mix_and_Match  $this
 		 */
 		return 'view' === $context ? apply_filters( 'wc_mnm_child_items', $this->child_items, $this ) : $this->child_items;
-
 	}
 
 
@@ -198,8 +198,7 @@ trait WC_MNM_Container_Child_Items {
 
 		}
 
-		return ! empty( $child_items_by_product ) && array_key_exists( $child_product_id, $child_items_by_product ) ?  $child_items_by_product[ $child_product_id ] : false;
-
+		return ! empty( $child_items_by_product ) && array_key_exists( $child_product_id, $child_items_by_product ) ? $child_items_by_product[ $child_product_id ] : false;
 	}
 
 
@@ -235,14 +234,14 @@ trait WC_MNM_Container_Child_Items {
 	 *
 	 * @param  mixed WC_MNM_Child_Item[] | array[]  $data {
 	 *     @type  int  $product_id     Child product id.
-	 *	   @type  int  $variation_id   Child variation id.
+	 *     @type  int  $variation_id   Child variation id.
 	 * }
 	 */
 	public function set_child_items( array $data ) {
 
 		// Reindex the existing items by product|variation ID, for easier comparison.
 		$current_items = array();
-		foreach( $this->get_child_items( 'edit' ) as $child_item ) {
+		foreach ( $this->get_child_items( 'edit' ) as $child_item ) {
 			$current_items[ $child_item->get_variation_id() ? $child_item->get_variation_id() : $child_item->get_product_id() ] = $child_item;
 		}
 
@@ -250,22 +249,22 @@ trait WC_MNM_Container_Child_Items {
 		$new_items    = array();
 
 		// Step 1 - Set all new/updated child items.
-		foreach( $data as $data_item ) {
+		foreach ( $data as $data_item ) {
 			if ( $data_item instanceof WC_MNM_Child_Item ) {
 				$new_item = $data_item;
 				$new_item->set_container_id( $this->get_id() );
 				$incoming_id = $data_item->get_variation_id() ? $data_item->get_variation_id() : $data_item->get_product_id();
 			} else {
-				$props = wp_parse_args(
-                    (array) $data_item,
-                    array(
-					'product_id'   => 0,
-					'variation_id' => 0,
-                    ) 
-                );
+				$props                 = wp_parse_args(
+					(array) $data_item,
+					array(
+						'product_id'   => 0,
+						'variation_id' => 0,
+					)
+				);
 				$props['container_id'] = $this->get_id();
-				$new_item = new WC_MNM_Child_Item( $props, $this );
-				$incoming_id = $props['variation_id'] ? $props['variation_id'] : $props['product_id'];
+				$new_item              = new WC_MNM_Child_Item( $props, $this );
+				$incoming_id           = $props['variation_id'] ? $props['variation_id'] : $props['product_id'];
 			}
 
 			$incoming_ids[] = $incoming_id; // Store for later comparison.
@@ -276,7 +275,6 @@ trait WC_MNM_Container_Child_Items {
 			} else {
 				$new_items[] = $new_item;
 			}
-
 		}
 
 		$this->child_items         = $new_items;
@@ -284,12 +282,11 @@ trait WC_MNM_Container_Child_Items {
 		$this->load_defaults();
 
 		// Step 2 - Queue any items to delete.
-		foreach( array_diff( array_keys( $current_items ), $incoming_ids ) as $product_id_to_delete ) {
+		foreach ( array_diff( array_keys( $current_items ), $incoming_ids ) as $product_id_to_delete ) {
 			$this->child_items_to_delete[] = $current_items[ $product_id_to_delete ];
 		}
-
 	}
-	
+
 
 	/*
 	|--------------------------------------------------------------------------
@@ -334,7 +331,6 @@ trait WC_MNM_Container_Child_Items {
 		if ( $this->has_child_item_changes() ) {
 			$this->save_child_items();
 		}
-
 	}
 
 	/**
@@ -354,7 +350,7 @@ trait WC_MNM_Container_Child_Items {
 
 			// Add/save items.
 			if ( is_array( $this->child_items ) ) {
-				$menu_order = 0;
+				$menu_order  = 0;
 				$child_items = array_filter( $this->child_items );
 				foreach ( $child_items as $item_key => $child_item ) {
 
@@ -369,7 +365,7 @@ trait WC_MNM_Container_Child_Items {
 						unset( $this->child_items[ $item_key ] );
 					}
 
-					$menu_order++;
+					++$menu_order;
 				}
 			}
 
@@ -384,14 +380,12 @@ trait WC_MNM_Container_Child_Items {
 			wc_get_logger()->error(
 				esc_html__( 'Error saving Mix and Match product child items.', 'wc-mnm-variable' ),
 				array(
-					'source' => 'wc-mix-and-match-product-save',
+					'source'  => 'wc-mix-and-match-product-save',
 					'product' => $this,
-					'error' => $e,
+					'error'   => $e,
 				)
 			);
 			wc_transaction_query( 'rollback' );
 		}
-
 	}
-
 }

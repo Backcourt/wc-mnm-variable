@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * The Main WC_MNM_Variable_APFS_Compatibility class
- **/
+ */
 if ( ! class_exists( 'WC_MNM_Variable_APFS_Compatibility' ) ) :
 
 	class WC_MNM_Variable_APFS_Compatibility {
@@ -26,9 +26,8 @@ if ( ! class_exists( 'WC_MNM_Variable_APFS_Compatibility' ) ) :
 
 			// Register mix-and-match-variation as supported type.
 			add_filter( 'wcsatt_supported_product_types', [ __CLASS__, 'wcsatt_supported_product_types' ] );
-
 		}
-		
+
 		/**
 		 * Product types supported by the plugin.
 		 *
@@ -38,7 +37,6 @@ if ( ! class_exists( 'WC_MNM_Variable_APFS_Compatibility' ) ) :
 		public static function wcsatt_supported_product_types( $types ) {
 			return array_merge( $types, [ 'variable-mix-and-match', 'mix-and-match-variation' ] );
 		}
-
 	} // End class: do not remove or there will be no more guacamole for you.
 
 endif; // End class_exists check.

@@ -25,7 +25,7 @@ import { calcTotalQuantity, selectQuantityMessage } from './utils';
 const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 
 	// Current child items from state.
-	const childItems =	state.containers[state.containerId] && 
+	const childItems =	state.containers[state.containerId] &&
 			typeof state.containers[state.containerId].extensions.mix_and_match !== 'undefined' &&
 			typeof state.containers[state.containerId].extensions.mix_and_match.child_items !==
 				'undefined'
@@ -51,7 +51,7 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 						[payload.container.id]: payload.container,
 					},
 				},
-				
+
 			};
 		}
 
@@ -76,17 +76,17 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 
 			// Attempt to parse JSON strings (used by data attributes when editing the container in admin).
 			if (typeof payloadConfig === 'string') {
-	
+
 					// Parse the JSON string into a JavaScript object
 					let dataObject = JSON.parse(payloadConfig);
-			
+
 					// Check if parsing was successful
 					if (dataObject && typeof dataObject === 'object') {
 						payloadConfig = dataObject;
 					}
-		
+
 			}
-			
+
 			// Cast any null to empty object.
 			payloadConfig = Object(payloadConfig);
 
@@ -106,7 +106,7 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 						newSelections.push(item);
 					}
 
-				}		
+				}
 
 			}
 
@@ -129,7 +129,7 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 
 			// Check if the ID is a valid child item ID.
 			if ( childItems.some(obj => obj.child_id === child_id) ) {
-				
+
 				// If increasing.
 				if ( payloadQty > currentQty ) {
 					updatedSelections.push( payload.item );
@@ -156,7 +156,7 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 			};
 
 		case VALIDATE:
-		
+
 			const messages = {
 				status: [],
 				errors: [],
@@ -175,7 +175,7 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 				const maxContainerSize =
 					state.containers[state.containerId].extensions.mix_and_match.max_container_size;
 				const qtyMessage = selectQuantityMessage( totalQuantity ); // "Selected X total".
-				
+
 				let errorMessage = '';
 				let validMessage = '';
 
@@ -326,18 +326,18 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 				container: state.containers[state.containerId],
 				messages,
 				passesValidation: messages.errors.length === 0,
-				subTotal, 
+				subTotal,
 				total,
 				totalQuantity,
 			};
 
 			/**
 			 * Dispatch an action when validated.
-			 * 
+			 *
 			 * @param object validated state
 			 */
 			doAction( 'wc.mnm.container.container-updated', validatedState );
-			
+
 			return validatedState;
 
 		default:

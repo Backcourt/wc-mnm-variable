@@ -19,18 +19,21 @@ trait WC_MNM_Container {
 
 	/**
 	 * Price-specific data, used to calculate min/max product prices for display and min/max prices incl/excl tax.
+	 *
 	 * @var array
 	 */
 	private $pricing_data;
 
 	/**
 	 * Array of container price data for consumption by the front-end script.
+	 *
 	 * @var array
 	 */
 	private $container_price_data = array();
 
 	/**
 	 * Array of child item objects.
+	 *
 	 * @var null|WC_MNM_Child_Item[]
 	 */
 	private $child_items = null;
@@ -45,36 +48,42 @@ trait WC_MNM_Container {
 
 	/**
 	 * Indicates whether child items need saving.
+	 *
 	 * @var array
 	 */
 	private $child_items_changed = false;
 
 	/**
 	 * In per-product pricing mode, the sale status of the product is defined by the children.
+	 *
 	 * @var bool
 	 */
 	private $on_sale;
 
 	/**
 	 * True if product is NYP enabled.
+	 *
 	 * @var null|bool
 	 */
 	private $is_nyp = null;
 
 	/**
 	 * True if product data is in sync with children.
+	 *
 	 * @var bool
 	 */
 	private $is_synced = false;
 
 	/**
 	 * Runtime cache for calculated prices.
+	 *
 	 * @var array
 	 */
 	private $container_price_cache = array();
 
 	/**
 	 *  Define type-specific properties.
+	 *
 	 * @var array
 	 */
 	protected $container_props = array(
@@ -118,7 +127,7 @@ trait WC_MNM_Container {
 	 */
 	public function get_price( $context = 'view' ) {
 		$value = $this->get_prop( 'price', $context );
-		return in_array( $context, array( 'view', 'sync' ) ) && $this->is_priced_per_product() ? (double) $value : $value;
+		return in_array( $context, array( 'view', 'sync' ) ) && $this->is_priced_per_product() ? (float) $value : $value;
 	}
 
 
@@ -130,7 +139,7 @@ trait WC_MNM_Container {
 	 */
 	public function get_regular_price( $context = 'view' ) {
 		$value = $this->get_prop( 'regular_price', $context );
-		return in_array( $context, array( 'view', 'sync' ) ) && $this->is_priced_per_product() ? (double) $value : $value;
+		return in_array( $context, array( 'view', 'sync' ) ) && $this->is_priced_per_product() ? (float) $value : $value;
 	}
 
 
@@ -142,7 +151,7 @@ trait WC_MNM_Container {
 	 */
 	public function get_sale_price( $context = 'view' ) {
 		$value = $this->get_prop( 'sale_price', $context );
-		return in_array( $context, array( 'view', 'sync' ) ) && $this->is_priced_per_product() && '' !== $value ? (double) $value : $value;
+		return in_array( $context, array( 'view', 'sync' ) ) && $this->is_priced_per_product() && '' !== $value ? (float) $value : $value;
 	}
 
 
@@ -155,7 +164,7 @@ trait WC_MNM_Container {
 	public function get_min_raw_price( $context = 'view' ) {
 		$this->sync();
 		$value = $this->get_prop( 'min_raw_price', $context );
-		return in_array( $context, array( 'view', 'sync' ) ) && $this->is_priced_per_product() && '' !== $value ? (double) $value : $value;
+		return in_array( $context, array( 'view', 'sync' ) ) && $this->is_priced_per_product() && '' !== $value ? (float) $value : $value;
 	}
 
 
@@ -168,7 +177,7 @@ trait WC_MNM_Container {
 	public function get_min_raw_regular_price( $context = 'view' ) {
 		$this->sync();
 		$value = $this->get_prop( 'min_raw_regular_price', $context );
-		return in_array( $context, array( 'view', 'sync' ) ) && $this->is_priced_per_product() && '' !== $value ? (double) $value : $value;
+		return in_array( $context, array( 'view', 'sync' ) ) && $this->is_priced_per_product() && '' !== $value ? (float) $value : $value;
 	}
 
 
@@ -181,7 +190,7 @@ trait WC_MNM_Container {
 	public function get_max_raw_price( $context = 'view' ) {
 		$this->sync();
 		$value = $this->get_prop( 'max_raw_price', $context );
-		$value = 'edit' !== $context && $this->get_max_container_size() && $this->is_priced_per_product() && '' !== $value ? (double) $value : $value;
+		$value = 'edit' !== $context && $this->get_max_container_size() && $this->is_priced_per_product() && '' !== $value ? (float) $value : $value;
 		$value = 'edit' === $context && '' === $value ? 9999999999.0 : $value;
 		return $value;
 	}
@@ -196,7 +205,7 @@ trait WC_MNM_Container {
 	public function get_max_raw_regular_price( $context = 'view' ) {
 		$this->sync();
 		$value = $this->get_prop( 'max_raw_regular_price', $context );
-		$value = 'edit' !== $context && $this->get_max_container_size() && $this->is_priced_per_product() && '' !== $value ? (double) $value : $value;
+		$value = 'edit' !== $context && $this->get_max_container_size() && $this->is_priced_per_product() && '' !== $value ? (float) $value : $value;
 		$value = 'edit' === $context && '' === $value ? 9999999999.0 : $value;
 		return $value;
 	}
@@ -271,6 +280,7 @@ trait WC_MNM_Container {
 
 	/**
 	 * Return the product's maximum size limit.
+	 *
 	 * @param  string $context
 	 * @return mixed | string or int
 	 */
@@ -400,7 +410,7 @@ trait WC_MNM_Container {
 	 * Set child items stock status.
 	 *
 	 * @param string  $status - 'instock' | 'onbackorder' | 'outofstock'
-	 * 	  'instock'     - Child items stock can fill all slots.
+	 *    'instock'     - Child items stock can fill all slots.
 	 *    'onbackorder' - Child items stock must be backordered to fill all slots.
 	 *    'outofstock'  - Child items do not have enough stock to fill all slots.
 	 */
@@ -408,7 +418,7 @@ trait WC_MNM_Container {
 		$status = in_array( $status, array( 'instock', 'outofstock', 'onbackorder' ) ) ? $status : 'instock';
 		$this->set_prop( 'child_items_stock_status', $status );
 	}
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Conditionals
@@ -418,6 +428,7 @@ trait WC_MNM_Container {
 
 	/**
 	 * Is this a NYP product?
+	 *
 	 * @return bool
 	 */
 	public function is_nyp() {
@@ -646,8 +657,6 @@ trait WC_MNM_Container {
 	 * @return bool
 	 */
 	public function is_config_valid( $config ) {
-
-
 	}
 
 
@@ -676,7 +685,6 @@ trait WC_MNM_Container {
 			} else {
 				$stock_status = $child_status;
 			}
-
 		}
 
 		return $stock_status;
@@ -694,7 +702,7 @@ trait WC_MNM_Container {
 			$this->sync();
 		}
 
-		return $this->get_prop( 'child_items_stock_status' , $context );
+		return $this->get_prop( 'child_items_stock_status', $context );
 	}
 
 
@@ -715,12 +723,12 @@ trait WC_MNM_Container {
 			$qty_args = WC_Mix_and_Match()->cart->rebuild_posted_container_form_data( $item_object['mnm_config'], $this );
 
 			if ( ! empty( $qty_args ) ) {
-				$args = array_merge(
-                    $qty_args,
+				$args      = array_merge(
+					$qty_args,
 					array(
-						'quantity' => isset( $item_object['quantity'] ) ? intval( $item_object['quantity'] ) : 0,
+						'quantity'         => isset( $item_object['quantity'] ) ? intval( $item_object['quantity'] ) : 0,
 						'update-container' => isset( $item_object['key'] ) ? $item_object['key'] : '',
-						)
+					)
 				);
 				$edit_link = add_query_arg( $args, $edit_link );
 			}
@@ -770,7 +778,7 @@ trait WC_MNM_Container {
 				 * @param  str $free_price
 				 * @param  obj WC_Product_Mix_and_Match $this
 				 */
-				$price       = apply_filters( 'wc_mnm_container_free_price_html', $free_string, $this );
+				$price = apply_filters( 'wc_mnm_container_free_price_html', $free_string, $this );
 
 			} elseif ( $this->is_on_sale() || $this->has_discount() ) {
 
@@ -781,15 +789,15 @@ trait WC_MNM_Container {
 					$show_discounted_ranges = apply_filters( 'wc_mnm_container_show_discounted_range_price', ! is_admin(), $this );
 
 					if ( $show_discounted_ranges ) {
-						$price = '<del aria-hidden="true">' . wc_format_price_range( $this->get_container_regular_price( 'min' ), $this->get_container_regular_price( 'max' ) ) . '</del>';
-						$price .= ' <ins>' . wc_format_price_range( $this->get_container_price( 'min' ), $this->get_container_price( 'max' ) ) . '</ins>' ;
+						$price  = '<del aria-hidden="true">' . wc_format_price_range( $this->get_container_regular_price( 'min' ), $this->get_container_regular_price( 'max' ) ) . '</del>';
+						$price .= ' <ins>' . wc_format_price_range( $this->get_container_price( 'min' ), $this->get_container_price( 'max' ) ) . '</ins>';
 					} else {
 						$price = wc_format_price_range( $this->get_container_price( 'min' ), $this->get_container_price( 'max' ) );
 					}
 				} else {
 					$price = sprintf(
 						// translators: %s is a formatted price, ex:  Starting at $99
-                        _x( 'Starting at %s', '[Frontend]Price range, ex:  Starting at $99', 'wc-mnm-variable' ),
+						_x( 'Starting at %s', '[Frontend]Price range, ex:  Starting at $99', 'wc-mnm-variable' ),
 						wc_format_sale_price( $this->get_container_regular_price( 'min' ), $this->get_container_price( 'min' ) )
 					);
 				}
@@ -815,7 +823,7 @@ trait WC_MNM_Container {
 					$price = wc_format_price_range( $this->get_container_price( 'min' ), $this->get_container_price( 'max' ) );
 				} else {
 					$price = sprintf(
-                        _x( 'Starting at %s', '[Frontend]Price range, ex:  Starting at $99', 'wc-mnm-variable' ),
+						_x( 'Starting at %s', '[Frontend]Price range, ex:  Starting at $99', 'wc-mnm-variable' ),
 						wc_price( $this->get_container_price( 'min' ) )
 					);
 				}
@@ -858,7 +866,7 @@ trait WC_MNM_Container {
 
 		if ( $this->is_priced_per_product() ) {
 
-			$price_suffix  = get_option( 'woocommerce_price_display_suffix' );
+			$price_suffix = get_option( 'woocommerce_price_display_suffix' );
 
 			if ( $price_suffix ) {
 				$price_suffix = ' <small class="woocommerce-price-suffix">' . $price_suffix . '</small>';
@@ -908,7 +916,7 @@ trait WC_MNM_Container {
 				$availability['availability'] = esc_html_x( 'Insufficient stock', '[Frontend]', 'wc-mnm-variable' );
 				$availability['class']        = 'insufficientstock out-of-stock';
 
-			// If a child is on backorder, the parent should appear to be on backorder, too.
+				// If a child is on backorder, the parent should appear to be on backorder, too.
 			} elseif ( 'onbackorder' === $container_stock_status ) {
 
 				$availability['availability'] = esc_html_x( 'Available on backorder', '[Frontend]', 'wc-mnm-variable' );
@@ -924,7 +932,6 @@ trait WC_MNM_Container {
 		 * @param  WC_Product_Mix_and_Match  $this
 		 */
 		return apply_filters( 'wc_mnm_container_get_availability', $availability, $this );
-
 	}
 
 
@@ -937,9 +944,9 @@ trait WC_MNM_Container {
 	public function get_container_price( $min_or_max = 'min', $display = false ) {
 		return $this->calculate_price(
 			array(
-			'min_or_max' => $min_or_max,
-			'calc'       => $display ? 'display' : '',
-			'prop'       => 'price'
+				'min_or_max' => $min_or_max,
+				'calc'       => $display ? 'display' : '',
+				'prop'       => 'price',
 			)
 		);
 	}
@@ -954,10 +961,10 @@ trait WC_MNM_Container {
 	public function get_container_regular_price( $min_or_max = 'min', $display = false ) {
 		return $this->calculate_price(
 			array(
-			'min_or_max' => $min_or_max,
-			'calc'       => $display ? 'display' : '',
-			'prop'       => 'regular_price',
-			'strict'     => true
+				'min_or_max' => $min_or_max,
+				'calc'       => $display ? 'display' : '',
+				'prop'       => 'regular_price',
+				'strict'     => true,
 			)
 		);
 	}
@@ -971,10 +978,10 @@ trait WC_MNM_Container {
 	public function get_container_price_including_tax( $min_or_max = 'min', $qty = 1 ) {
 		return $this->calculate_price(
 			array(
-			'min_or_max' => $min_or_max,
-			'qty'        => $qty,
-			'calc'       => 'incl_tax',
-			'prop'       => 'price'
+				'min_or_max' => $min_or_max,
+				'qty'        => $qty,
+				'calc'       => 'incl_tax',
+				'prop'       => 'price',
 			)
 		);
 	}
@@ -988,10 +995,10 @@ trait WC_MNM_Container {
 	public function get_container_price_excluding_tax( $min_or_max = 'min', $qty = 1 ) {
 		return $this->calculate_price(
 			array(
-			'min_or_max' => $min_or_max,
-			'qty'        => $qty,
-			'calc'       => 'excl_tax',
-			'prop'       => 'price'
+				'min_or_max' => $min_or_max,
+				'qty'        => $qty,
+				'calc'       => 'excl_tax',
+				'prop'       => 'price',
 			)
 		);
 	}
@@ -1005,10 +1012,10 @@ trait WC_MNM_Container {
 	 */
 	public function calculate_price( $args ) {
 
-		$min_or_max = isset( $args['min_or_max'] ) && in_array( $args['min_or_max'] , array( 'min', 'max' ) ) ? $args['min_or_max'] : 'min';
+		$min_or_max = isset( $args['min_or_max'] ) && in_array( $args['min_or_max'], array( 'min', 'max' ) ) ? $args['min_or_max'] : 'min';
 		$qty        = isset( $args['qty'] ) ? absint( $args['qty'] ) : 1;
-		$price_prop = isset( $args['prop'] ) && in_array( $args['prop'] , array( 'price', 'regular_price' ) ) ? $args['prop'] : 'price';
-		$price_calc = isset( $args['calc'] ) && in_array( $args['calc'] , array( 'incl_tax', 'excl_tax', 'display', '' ) ) ? $args['calc'] : '';
+		$price_prop = isset( $args['prop'] ) && in_array( $args['prop'], array( 'price', 'regular_price' ) ) ? $args['prop'] : 'price';
+		$price_calc = isset( $args['calc'] ) && in_array( $args['calc'], array( 'incl_tax', 'excl_tax', 'display', '' ) ) ? $args['calc'] : '';
 
 		if ( $this->is_priced_per_product() ) {
 
@@ -1041,7 +1048,7 @@ trait WC_MNM_Container {
 
 					$price_fn = 'get_' . $price_prop;
 
-					$price    = wc_format_decimal(
+					$price = wc_format_decimal(
 						WC_MNM_Product_Prices::get_product_price(
 							$this,
 							array(
@@ -1056,7 +1063,7 @@ trait WC_MNM_Container {
 					if ( ! empty( $this->pricing_data ) ) {
 						foreach ( $this->pricing_data as $child_item_id => $data ) {
 
-							$item_qty = $qty * $data['slots_filled_' . $min_or_max ];
+							$item_qty = $qty * $data[ 'slots_filled_' . $min_or_max ];
 
 							if ( $item_qty ) {
 								$child_item = $this->get_child_item( $child_item_id );
@@ -1066,7 +1073,7 @@ trait WC_MNM_Container {
 										WC_MNM_Product_Prices::get_product_price(
 											$child_item->get_product(),
 											array(
-												'price' => $data[$price_prop],
+												'price' => $data[ $price_prop ],
 												'qty'   => $item_qty,
 												'calc'  => $price_calc,
 											)
@@ -1077,7 +1084,6 @@ trait WC_MNM_Container {
 							}
 						}
 					}
-
 				}
 
 				$this->container_price_cache[ $cache_key ] = $price;
@@ -1088,15 +1094,14 @@ trait WC_MNM_Container {
 			$price    = WC_MNM_Product_Prices::get_product_price(
 				$this,
 				array(
-				'price' => $this->$price_fn(),
-				'qty'   => $qty,
-				'calc'  => $price_calc,
+					'price' => $this->$price_fn(),
+					'qty'   => $qty,
+					'calc'  => $price_calc,
 				)
 			);
 		}
 
 		return $price;
-
 	}
 
 
@@ -1112,65 +1117,65 @@ trait WC_MNM_Container {
 
 		if ( empty( $this->container_price_data ) ) {
 
-			$container_price_data                                    = array();
+			$container_price_data = array();
 
-			$raw_container_price_min                                 = $this->get_container_price( 'min', true );
-			$raw_container_price_max                                 = $this->get_container_price( 'max', true );
-			$raw_container_regular_price_min                         = $this->get_container_regular_price( 'min', true );
-			$raw_container_regular_price_max                         = $this->get_container_regular_price( 'max', true );
+			$raw_container_price_min         = $this->get_container_price( 'min', true );
+			$raw_container_price_max         = $this->get_container_price( 'max', true );
+			$raw_container_regular_price_min = $this->get_container_regular_price( 'min', true );
+			$raw_container_regular_price_max = $this->get_container_regular_price( 'max', true );
 
-			$container_price_data['per_product_pricing']             = $this->is_priced_per_product() ? 'yes': 'no';
+			$container_price_data['per_product_pricing'] = $this->is_priced_per_product() ? 'yes' : 'no';
 
-			$container_price_data['raw_container_price_min']         = (double) $raw_container_price_min;
-			$container_price_data['raw_container_price_max']         = '' === $raw_container_price_max ? '': (double) $raw_container_price_max;
+			$container_price_data['raw_container_price_min'] = (float) $raw_container_price_min;
+			$container_price_data['raw_container_price_max'] = '' === $raw_container_price_max ? '' : (float) $raw_container_price_max;
 
 			// Deprecated data keys.
 			$container_price_data['raw_container_min_price']         = $container_price_data['raw_container_price_min'];
 			$container_price_data['raw_container_price']             = $container_price_data['raw_container_price_max'];
-			$container_price_data['raw_container_min_regular_price'] = (double) $raw_container_regular_price_min;
-			$container_price_data['raw_container_regular_price']     = '' === $raw_container_regular_price_max ? '': (double) $raw_container_regular_price_max;
-			
-			$container_price_data['price_string']                    = '%s';
-			$container_price_data['is_purchasable']                  = $this->is_purchasable() ? 'yes'                                                            : 'no';
-			$container_price_data['is_in_stock']                     = $this->is_in_stock() ? 'yes'                                                               : 'no';
+			$container_price_data['raw_container_min_regular_price'] = (float) $raw_container_regular_price_min;
+			$container_price_data['raw_container_regular_price']     = '' === $raw_container_regular_price_max ? '' : (float) $raw_container_regular_price_max;
 
-			$container_price_data['show_free_string']                = ( $this->is_priced_per_product() ? apply_filters( 'wc_mnm_show_free_string', false, $this ): true ) ? 'yes': 'no';
+			$container_price_data['price_string']   = '%s';
+			$container_price_data['is_purchasable'] = $this->is_purchasable() ? 'yes' : 'no';
+			$container_price_data['is_in_stock']    = $this->is_in_stock() ? 'yes' : 'no';
 
-			$container_price_data['prices']                          = array();
-			$container_price_data['regular_prices']                  = array();
+			$container_price_data['show_free_string'] = ( $this->is_priced_per_product() ? apply_filters( 'wc_mnm_show_free_string', false, $this ) : true ) ? 'yes' : 'no';
 
-			$container_price_data['prices_tax']                      = array();
+			$container_price_data['prices']         = array();
+			$container_price_data['regular_prices'] = array();
 
-			$container_price_data['quantities']                      = array();
+			$container_price_data['prices_tax'] = array();
 
-			$container_price_data['product_ids']                     = array();
+			$container_price_data['quantities'] = array();
 
-			$container_price_data['is_sold_individually']            = array();
+			$container_price_data['product_ids'] = array();
 
-			$container_price_data['base_price']                      = $this->get_price();
-			$container_price_data['base_regular_price']              = $this->get_regular_price();
-			$container_price_data['base_price_tax']                  = WC_MNM_Product_Prices::get_tax_ratios( $this );
+			$container_price_data['is_sold_individually'] = array();
 
-			$container_price_data['price']                           = $container_price_data['base_price'];
-			$container_price_data['regular_price']                   = $container_price_data['base_regular_price'];
-			$container_price_data['price_tax']                       = $container_price_data['base_price_tax'];
+			$container_price_data['base_price']         = $this->get_price();
+			$container_price_data['base_regular_price'] = $this->get_regular_price();
+			$container_price_data['base_price_tax']     = WC_MNM_Product_Prices::get_tax_ratios( $this );
 
-			$totals                                                  = new stdClass;
+			$container_price_data['price']         = $container_price_data['base_price'];
+			$container_price_data['regular_price'] = $container_price_data['base_regular_price'];
+			$container_price_data['price_tax']     = $container_price_data['base_price_tax'];
 
-			$totals->price                                           = 0.0;
-			$totals->regular_price                                   = 0.0;
-			$totals->price_incl_tax                                  = 0.0;
-			$totals->price_excl_tax                                  = 0.0;
+			$totals = new stdClass();
 
-			$container_price_data['base_price_subtotals']            = $totals;
-			$container_price_data['base_price_totals']               = $totals;
+			$totals->price          = 0.0;
+			$totals->regular_price  = 0.0;
+			$totals->price_incl_tax = 0.0;
+			$totals->price_excl_tax = 0.0;
 
-			$container_price_data['addons_totals']                   = $totals;
+			$container_price_data['base_price_subtotals'] = $totals;
+			$container_price_data['base_price_totals']    = $totals;
 
-			$container_price_data['subtotals']                       = $totals;
-			$container_price_data['totals']                          = $totals;
+			$container_price_data['addons_totals'] = $totals;
 
-			$child_items                                             = $this->get_child_items();
+			$container_price_data['subtotals'] = $totals;
+			$container_price_data['totals']    = $totals;
+
+			$child_items = $this->get_child_items();
 
 			if ( empty( $child_items ) ) {
 				return;
@@ -1202,12 +1207,11 @@ trait WC_MNM_Container {
 		}
 
 		return $this->container_price_data;
-
 	}
 
 	/**
 	 * Get the data attributes
-	 * 
+	 *
 	 * @param array $args
 	 * @return string
 	 */
@@ -1216,7 +1220,7 @@ trait WC_MNM_Container {
 		$attributes = wp_parse_args(
 			$args,
 			array(
-				'per_product_pricing' => $this->is_priced_per_product() ? 'true' :  'false',
+				'per_product_pricing' => $this->is_priced_per_product() ? 'true' : 'false',
 				'container_id'        => $this->get_id(),
 				'min_container_size'  => $this->get_min_container_size(),
 				'max_container_size'  => $this->get_max_container_size(),
@@ -1295,7 +1299,7 @@ trait WC_MNM_Container {
 	 * Sync child data such as price, availability, etc.
 	 */
 	public function sync() {
-		
+
 		if ( $this->is_synced() ) {
 			return false;
 		}
@@ -1303,7 +1307,5 @@ trait WC_MNM_Container {
 		$this->set_child_items_stock_status( 'instock' );
 
 		$this->is_synced = true;
-
 	}
-
 }

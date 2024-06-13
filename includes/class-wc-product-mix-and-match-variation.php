@@ -80,8 +80,8 @@ class WC_Product_Mix_and_Match_Variation extends WC_Product_Variation {
 
 		return $key;
 	}
-	
-	
+
+
 	/**
 	 * Share content getter.
 	 *
@@ -132,7 +132,7 @@ class WC_Product_Mix_and_Match_Variation extends WC_Product_Variation {
 
 	/**
 	 * "Form Location" getter.
-	 * 
+	 *
 	 * NB: This is for parity and API support, but not used for display.
 	 *
 	 * @param  string  $context
@@ -157,7 +157,7 @@ class WC_Product_Mix_and_Match_Variation extends WC_Product_Variation {
 
 	/**
 	 * "Layout" getter.
-	 * 
+	 *
 	 * NB: This is for parity and API support, but not used for display.
 	 *
 	 * @param  string  $context
@@ -198,7 +198,7 @@ class WC_Product_Mix_and_Match_Variation extends WC_Product_Variation {
 
 	/**
 	 * Set additional parent data array for this variation.
-	 * 
+	 *
 	 * There's not really a way to merge our defaults with the WC_Product_Variation defaults so let's create our own setter.
 	 *
 	 * @param array $parent_data parent data array for this variation.
@@ -219,20 +219,19 @@ class WC_Product_Mix_and_Match_Variation extends WC_Product_Variation {
 	 */
 	public function set_share_content( $value ) {
 		$this->set_prop( 'share_content', wc_string_to_bool( $value ) );
- 	}
+	}
 
 
-	/*
-	|--------------------------------------------------------------------------
-	| Conditionals
-	|--------------------------------------------------------------------------
-	*/
+	/**
+	 *--------------------------------------------------------------------------
+	 * Conditionals
+	 *--------------------------------------------------------------------------
+	 */
 
 	/**
 	 * Checks the product type to see if it is either this product's type or the parent's
 	 * product type.
 	 *
-	 * @access public
 	 * @param mixed $type Array or string of types
 	 * @return bool
 	 */
@@ -310,11 +309,11 @@ class WC_Product_Mix_and_Match_Variation extends WC_Product_Variation {
 		 */
 		do_action( 'wc_mnm_before_sync', $this );
 
-		/*
-		-----------------------------------------------------------------------------------*/
-		/*
-			Sync Availability Data.
-		/*-----------------------------------------------------------------------------------*/
+		/**
+		 *--------------------------------------------------------------------------
+		 * Sync Availability Data.
+		 *--------------------------------------------------------------------------
+		 */
 
 		$child_items_stock_status = 'outofstock';
 
@@ -358,10 +357,10 @@ class WC_Product_Mix_and_Match_Variation extends WC_Product_Variation {
 					$child_stock_available = $child_stock;
 
 					if ( $child_product->backorders_allowed() ) {
-						$backorders_allowed = true; 
+						$backorders_allowed = true;
 					}
 				} elseif ( $child_product->backorders_allowed() ) {
-					$backorders_allowed = true; 
+					$backorders_allowed = true;
 				}
 			} elseif ( $child_product->is_in_stock() ) {
 				$unlimited_stock_available = true;
@@ -395,7 +394,4 @@ class WC_Product_Mix_and_Match_Variation extends WC_Product_Variation {
 		 */
 		do_action( 'wc_mnm_synced', $this );
 	}
-
 }
-
-
