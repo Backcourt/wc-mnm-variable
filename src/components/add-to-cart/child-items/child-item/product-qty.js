@@ -285,10 +285,12 @@ const ProductQty = ({
 	if ( ! isSelectable ) {
 		if ( isTabular ) {
 			return (
-				<ProductStockStatus
-					status={ childItem.availability.class }
-					availability={ childItem.availability.availability }
-				/>
+				<Element className="wc-mnm-variation__child-item-quantity product-quantity" >
+					<ProductStockStatus
+						status={ childItem.availability.class }
+						availability={ childItem.availability.availability }
+					/>
+				</Element>
 			);
 		} else {
 			return;
@@ -309,20 +311,22 @@ const ProductQty = ({
 			childItem.name
 		);
 		return (
-			<p className="required-quantity child_item__quantity">
-				<Interweave tagName="span" content={ requiredText } />
-				<input
-					type="hidden"
-					data-required={ true }
-					data-title={ childItem.name }
-					data-id={ childItem.child_id }
-					className={
-						'child_item__quantity_input qty mnm-quantity input-text'
-					}
-					name={ `mnm_quantity[${ childItem.child_id }]` }
-					value={ max }
-				/>
-			</p>
+			<Element className="wc-mnm-variation__child-item-quantity product-quantity" >
+				<p className="required-quantity child_item__quantity">
+					<Interweave tagName="span" content={ requiredText } />
+					<input
+						type="hidden"
+						data-required={ true }
+						data-title={ childItem.name }
+						data-id={ childItem.child_id }
+						className={
+							'child_item__quantity_input qty mnm-quantity input-text'
+						}
+						name={ `mnm_quantity[${ childItem.child_id }]` }
+						value={ max }
+					/>
+				</p>
+			</Element>
 		);
 	}
 
