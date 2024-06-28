@@ -42,7 +42,7 @@ trait WC_MNM_Product {
 	 * @since  2.0.0
 	 *
 	 * @param  string  $context
-	 * @return string
+	 * @return bool
 	 */
 	public function get_layout_override( $context = 'view' ) {
 		return $this->get_prop( 'layout_override', $context );
