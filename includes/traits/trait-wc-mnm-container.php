@@ -3,7 +3,7 @@
  * This ongoing trait will have shared calculation logic between WC_Product_Mix_and_Match and WC_Product_Mix_and_Match_Variation classes.
  *
  * @package WooCommerce Mix and Match Products\Traits
- * @version 1.0.0
+ * @version 2.0.3
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -446,22 +446,38 @@ trait WC_MNM_Container {
 	 */
 	public function is_purchasable() {
 
+		/**
+		 * WooCommerce product is purchasable.
+		 *
+		 * @param  str $is_purchasable
+		 * @param  obj WC_Product_Mix_and_Match $this
+		 */
+		return apply_filters( 'woocommerce_is_purchasable', $this->is_container_purchasable(), $this );
+	}
+
+	/**
+	 * A MnM product must contain children and have a price in static mode only.
+	 *
+	 * @return bool
+	 */
+	private function is_container_purchasable() {
+
 		$is_purchasable = true;
 
 		// Not purchasable while updating DB.
 		if ( defined( 'WC_MNM_UPDATING' ) ) {
 			$is_purchasable = false;
 
-			// Products must exist of course.
+		// Products must exist of course.
 		} elseif ( ! $this->exists() ) {
 			$is_purchasable = false;
 
-			// When priced statically a price needs to be set.
+		// When priced statically a price needs to be set.
 		} elseif ( false === $this->is_priced_per_product() && '' === $this->get_price() ) {
 
 			$is_purchasable = false;
 
-			// Check the product is published.
+		// Check the product is published.
 		} elseif ( $this->get_status() !== 'publish' && ! current_user_can( 'edit_post', $this->get_id() ) ) {
 
 			$is_purchasable = false;
@@ -472,15 +488,8 @@ trait WC_MNM_Container {
 
 		}
 
-		/**
-		 * WooCommerce product is purchasable.
-		 *
-		 * @param  str $is_purchasable
-		 * @param  obj WC_Product_Mix_and_Match $this
-		 */
-		return apply_filters( 'woocommerce_is_purchasable', $is_purchasable, $this );
+		return $is_purchasable;
 	}
-
 
 	/**
 	 * Returns whether or not the product container's price is based on the included items.

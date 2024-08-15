@@ -6,7 +6,7 @@
  *
  * @package Mix and Match Products\Classes
  * @since 1.0.0
- * @version 1.0.0
+ * @version 2.0.3
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -275,6 +275,16 @@ class WC_Product_Mix_and_Match_Variation extends WC_Product_Variation {
 	}
 
 	/**
+	 * Returns false if the product cannot be bought.
+	 *
+	 * @since 2.0.3
+	 * @return bool
+	 */
+	public function is_purchasable() {
+		return apply_filters( 'woocommerce_variation_is_purchasable', $this->variation_is_visible() && parent::is_purchasable() && ( 'publish' === $this->parent_data['status'] || current_user_can( 'edit_post', $this->get_parent_id() ) ), $this );
+	}
+
+	/**
 	 * Checks if this particular variation is visible. Invisible variations are enabled and can be selected, but no price / stock info is displayed.
 	 * Instead, a suitable 'unavailable' message is displayed.
 	 * Invisible by default: Disabled variations and variations with an empty price AND no child items.
@@ -282,16 +292,15 @@ class WC_Product_Mix_and_Match_Variation extends WC_Product_Variation {
 	 * @return bool
 	 */
 	public function variation_is_visible() {
-		return apply_filters( 'woocommerce_variation_is_visible', 'publish' === get_post_status( $this->get_id() ) && '' !== $this->get_price() && $this->has_child_items(), $this->get_id(), $this->get_parent_id(), $this );
+		$variation_is_visible = $this->is_container_purchasable() && 'publish' === get_post_status( $this->get_id() );
+		return apply_filters( 'woocommerce_variation_is_visible', $variation_is_visible, $this->get_id(), $this->get_parent_id(), $this );
 	}
-
 
 	/*
 	|--------------------------------------------------------------------------
 	| Sync with children.
 	|--------------------------------------------------------------------------
 	*/
-
 
 	/**
 	 * Sync child data such as price, availability, etc.
