@@ -20,7 +20,7 @@ export const setContainerId =
 	( { select, dispatch } ) => {
 
 		// If we are switching the variation, we will clear the config - except on first load.
-		if ( null !== select.getContainerId() && select.hasConfiguration() ) {
+		if ( null !== select.getContainerId() && containerId !== select.getContainerId() && select.hasConfiguration() ) {
 
 			dispatch( { type: RESET_CONFIG } );
 
