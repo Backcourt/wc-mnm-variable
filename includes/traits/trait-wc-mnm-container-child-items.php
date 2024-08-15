@@ -4,7 +4,7 @@
  *
  * @package WooCommerce Mix and Match Products\Traits
  * @since 1.0.0
- * @version 1.0.0
+ * @version 2.0.3
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,6 +15,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Trait WC_MNM_Container_Child_Items.
  */
 trait WC_MNM_Container_Child_Items {
+
+
+	/**
+	 * Array of container price data for consumption by the front-end script.
+	 *
+	 * @var array
+	 */
+	private $container_price_data = array();
 
 	/**
 	 * Array of child item objects.
@@ -36,6 +44,20 @@ trait WC_MNM_Container_Child_Items {
 	 * @var array
 	 */
 	private $child_items_changed = false;
+
+	/**
+	 * True if product data is in sync with children.
+	 *
+	 * @var bool
+	 */
+	private $is_synced = false;
+
+	/**
+	 * Runtime cache for calculated prices.
+	 *
+	 * @var array
+	 */
+	private $container_price_cache = array();
 
 	/**
 	 *  Define type-specific properties.
