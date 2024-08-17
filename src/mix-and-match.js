@@ -21,6 +21,22 @@ const MixAndMatch = ( { target } ) => {
 
 	const [runOnce, setRunOnce] = useState(false);
 
+	// Set the validation context right away.
+	useEffect( () => {
+
+		const Form = target.closest( 'form' );
+
+		if ( Form ) {
+
+			const context = Form.getAttribute( 'data-validation_context' );
+			if ( context ) {
+				setContext( context );
+			}
+
+		}
+
+	}, [] );
+
 	// Watch for variation changes.
 	useMutationObserver(
 		target,
@@ -61,11 +77,6 @@ const MixAndMatch = ( { target } ) => {
 		const Form = target.closest( 'form' );
 
 		if ( ! runOnce && hasContainer && Form ) {
-
-			const context = Form.getAttribute( 'data-validation_context' );
-			if ( context ) {
-				setContext( context );
-			}
 
 			// Read the config from either the URL or the data-attributes.
 			let initConfig = Form.getAttribute( 'data-container_config' );
