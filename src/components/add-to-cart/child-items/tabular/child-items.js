@@ -16,25 +16,6 @@ const ChildItems = ( { childItems } ) => {
 			cellSpacing="0"
 			className="wc-mnm-variation__child-items mnm_child_products products tabular mnm_table shop_table"
 		>
-			<thead>
-				<tr>
-					<th> </th>
-					<th>
-						{ _x(
-							'Product',
-							'[Frontend]',
-							'wc-mnm-variable'
-						) }
-					</th>
-					<th>
-						{ _x(
-							'Quantity',
-							'[Frontend]',
-							'wc-mnm-variable'
-						) }
-					</th>
-				</tr>
-			</thead>
 			<tbody>
 				{ childItems.map( ( childItem, index ) => (
 					<ChildProvider
