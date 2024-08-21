@@ -35,47 +35,26 @@ const ProductImage = ( {
 				src: PLACEHOLDER_IMG_SRC,
 				alt: '',
 		  };
-
-	if ( permalink ) {
-		return (
-
-			<Element className="wc-mnm-variation__child-item-thumbnail product-thumbnail">
-				<div className="mnm_child_product_images mnm_image">
-					<figure className="mnm_child_product_image woocommerce-product-gallery__image">
-						<a
-							href={ imageSrc }
-							className="image zoom"
-							data-rel="photoSwipe"
-							tabIndex="-1"
-						>
-							<img
-								className="wc-block-components-product-image"
-								{ ...imageProps }
-								alt={ imageProps.alt }
-							/>
-						</a>
-					</figure>
-				</div>
-			</Element>
-		);
-	}
-
+		
 	return (
 		<Element className="wc-mnm-variation__child-item-thumbnail product-thumbnail">
 			<div className="wc-mnm-variation__image-wrap mnm_child_product_images mnm_image">
 				<figure className="mwc-mnm-variation__image mnm_child_product_image woocommerce-product-gallery__image">
-					<a
-						href={ imageSrc }
-						className="image zoom"
-						data-rel="photoSwipe"
-						tabIndex="-1"
-					>
+					{permalink !== false ? (
+						<a href={permalink} tabIndex="-1" >
+							<img
+							className={`wc-block-components-product-image wp-image-${image.id}`}
+							{...imageProps}
+							alt={imageProps.alt}
+							/>
+						</a>
+					) : (
 						<img
-							className="wc-block-components-product-image {`wp-image-${image.id}`}"
-							{ ...imageProps }
-							alt={ imageProps.alt }
+							className={`wc-block-components-product-image wp-image-${image.id}`}
+							{...imageProps}
+							alt={imageProps.alt}
 						/>
-					</a>
+					)}
 				</figure>
 			</div>
 		</Element>
