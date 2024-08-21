@@ -3,7 +3,7 @@
  * This ongoing trait will have shared calculation logic between WC_Product_Mix_and_Match and WC_Product_Mix_and_Match_Variation classes.
  *
  * @package WooCommerce Mix and Match Products\Traits
- * @version 2.0.3
+ * @version 2.0.4
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -296,6 +296,26 @@ trait WC_MNM_Container {
 		return 'view' === $context ? apply_filters( 'wc_mnm_container_max_size', $value, $this ) : $value;
 	}
 
+	/**
+	 * Get the add to cart button text for the single page.
+	 *
+	 * @return string
+	 */
+	public function single_add_to_cart_text() {
+
+		$text = _x( 'Add to cart', '[Frontend]', 'wc-mnm-variable' );
+
+		if ( isset( $_GET['update-container'] ) ) {
+			$updating_cart_key = wc_clean( wp_unslash( $_GET['update-container'] ) );
+
+			if ( isset( WC()->cart->cart_contents[ $updating_cart_key ] ) ) {
+				$text = _x( 'Update cart', '[Frontend]', 'wc-mnm-variable' );
+			}
+		}
+
+		/** WC core filter. */
+		return apply_filters( 'woocommerce_product_single_add_to_cart_text', $text, $this );
+	}
 
 	/*
 	|--------------------------------------------------------------------------
