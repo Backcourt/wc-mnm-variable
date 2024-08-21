@@ -1,7 +1,7 @@
 {
   "title": "WooCommerce Mix and Match Products - Variable Mix and Match",
   "name": "wc-mnm-variable",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Make different sized Mix and Match packs all in once place!",
   "main": "Gruntfile.js",
   "license": "GPL-3.0",
