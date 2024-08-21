@@ -43,12 +43,14 @@ const ProductDetails = ({
 
 	const isSelectable = isInStock && childItem.purchasable && childItem.in_stock;
 
+	const target = WC_MNM_ADD_TO_CART_VARIATION_PARAMS?.__experimental_link_target === '_blank' ? '_blank' : '_self';
+
 	return (
 		<Element className="wc-mnm-variation__child-item-details product-details">
 			{ isProductHiddenFromCatalog ? (
 				<ProductTitle title={ name } />
 			) : (
-				<a href={ permalink } aria-label={ sprintf( _x( 'View product page for %s', 'wc-mnm-variable' ), name ) } >
+				<a href={ permalink } aria-label={ sprintf( _x( 'View product page for %s', 'wc-mnm-variable' ), name ) } target={target} >
 					<ProductTitle title={ name } />
 				</a>
 			) }

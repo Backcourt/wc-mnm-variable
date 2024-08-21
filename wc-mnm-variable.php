@@ -438,6 +438,7 @@ class WC_MNM_Variable {
 			'display_plus_minus_buttons'     => wc_string_to_bool( get_option( 'wc_mnm_display_plus_minus_buttons', 'no' ) ),
 			'display_layout'                 => is_admin() ? 'tabular' : get_option( 'wc_mnm_layout', 'tabular' ),
 			'num_columns'                    => (int) apply_filters( 'wc_mnm_grid_layout_columns', get_option( 'wc_mnm_number_columns', 3 ) ),
+			'__experimental_link_target'     => '_self', // Default link target. acceptable values: _self, _blank
 		);
 
 		$params = apply_filters( 'wc_mnm_variable_add_to_cart_script_parameters', wp_parse_args( $params, $mnm_params ) );
