@@ -1,7 +1,7 @@
 {
   "title": "WooCommerce Mix and Match Products - Variable Mix and Match",
   "name": "wc-mnm-variable",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Make different sized Mix and Match packs all in once place!",
   "main": "Gruntfile.js",
   "license": "GPL-3.0",
@@ -15,22 +15,22 @@
   "author": "helgatheviking",
   "dependencies": {
     "@react-hooks-library/core": "^0.6.2",
-    "@wordpress/api-fetch": "^6.54.0",
-    "@wordpress/data": "^9.27.0",
-    "@wordpress/element": "^5.34.0",
-    "@wordpress/html-entities": "^3.57.0",
-    "@wordpress/i18n": "^4.57.0",
-    "@wordpress/url": "^3.58.0",
+    "@wordpress/api-fetch": "^7.12.0",
+    "@wordpress/data": "^10.12.0",
+    "@wordpress/element": "^6.12.0",
+    "@wordpress/html-entities": "^4.12.0",
+    "@wordpress/i18n": "^5.12.0",
+    "@wordpress/url": "^4.12.0",
     "interweave": "^13.1.0",
-    "use-debounce": "^10.0.0"
+    "use-debounce": "^10.0.4"
   },
   "devDependencies": {
     "@lodder/grunt-postcss": "^3.1.1",
     "@woocommerce/dependency-extraction-webpack-plugin": "^3.0.1",
-    "@woocommerce/eslint-plugin": "^2.2.0",
-    "@wordpress/scripts": "^27.8.0",
-    "autoprefixer": "^10.4.19",
-    "eslint-import-resolver-webpack": "^0.13.8",
+    "@woocommerce/eslint-plugin": "^2.3.0",
+    "@wordpress/scripts": "^30.5.1",
+    "autoprefixer": "^10.4.20",
+    "eslint-import-resolver-webpack": "^0.13.9",
     "grunt": "~1.6.1",
     "grunt-contrib-clean": "^2.0.1",
     "grunt-contrib-compress": "^2.0.0",
@@ -47,7 +47,7 @@
     "jshint-stylish": "~2.2.1",
     "load-grunt-tasks": "~5.1.0",
     "node-sass": "^9.0.0",
-    "postcss": "^8.4.38",
+    "postcss": "^8.4.49",
     "prettier": "npm:wp-prettier@^3.0.3"
   },
   "scripts": {
