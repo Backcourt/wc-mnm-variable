@@ -4,7 +4,7 @@
  *
  * @package  WooCommerce Mix and Match Products/Admin/Meta-Boxes/Product
  * @since    1.0.0
- * @version  1.0.0
+ * @version  2.0.5
  */
 
 // Exit if accessed directly.
@@ -31,6 +31,9 @@ class WC_MNM_Variable_Meta_Box_Variable_Product_Data {
 
 		// Creates the panel for selecting product options.
 		add_action( 'woocommerce_product_data_panels', [ __CLASS__, 'product_data_panel' ] );
+
+		// Fix the packing mode option display.
+		add_filter( '_wc_mnm_backcompat_product_get_packing_mode', [ __CLASS__, 'fix_packing_mode' ] );
 
 		// Adds the vmnm product options.
 		// add_action( 'wc_mnm_admin_variable_product_options', [ __CLASS__, 'share_content_options' ], 20, 2 );
@@ -107,6 +110,17 @@ class WC_MNM_Variable_Meta_Box_Variable_Product_Data {
 		return $tabs;
 	}
 
+	/**
+	 * Fix the value of the packing mode. 
+	 * It's pulled from core MNM product object.
+	 */
+	public static function fix_packing_mode( $mode ) {
+		global 	$vmnm_product_object;
+		if ( $vmnm_product_object->get_id() ) {
+			$mode = $vmnm_product_object->get_packing_mode( 'edit' );
+		};
+		return $mode;
+	}
 
 	/**
 	 * Write panel.
