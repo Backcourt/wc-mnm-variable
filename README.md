@@ -2,7 +2,7 @@
 
 ## Quickstart
 
-This is a developmental repo. Clone this repo and run `npm install && npm run build`   
+This is a developmental repo. Clone this repo and run `composer install && npm install && npm run build`   
 OR    
 |[Download latest release](https://github.com/kathyisawesome/wc-mnm-variable/releases/latest)|
 |---|

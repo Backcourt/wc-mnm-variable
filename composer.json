@@ -1,42 +1,73 @@
 {
-  "name": "kathyisawesome/wc-mnm-variable",
-  "description": "Variable Mix and Match Products.",
-  "homepage": "https://github.com/kathyisawesome/wc-mnm-variable",
-  "type": "wordpress-plugin",
-  "license": "GPL-3.0-or-later",
-  "require-dev": {
-      "woocommerce/woocommerce-sniffs": "^1.0.0",
-      "wp-cli/i18n-command": "^2.5"
+    "name": "kathyisawesome/wc-mnm-variable",
+    "description": "Variable Mix and Match Products.",
+    "homepage": "https://github.com/kathyisawesome/wc-mnm-variable",
+    "type": "wordpress-plugin",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "helgatheviking",
+            "email": "507025+helgatheviking@users.noreply.github.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/kathyisawesome/wc-mnm-variable/issues",
+        "source": "https://github.com/kathyisawesome/wc-mnm-variable"
+    },
+    "require": {
+        "afragen/git-updater-lite": "^1"
+    },
+    "require-dev": {
+        "brianhenryie/strauss": "^0.20.1",
+        "woocommerce/woocommerce-sniffs": "1.0.0",
+        "wp-cli/i18n-command": "^2.6"
     },
     "scripts": {
-      "makepot-audit": [
-        "wp --allow-root i18n make-pot . languages/wc-mnm-variable.pot --slug=wc-mnm-variable --exclude=\".github,.wordpress-org,node_modules,vendor,build,deploy\" '--headers=[\"Report-Msgid-Bugs-To: https://woocommerce.com/my-account/tickets/\"]'"
-      ],
-      "makepot": [
-        "@makepot-audit --skip-audit"
-      ],
-      "phpcs": [
-          "phpcs . -s -p -n --extensions=php"
-      ],
-      "phpcs-pre-commit": [
-        "phpcs . -s -p -n"
-      ],
-      "phpcb": [
-          "phpcbf . --extensions=php"
-      ]
+        "makepot-audit": [
+            "wp --allow-root i18n make-pot . languages/wc-mnm-variable.pot --slug=wc-mnm-variable --exclude=\".github,.wordpress-org,build,deploy,node_modules,packages,vendor\" --headers='{\"Report-Msgid-Bugs-To\":\"https://github.com/kathyisawesome/wc-mnm-variable/new\"}'"
+        ],
+        "makepot": [
+            "@makepot-audit --skip-audit"
+        ],
+        "phpcs": [
+            "phpcs . -s -p -n"
+        ],
+        "phpcs-pre-commit": [
+            "phpcs . -s -p -n"
+        ],
+        "phpcb": [
+            "phpcbf . "
+        ],
+        "prefix-namespaces": [
+            "strauss",
+            "@php composer dump-autoload"
+        ],
+        "post-install-cmd": [
+            "@prefix-namespaces"
+        ],
+        "post-update-cmd": [
+            "@prefix-namespaces"
+        ]
     },
     "config": {
-      "allow-plugins": {
-          "composer/installers": true,
-          "dealerdirect/phpcodesniffer-composer-installer": true
-      }
+        "allow-plugins": {
+            "composer/installers": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "extra": {
-      "scripts-description": {
-          "makepot-audit": "Make a .pot file with audit to find possible mistakes in translatable strings",
-          "makepot": "Make a .pot file without checking for mistakes",
-          "phpcs": "Analyze code against the WordPress coding standards with PHP_CodeSniffer",
-          "phpcb": "Fix coding standards warnings/errors automatically with PHP Code Beautifier"
-      }
+        "scripts-description": {
+            "makepot": "Generate a .pot file for translation",
+            "makepot-audit": "Generate a .pot file for translation. Dry run.",
+            "phpcs": "Analyze code against the WordPress coding standards with PHP_CodeSniffer",
+            "phpcb": "Fix coding standards warnings/errors automatically with PHP Code Beautifier",
+            "prefix-namespaces": "Prefix namespaces of dependencies with Strauss"
+        },
+        "strauss": {
+            "target_directory": "packages",
+            "namespace_prefix": "Backcourt\\MNMVariable\\Vendor",
+            "classmap_prefix": "Backcourt_MNM_Variable_Vendor_",
+            "constant_prefix": "BCMNMVar_"
+        }
     }
 }

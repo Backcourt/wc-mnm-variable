@@ -206,7 +206,7 @@ module.exports = function ( grunt ) {
 					'!composer.lock',
 					'!vendor/**',
 					'!none',
-					'!includes/compatibility/backcompatibility/**',
+					'!bin/**',
 				],
 				dest: 'build/',
 			},

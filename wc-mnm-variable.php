@@ -3,22 +3,23 @@
  * Plugin Name: WooCommerce Mix and Match - Variable Mix and Match
  * Plugin URI: https://github.com/kathyisawesome/wc-mnm-variable
  * Description: Variable mix and match product type
- * Version: 2.0.5
+ * Version: 2.1.0
  * Author: Kathy Darling
  * Author URI: http://kathyisawesome.com/
  * Text Domain: wc-mnm-variable
  * Domain Path: /languages
  *
- * GitHub Plugin URI: https://github.com/kathyisawesome/wc-mnm-variable
- * Primary Branch: trunk
- * Release Asset: true
- *
- * WC requires at least: 8.0.0
- * WC tested up to: 8.3.0
- * Requires at least: 6.2.0
+ * Update URI: kathyisawesome/wc-mnm-variable
+ * 
  * Requires PHP: 8.0
  *
- * Copyright: © 2022 Kathy Darling
+ * Requires at least: 6.6.0
+ * Tested up to: 6.7.0
+ * 
+ * WC requires at least: 9.4.0
+ * WC tested up to: 9.6.0
+ *
+ * Copyright: © 2025 Kathy Darling
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
@@ -26,7 +27,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Automattic\Jetpack\Constants;
+use \Automattic\Jetpack\Constants;
+use \Backcourt\MNMVariable\Vendor\Fragen;
+
+ /**
+  * Add Git Updater Lite
+  */
+if ( file_exists( __DIR__ . '/packages/autoload.php' ) ) {
+	require_once __DIR__ . '/packages/autoload.php';
+	( new Fragen\Git_Updater\Lite( __FILE__ ) )->run();
+}
 
 class WC_MNM_Variable {
 

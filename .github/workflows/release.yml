@@ -48,7 +48,7 @@ jobs:
       - name: "Sets up PHP with Composer."
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.1'
           tools: composer
         env:
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -73,7 +73,7 @@ jobs:
 
       - name: "Install Composer dependencies with development dependencies."
         run: |
-          composer install --no-interaction --prefer-dist --no-scripts
+          composer install --no-interaction --prefer-dist 
 
       - name: "Setup NodeJS."
         uses: actions/setup-node@v4

@@ -1,14 +1,52 @@
-assets/css/
-assets/dist/
-build/
-build/
-deploy/
-languages/
-node_modules/
-vendor/
-assets/js/frontend/*.min.js
-assets/js/admin/*.min.js
-bookmarks.json
-composer.lock
+# Editors
+project.xml
+project.properties
+/nbproject/private/
+.buildpath
+.project
+.settings*
+sftp-config.json
+.idea
+
+# Grunt
+/node_modules/
+/deploy/
+/build/
+npm-debug.log
+
+# Sass
+.sass-cache/
+
+# OS X metadata
+.DS_Store
+
+# Windows junk
+Thumbs.db
+
+# ApiGen
+/wc-apidocs/
+
+# Unit tests
+/tmp
+
+# Logs
+/logs
 package-lock.json
+
+# Compiled assets
+assets/
+languages/
+none
+
+# Editor
+.vscode/
+
+# Composer
+/vendor/*
+/packages/*
+
+# Temporary files
 *.bak
+
+# BrianHenryIE/Strauss - PHP Namespace Renamer
+bin/strauss.phar
