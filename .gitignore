@@ -8,11 +8,10 @@ project.properties
 sftp-config.json
 .idea
 
-# Grunt
+# NPM
 /node_modules/
-/deploy/
-/build/
 npm-debug.log
+package-lock.json
 
 # Sass
 .sass-cache/
@@ -34,7 +33,8 @@ Thumbs.db
 package-lock.json
 
 # Compiled assets
-assets/
+deploy/
+build/
 languages/
 none
 
@@ -44,6 +44,7 @@ none
 # Composer
 /vendor/*
 /packages/*
+composer.lock
 
 # Temporary files
 *.bak
