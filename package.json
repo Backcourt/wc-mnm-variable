@@ -46,9 +46,9 @@
     "grunt-wp-i18n": "~1.0.3",
     "jshint-stylish": "~2.2.1",
     "load-grunt-tasks": "~5.1.0",
-    "node-sass": "^9.0.0",
     "postcss": "^8.4.49",
-    "prettier": "npm:wp-prettier@^3.0.3"
+    "prettier": "npm:wp-prettier@^3.0.3",
+    "sass": "^1.88.0"
   },
   "scripts": {
     "build:js": "wp-scripts build",
