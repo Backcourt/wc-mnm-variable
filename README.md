@@ -4,7 +4,7 @@
 
 This is a developmental repo. Clone this repo and run `composer install && npm install && npm run build`   
 OR    
-|[Download latest release](https://github.com/kathyisawesome/wc-mnm-variable/releases/latest)|
+|[Download latest release](https://github.com/backcourt/wc-mnm-variable/releases/latest)|
 |---|
 
 ### What's This?

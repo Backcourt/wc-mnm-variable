@@ -7,10 +7,10 @@
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kathyisawesome/wc-mnm-variable"
+    "url": "https://github.com/backcourt/wc-mnm-variable"
   },
   "bugs": {
-    "url": "https://github.com/kathyisawesome/wc-mnm-variable/issues"
+    "url": "https://github.com/backcourt/wc-mnm-variable/issues"
   },
   "author": "helgatheviking",
   "dependencies": {

@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WooCommerce Mix and Match - Variable Mix and Match
- * Plugin URI: https://github.com/kathyisawesome/wc-mnm-variable
+ * Plugin URI: https://github.com/backcourt/wc-mnm-variable
  * Description: Variable mix and match product type
  * Version: 2.1.0
  * Author: Kathy Darling
@@ -9,7 +9,7 @@
  * Text Domain: wc-mnm-variable
  * Domain Path: /languages
  *
- * Update URI: kathyisawesome/wc-mnm-variable
+ * Update URI: backcourt/wc-mnm-variable
  * 
  * Requires PHP: 8.0
  *

@@ -1,7 +1,7 @@
 {
-    "name": "kathyisawesome/wc-mnm-variable",
+    "name": "backcourt/wc-mnm-variable",
     "description": "Variable Mix and Match Products.",
-    "homepage": "https://github.com/kathyisawesome/wc-mnm-variable",
+    "homepage": "https://github.com/backcourt/wc-mnm-variable",
     "type": "wordpress-plugin",
     "license": "GPL-3.0-or-later",
     "authors": [
@@ -11,8 +11,8 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/kathyisawesome/wc-mnm-variable/issues",
-        "source": "https://github.com/kathyisawesome/wc-mnm-variable"
+        "issues": "https://github.com/backcourt/wc-mnm-variable/issues",
+        "source": "https://github.com/backcourt/wc-mnm-variable"
     },
     "require": {
         "afragen/git-updater-lite": "^1"
@@ -24,7 +24,7 @@
     },
     "scripts": {
         "makepot-audit": [
-            "wp --allow-root i18n make-pot . languages/wc-mnm-variable.pot --slug=wc-mnm-variable --exclude=\".github,.wordpress-org,build,deploy,node_modules,packages,vendor\" --headers='{\"Report-Msgid-Bugs-To\":\"https://github.com/kathyisawesome/wc-mnm-variable/new\"}'"
+            "wp --allow-root i18n make-pot . languages/wc-mnm-variable.pot --slug=wc-mnm-variable --exclude=\".github,.wordpress-org,build,deploy,node_modules,packages,vendor\" --headers='{\"Report-Msgid-Bugs-To\":\"https://github.com/backcourt/wc-mnm-variable/new\"}'"
         ],
         "makepot": [
             "@makepot-audit --skip-audit"
