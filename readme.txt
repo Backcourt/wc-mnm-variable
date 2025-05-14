@@ -17,5 +17,8 @@ Variable Mix and Match Products
 
 == Changelog ==
 
+= 2.1.0  =
+* New: Automatic updates
+
 = 2.0.0  =
 * Fix: Update for Mix and Match 2.0 Compatibility
