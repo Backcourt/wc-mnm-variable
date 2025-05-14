@@ -139,6 +139,11 @@
 	) {
 		const form = event.data.mnmVariationForm;
 
+		wp.hooks.doAction( 'wc.mnm.onFoundVariation', {
+			'form': event.target,
+			'variation': variation,
+		} );
+
 		if ( variation.variation_is_visible ) {
 			const $target = form.$mnmVariation;
 
@@ -189,6 +194,8 @@
 		form.$form.find( '.reset_variations' ).css( 'visibility', 'hidden' );
 
 		$( event.target ).trigger( 'wc_mnm_variation_reset' );
+
+		wp.hooks.doAction( 'wc.mnm.onResetVariation' );
 	};
 
 	// Uncheeck all radio buttons when reset.
