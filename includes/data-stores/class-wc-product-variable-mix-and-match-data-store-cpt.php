@@ -31,6 +31,7 @@ class WC_Product_Variable_Mix_and_Match_Data_Store_CPT extends WC_Product_Variab
 		'_mnm_packing_mode',
 		'_mnm_weight_cumulative',
 		'_mnm_share_content',
+		'_mnm_default_variation_id',
 	);
 
 	/**
@@ -45,6 +46,7 @@ class WC_Product_Variable_Mix_and_Match_Data_Store_CPT extends WC_Product_Variab
 		'packing_mode'              => '_mnm_packing_mode',
 		'weight_cumulative'         => '_mnm_weight_cumulative',
 		'share_content'             => '_mnm_share_content',
+		'default_variation_id'      => '_mnm_default_variation_id',
 	);
 
 	/**
@@ -142,4 +144,37 @@ class WC_Product_Variable_Mix_and_Match_Data_Store_CPT extends WC_Product_Variab
 	public function get_props_to_meta_keys() {
 		return $this->props_to_meta_keys;
 	}
+
+	/**
+	 * Sync the default variation with default attributes.
+	 *
+	 * @since 2.2.0
+	 * @param WC_Product|int $product Product object or product ID.
+	 */
+	public function sync_default_variation( &$product ) {
+		$this->update_default_variation_from_attributes( $product );
+	}
+
+	/**
+	 * Update the default variation from attributes.
+	 *
+	 * @since 2.2.0
+	 * 
+	 * @param WC_Product $product Product object.
+	 */
+	protected function update_default_variation_from_attributes( &$product ) {
+		
+		$attributes = $product->get_default_attributes();
+	
+		foreach ( $attributes as $key => $value ) { 
+			$attributes[ 'attribute_' . $key ] = $value;
+			unset( $attributes[ $key ] );
+		}
+	
+		$default_variation = $this->find_matching_product_variation( $product, $attributes );
+
+		$product->set_default_variation_id( $default_variation );
+
+	}
+
 }

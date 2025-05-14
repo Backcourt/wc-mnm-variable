@@ -6,7 +6,7 @@
  *
  * @package Mix and Match Products\Classes
  * @since 1.0.0
- * @version 1.0.0
+ * @version 2.2.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -22,8 +22,9 @@ class WC_Product_Variable_Mix_and_Match extends WC_Product_Variable {
 	 * @var array
 	 */
 	protected $extended_data = array(
-		'layout_override' => false,
-		'share_content'   => true,
+		'layout_override'      => false,
+		'share_content'        => true,
+		'default_variation_id' => 0,
 	);
 
 
@@ -121,6 +122,16 @@ class WC_Product_Variable_Mix_and_Match extends WC_Product_Variable {
 	}
 
 	/**
+	 * Default variation getter.
+	 *
+	 * @param  string $context
+	 * @return string
+	 */
+	public function get_default_variation_id( $context = 'view' ) {
+		return $this->get_prop( 'default_variation_id', $context );
+	}
+
+	/**
 	 *--------------------------------------------------------------------------
 	 * Setters
 	 *--------------------------------------------------------------------------
@@ -134,6 +145,17 @@ class WC_Product_Variable_Mix_and_Match extends WC_Product_Variable {
 	 */
 	public function set_share_content( $value ) {
 		$this->set_prop( 'share_content', wc_string_to_bool( $value ) );
+	}
+
+	/**
+	 * Set the product's default variation.
+	 *
+	 * @since  2.2.0
+	 *
+	 * @param  int  $value
+	 */
+	public function set_default_variation_id( $value ) {
+		$this->set_prop( 'default_variation_id', '' !== $value ? absint( $value ) : 0 );
 	}
 
 	/**
@@ -164,5 +186,33 @@ class WC_Product_Variable_Mix_and_Match extends WC_Product_Variable {
 	 */
 	public function is_sharing_content( $context = 'view' ) {
 		return $this->get_share_content( $context );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Sync with children.
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Save a variable product's "Default" variation to the database.
+	 *
+	 * @param WC_Product|int $product Product object or ID for which you wish to sync.
+	 * @param bool           $save If true, the product object will be saved to the DB before returning it.
+	 * @return WC_Product Synced product object.
+	 */
+	public static function sync( $product, $save = true ) {
+		if ( ! is_a( $product, 'WC_Product' ) ) {
+			$product = wc_get_product( $product );
+		}
+		if ( is_a( $product, 'WC_Product_Variable_Mix_and_Match' ) ) {
+			$data_store = WC_Data_Store::load( 'product-' . $product->get_type() );
+
+			$data_store->sync_default_variation( $product );
+			if ( $save ) {
+				$product->save();
+			}
+		}
+		return $product;
 	}
 }
