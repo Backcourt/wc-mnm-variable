@@ -37,6 +37,8 @@ deploy/
 build/
 languages/
 none
+assets/dist/
+assets/css/
 
 # Editor
 .vscode/
