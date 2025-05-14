@@ -9,7 +9,7 @@
  * Text Domain: wc-mnm-variable
  * Domain Path: /languages
  *
- * Update URI: backcourt/wc-mnm-variable
+ * Update URI: https://www.backcourt.io/
  * 
  * Requires PHP: 8.0
  *
@@ -27,10 +27,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use \Automattic\Jetpack\Constants;
-use \Backcourt\MNMVariable\Vendor\Fragen;
+use Automattic\Jetpack\Constants;
+use Backcourt\MNMVariable\Vendor\Fragen;
 
- /**
+/**
   * Add Git Updater Lite
   */
 if ( file_exists( __DIR__ . '/packages/autoload.php' ) ) {
