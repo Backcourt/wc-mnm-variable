@@ -147,12 +147,14 @@
 		if ( variation.variation_is_visible ) {
 			const $target = form.$mnmVariation;
 
-			event.currentTarget
-				.querySelector( '.wc-mix-and-match-root' )
-				.setAttribute( 'data-variation_id', variation.variation_id );
-
 			// Dynamically store variation ID in place that is automatically include in submit data when editing container.
 			event.currentTarget.setAttribute( 'data-variation_id', variation.variation_id );
+
+			const root = event.currentTarget.querySelector( '.wc-mix-and-match-root' );
+
+			if ( root ) {
+				root.setAttribute( 'data-variation_id', variation.variation_id );
+			}
 
 			if (
 				! $target.wcMNMisInViewport() &&
@@ -185,9 +187,11 @@
 			return false;
 		}
 
-		event.currentTarget
-			.querySelector( '.wc-mix-and-match-root' )
-			.setAttribute( 'data-variation_id', '' );
+		const root = event.currentTarget.querySelector( '.wc-mix-and-match-root' );
+
+		if ( root ) {
+			root.setAttribute( 'data-variation_id', '' );
+		}
 
 		form.$selectors.prop( 'checked', false );
 
