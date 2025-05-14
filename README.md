@@ -24,7 +24,3 @@ Experimental mini-extension for [WooCommerce Mix and Match Products](https://woo
 1. This is provided _as is_ and does not receive priority support.
 2. Please test thoroughly before using in production.
 3. Requires Mix and Match 2.7.0+ and WooCommerce 8.0+
-
-### Automatic plugin updates
-
-Plugin updates can be enabled by installing the [Git Updater](https://git-updater.com/) plugin.
