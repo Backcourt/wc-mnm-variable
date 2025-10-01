@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WooCommerce Mix and Match - Variable Mix and Match
+ * Plugin Name: WC Mix and Match - Variable Mix and Match
  * Plugin URI: https://github.com/backcourt/wc-mnm-variable
  * Description: Variable mix and match product type
  * Version: 2.1.0
