@@ -142,7 +142,7 @@ class WC_MNM_Variable_Store_API {
 
 			$data = [];
 
-			$assets = Automattic\WooCommerce\Blocks\Package::container()->get( Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry::class );
+			$assets = \Automattic\WooCommerce\Blocks\Package::container()->get( \Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry::class );
 
 			foreach ( $preloads as $product_id ) {
 
