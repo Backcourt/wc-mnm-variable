@@ -39,6 +39,7 @@ languages/
 none
 assets/dist/
 assets/css/
+*.min.js
 
 # Editor
 .vscode/
