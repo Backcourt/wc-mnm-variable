@@ -75,6 +75,9 @@ class WC_MNM_Variable {
 	 */
 	public function attach_hooks_and_filters() {
 
+		// Declare Features compatibility.
+		add_action( 'before_woocommerce_init', [ $this, 'declare_features_compatibility' ] );
+
 		// Quietly quit if Woo is not active or below required version.
 		if ( ! function_exists( 'wc' ) || version_compare( wc()->version, self::REQ_WC_VERSION ) < 0 ) {
 			return false;
@@ -164,6 +167,24 @@ class WC_MNM_Variable {
 
 		// Handle change variation.
 		add_filter( 'wc_mnm_get_product_from_edit_order_item', [ $this, 'switch_variation' ], 10, 4 );
+	}
+
+	/**
+	 * Declare WooCommerce Features compatibility.
+	 * 
+	 * @since 2.2.0
+	 */
+	public function declare_features_compatibility() {
+
+		if ( ! class_exists( 'Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+			return;
+		}
+
+		// HPOS (Custom Order tables) compatibility.
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', WC_MNM_Variable::get_instance()->get_plugin_basename(), true );
+
+		// Cart/Checkout Blocks compatibility.
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', WC_MNM_Variable::get_instance()->get_plugin_basename(), true );
 	}
 
 	/**
