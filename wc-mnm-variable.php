@@ -541,49 +541,6 @@ class WC_MNM_Variable {
 		return $types;
 	}
 
-
-	/**
-	 * Validates that all MnM items chosen can be added-to-cart before actually starting to add items.
-	 *
-	 * @param  bool $passed_validation
-	 * @param  int  $product_id
-	 * @param  int  $quantity
-	 * @param  int  $variation_id
-	 * @param array $variation - selected attribues
-	 * @param array $cart_item_data - data from session
-	 * @return bool
-	 */
-	public function add_to_cart_validation( $passed_validation, $product_id, $quantity, $variation_id = '', $variations = array(), $cart_item_data = array() ) {
-
-		if ( ! $passed_validation ) {
-			return false;
-		}
-
-		/**
-		 * Prevent child items from getting validated when re-ordering after cart session data has been loaded:
-		 * They will be added by the container item on 'woocommerce_add_to_cart'.
-		 */
-		if ( WC_Mix_and_Match()->cart->is_cart_session_loaded() ) {
-			if ( isset( $cart_item_data['is_order_again_mnm_item'] ) ) {
-				return false;
-			}
-		}
-
-		$product_type = WC_Product_Factory::get_product_type( $product_id );
-
-		if ( 'variable-mix-and-match' === $product_type ) {
-
-			// Validate the variation as a container.
-			$container = wc_get_product( $variation_id );
-
-			$passed_validation = WC_Mix_and_Match()->cart->validate_container_add_to_cart( $container, $quantity, $cart_item_data );
-
-		}
-
-		return $passed_validation;
-	}
-
-
 	/**
 	 * Use the default variable product add to cart handler.
 	 *

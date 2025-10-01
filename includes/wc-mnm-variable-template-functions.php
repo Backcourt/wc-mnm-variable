@@ -51,9 +51,11 @@ if ( ! function_exists( 'wc_mnm_variable_template_add_to_cart' ) ) {
 		$variation_id = isset( $_POST['variation_id'] ) ? absint( $_POST['variation_id'] ) : 0;
 		$configuration = [];
 
-		if ( $variation_id ) {
-			$configuration = WC_Mix_and_Match()->cart->get_posted_container_configuration( $variation_id );
-			$configuration = wp_list_pluck( $configuration, 'quantity' );
+		$variation = wc_get_product( $variation_id );
+
+		if ( wc_mnm_is_product_container_type( $variation ) ) {
+			$configuration = $variation->sanitize_configuration();
+			$configuration = wp_list_pluck( $configuration, 'quantity' );;
 		}
 
 		// Load the template.

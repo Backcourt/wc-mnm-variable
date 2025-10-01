@@ -15,6 +15,7 @@ class WC_Product_Mix_and_Match_Variation extends WC_Product_Variation {
 
 	use WC_MNM_Container;
 	use WC_MNM_Container_Child_Items;
+	use WC_MNM_Container_Validation;
 
 	/**
 	 * Inherited parent properties.
