@@ -440,6 +440,14 @@ trait WC_MNM_Container_Data_Store {
 
 		$child_items_data = array();
 
+		$key = 'child_items_by_category_' . $product->get_id();
+
+		$child_items_data = WC_MNM_Cache::get( $key );
+
+		if ( ! empty( $child_items_data ) ) {
+			return $child_items_data;
+		}
+
 		$cat_ids = $product->get_child_category_ids();
 
 		if ( ! empty( $cat_ids ) ) {
@@ -459,6 +467,8 @@ trait WC_MNM_Container_Data_Store {
 			);
 
 			$child_items_data = wc_get_products( $args );
+
+			WC_MNM_Cache::set( $key, $child_items_data );
 
 		}
 
@@ -481,7 +491,8 @@ trait WC_MNM_Container_Data_Store {
 		global $wpdb;
 
 		// Get from cache if available.
-		$container_ids = 0 < $product_id ? wp_cache_get( 'wc-mnm-container-products-' . $product_id, 'products' ) : false;
+		$key           = 'container_products_' . $product_id;
+		$container_ids = $product_id > 0 ? WC_MNM_Cache::get( $key ) : false;
 
 		if ( false === $container_ids && $product_id > 0 ) {
 
@@ -498,9 +509,8 @@ trait WC_MNM_Container_Data_Store {
 				)
 			);
 
-			if ( 0 < $product_id ) {
-				wp_cache_set( 'wc-mnm-container-products-' . $product_id, $container_ids, 'products' );
-			}
+			WP_MNM_Cache::set( $key, $container_ids );
+
 		}
 
 		return ! empty( $container_ids ) ? array_unique( wp_list_pluck( $container_ids, 'container_id', 'child_item_id' ) ) : array();
@@ -513,7 +523,7 @@ trait WC_MNM_Container_Data_Store {
 	 */
 	protected function clear_caches( &$product ) {
 		parent::clear_caches( $product );
-		wp_cache_delete( 'wc-mnm-child-items-' . $product->get_id(), 'products' );
+		WC_MNM_Cache::flush();
 	}
 
 	/**
