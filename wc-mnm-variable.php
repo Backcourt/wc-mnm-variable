@@ -41,8 +41,8 @@ if ( file_exists( __DIR__ . '/packages/autoload.php' ) ) {
 class WC_MNM_Variable {
 
 	const VERSION         = '2.1.0';
-	const REQ_WC_VERSION  = '8.0.0';
-	const REQ_MNM_VERSION = '2.6.0';
+	const REQ_WC_VERSION  = '9.4.0';
+	const REQ_MNM_VERSION = '2.8.0';
 
 	/**
 	 * The single instance of the class.
