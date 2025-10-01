@@ -250,11 +250,7 @@ trait WC_MNM_Container_Child_Items {
 	 */
 	public function set_child_items( array $data ) {
 
-		// Reindex the existing items by product|variation ID, for easier comparison.
-		$current_items = array();
-		foreach ( $this->get_child_items( 'edit' ) as $child_item ) {
-			$current_items[ $child_item->get_variation_id() ? $child_item->get_variation_id() : $child_item->get_product_id() ] = $child_item;
-		}
+		$current_items = $this->get_child_items( 'edit' );
 
 		$incoming_ids = array();
 		$new_items    = array();
@@ -264,7 +260,7 @@ trait WC_MNM_Container_Child_Items {
 			if ( $data_item instanceof WC_MNM_Child_Item ) {
 				$new_item = $data_item;
 				$new_item->set_container_id( $this->get_id() );
-				$incoming_id = $data_item->get_variation_id() ? $data_item->get_variation_id() : $data_item->get_product_id();
+				$incoming_id = $data_item->get_the_id();
 			} else {
 				$props                 = wp_parse_args(
 					(array) $data_item,
@@ -376,9 +372,7 @@ trait WC_MNM_Container_Child_Items {
 
 					$child_item_id = $child_item->save();
 
-					$mnm_id = $child_item->get_variation_id() ? $child_item->get_variation_id() : $child_item->get_id();
-
-					$new_items[ $mnm_id ] = $child_item;
+					$new_items[ $child_item->get_the_id() ] = $child_item;
 
 					++$menu_order;
 				}
