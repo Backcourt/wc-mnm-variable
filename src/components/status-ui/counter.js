@@ -2,7 +2,7 @@
  * External dependencies
  */
 import { useSelect } from '@wordpress/data';
-import { _nx, _x } from '@wordpress/i18n';
+import { sprintf, _nx, _x } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
