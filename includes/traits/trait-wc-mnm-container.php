@@ -34,9 +34,9 @@ trait WC_MNM_Container {
 	/**
 	 * Array of child item objects.
 	 *
-	 * @var null|WC_MNM_Child_Item[]
+	 * @var false|WC_MNM_Child_Item[]
 	 */
-	private $child_items = null;
+	private $child_items = false;
 
 	/**
 	 * Child items that need deleting are stored here.
@@ -1090,12 +1090,12 @@ trait WC_MNM_Container {
 					);
 
 					if ( ! empty( $this->pricing_data ) ) {
-						foreach ( $this->pricing_data as $child_item_id => $data ) {
+						foreach ( $this->pricing_data as $child_id => $data ) {
 
 							$item_qty = $qty * $data[ 'slots_filled_' . $min_or_max ];
 
 							if ( $item_qty ) {
-								$child_item = $this->get_child_item( $child_item_id );
+								$child_item = $this->get_child_item_by_product_id( $child_id );
 								if ( $child_item ) {
 
 									$price += wc_format_decimal(
@@ -1210,7 +1210,7 @@ trait WC_MNM_Container {
 				return;
 			}
 
-			foreach ( $child_items as $child_item_id => $child_item ) {
+			foreach ( $child_items as $child_id => $child_item ) {
 
 				$child_product    = $child_item->get_product();
 				$child_product_id = $child_product->get_id();

@@ -65,6 +65,10 @@ trait WC_MNM_Product {
 	 * @return string
 	 */
 	public function get_add_to_cart_form_location( $context = 'view' ) {
+		if ( ! wc_mnm_has_legacy_product_template( $this ) ) {
+			return 'default';
+		}
+
 		return $this->get_prop( 'add_to_cart_form_location', $context );
 	}
 

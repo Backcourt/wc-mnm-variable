@@ -223,6 +223,7 @@ trait WC_MNM_Container_Data_Store {
 			$stock          = 'yes' === $manage_stock ? wc_stock_amount( get_post_meta( $id, '_stock', true ) ) : null;
 			$price          = wc_format_decimal( get_post_meta( $id, '_price', true ) );
 			$sale_price     = wc_format_decimal( get_post_meta( $id, '_sale_price', true ) );
+			$ratings_count  = get_post_meta( $id, '_wc_rating_count', true );
 
 			return array(
 				'product_id'     => absint( $id ),
@@ -234,7 +235,7 @@ trait WC_MNM_Container_Data_Store {
 				'onsale'         => $sale_price && $price === $sale_price ? 1 : 0,
 				'stock_quantity' => $stock,
 				'stock_status'   => get_post_meta( $id, '_stock_status', true ),
-				'rating_count'   => array_sum( (array) get_post_meta( $id, '_wc_rating_count', true ) ),
+				'rating_count'   => ! $ratings_count ? 0 : array_sum( (array) $ratings_count ),
 				'average_rating' => get_post_meta( $id, '_wc_average_rating', true ),
 				'total_sales'    => get_post_meta( $id, 'total_sales', true ),
 			);
@@ -299,11 +300,14 @@ trait WC_MNM_Container_Data_Store {
 	 * Reads the child contents from the DB.
 	 *
 	 * @since 2.0.0
+	 * @since 2.2.0 The $force_refresh parameter was added.
 	 *
 	 * @param  int|WC_Product_Mix_and_Match  $product
+	 * @param bool $force_refresh Force refresh the cache.
+	 * 
 	 * @return WC_MNM_Child_Item[]
 	 */
-	public function read_child_items( $product ) {
+	public function read_child_items( $product, $force_refresh = false  ) {
 
 		$child_items = array();
 
@@ -319,11 +323,10 @@ trait WC_MNM_Container_Data_Store {
 			foreach ( $child_items_data as $product_id ) {
 
 				/**
-				 * Products without a DB entry, are keyed by their product ID.
-				 * @ See WC_MNM_Child_Item::get_child_item_id()
+				 * Starting in 2.8, child items are keyed by their product ID.
 				 */
-				if ( ! in_array( 'product-' . $product_id, $child_items ) ) {
-					$child_items[ 'product-' . $product_id ] = new WC_MNM_Child_Item(
+				if ( ! isset( $child_items[$product_id] ) ) {
+					$child_items[$product_id] = new WC_MNM_Child_Item(
 						array(
 							'product_id'   => $product_id,
 							'variation_id' => 0, // Querying by category currently does not support variations.
@@ -338,37 +341,15 @@ trait WC_MNM_Container_Data_Store {
 			// If sharing content we need to query by the parent's ID.
 			$query_container_id = $product->get_parent_id() && $product->is_sharing_content() ? $product->get_parent_id() : $product->get_id();
 
-			$child_items_data = $this->query_child_items_by_container( $query_container_id, 'array' );
+			$child_items_data = $this->query_child_items_by_container( $query_container_id, 'array', $force_refresh );
 
 			if ( ! empty( $child_items_data ) && function_exists( '_prime_post_caches' ) ) {
-				_prime_post_caches( array_unique( wp_list_pluck( $child_items_data, 'p_id' ) ) );
+				_prime_post_caches( array_unique( wp_list_pluck( $child_items_data, 'mnm_id' ) ) );
 			}
 
-			/**
-			 * For now, lets key shared contents the same key construct as category contents.
-			 *
-			 * If you generate the WC_MNM_Child_Item from the child item ID, then the props will be read from the database and container_id will be the ID of the parent variable product, which breaks things.
-			 * If you generate the WC_MNM_Child_Item from props then the array key is the child item DB, but the WC_MNM_Child_Item doesn't have a matching get_id(). Hesitant to set_id() as any
-			 * save actions on the child item object might add info to the DB that we don't need.
-			 *
-			 * Especially struggling in WC_Mix_and_Match_Cart::set_mnm_cart_item() at $container->get_child_item( $cart_item['child_item_id'] ) cannot find the child item with the id + array key mismatch.
-			 */
-			if ( $product->get_parent_id() && $product->is_sharing_content() ) {
-
-				foreach ( $child_items_data as $item_key => $item_data ) {
-					$child_items[ 'product-' . ( $item_data['variation_id'] ? $item_data['variation_id'] : $item_data['product_id'] ) ] = new WC_MNM_Child_Item(
-						array(
-							'product_id'   => $item_data['product_id'],
-							'variation_id' => $item_data['variation_id'],
-							'container_id' => $product->get_id(),
-						),
-						$product
-					);
-				}
-			} else {
-				foreach ( $child_items_data as $item_key => $item_data ) {
-					$child_items[ $item_key ] = new WC_MNM_Child_Item( $item_key, $product );
-				}
+			foreach ( $child_items_data as $item_data ) {
+				$child_item = new WC_MNM_Child_Item( $item_data, $product );
+				$child_items[$child_item->get_the_id()] = $child_item;
 			}
 		}
 
@@ -379,72 +360,72 @@ trait WC_MNM_Container_Data_Store {
 	 * Reads the allowed contents from the DB.
 	 *
 	 * @since 2.0.0
+	 * @since 2.8.0 The `$return` parameter was added.
 	 *
-	 * @param  int|WC_Product_Mix_and_Match  $product
-	 * @param string $return Format of returned data, values: 'ids'|'array'
-	 * @return array() - map of [ child item ids => child product ids ] OR map of full props ex: [ child item ids => [ child_item_id, p_id, product_id, variation_id, container_id, menu_order ] ]
+	 * @param int|WC_Product_Mix_and_Match $product The product or product ID to read the contents for.
+	 * @param string $return Format of returned data, values: 'ids'|'array'.
+	 * @param bool $force_refresh Force refresh the cache.
+	 * @return array When $return = 'ids': returns a map of [ (int) child item ids => (int) child product ids ].
+	 *               When $return = 'array': returns a map of full props ex: [ child item ids => [ child_item_id, p_id, product_id, variation_id, container_id, menu_order ] ].
+	 *
+	 * When $return = 'ids': returns a map of [ (int) child item ids => (int) child product ids ].
+	 * Example:
+	 *   array(
+	 *        134 => 43
+	 *    );
+	 *
+	 * When $return = 'array': returns a map of full props ex: [ child item ids => [ child_item_id, p_id, product_id, variation_id, container_id, menu_order ] ].
+	 * Example:
+	 *   array(
+	 *        134 => array(                             // ID of child item.
+	 *            'p_id'         => 42, // Singular ID of child product (variation or product id).
+	 *            'product_id'   => 15, // Product ID.
+	 *            'variation_id' => 43, // Variation ID.
+	 *            'container_id' => 99, // Product ID of container product.
+	 *            'menu_order'   => 1,  // The sort order of the child item.
+	 *        )
+	 *    )
 	 */
-	public function query_child_items_by_container( $product, $return = 'ids' ) {
+	public function query_child_items_by_container( $product, $return = 'ids', $force_refresh = false ) {
 
 		$product_id = $product instanceof WC_Product ? $product->get_id() : absint( $product );
 
 		global $wpdb;
 
 		// Get from cache if available.
-		$child_items = 0 < $product_id ? wp_cache_get( 'wc-mnm-child-items-' . $product_id, 'products' ) : false;
+		$key         = 'child_items_' . $product_id;
+		$child_items = 0 < $product_id ? WC_MNM_Cache::get( $key ) : false;
 
-		$results = array();
-
-		if ( false === $child_items ) {
+		if ( $force_refresh || (false === $child_items && $product_id > 0 ) ) {
 
 			$child_items = $wpdb->get_results(
 				$wpdb->prepare(
 					"
-					SELECT items.child_item_id, items.product_id as p_id,
+					SELECT items.child_item_id, items.product_id as mnm_id,
 					CASE
 						WHEN p.post_parent > 0 THEN p.post_parent
-						ELSE items.product_id 
+						ELSE items.product_id
 						END AS product_id,
 					CASE
 						WHEN p.post_parent > 0 THEN items.product_id
 						ELSE 0
 						END AS variation_id,
 	   			items.container_id, items.menu_order
-				FROM {$wpdb->prefix}wc_mnm_child_items AS items 
+				FROM {$wpdb->prefix}wc_mnm_child_items AS items
 				INNER JOIN {$wpdb->prefix}posts as p ON items.product_id = p.ID
 				WHERE items.container_id = %d
-				GROUP BY items.product_id
 				ORDER BY items.menu_order ASC",
 					$product_id
-				)
+				),
+				ARRAY_A
 			);
 
-			foreach ( $child_items as $child_item ) {
-				wp_cache_set( 'wc-mnm-child-item-' . $child_item->child_item_id, $child_item, 'wc-mnm-child-items' );
-			}
+			WC_MNM_Cache::set( $key, $child_items );
 
-			if ( 0 < $product_id ) {
-				wp_cache_set( 'wc-mnm-child-items-' . $product_id, $child_items, 'products' );
-			}
 		}
 
-		if ( ! empty( $child_items ) ) {
-			foreach ( $child_items as $child_item ) {
-				if ( 'array' === $return ) {
-					$results[ $child_item->child_item_id ] = array(
-						'p_id'         => $child_item->p_id, // The product ID or variation ID, unique post ID for priming caches.
-						'product_id'   => $child_item->product_id,
-						'variation_id' => $child_item->variation_id,
-						'container_id' => $child_item->container_id,
-						'menu_order'   => $child_item->menu_order,
-					);
-				} else {
-					$results[ $child_item->child_item_id ] = $child_item->p_id;
-				}
-			}
-		}
+		return 'ids' === $return ? wp_list_pluck( $child_items, 'mnm_id', 'child_item_id' ) : $child_items;
 
-		return $results;
 	}
 
 	/**
@@ -466,7 +447,8 @@ trait WC_MNM_Container_Data_Store {
 			$args = apply_filters(
 				'wc_mnm_query_products_by_categories_args',
 				array(
-					'type'                 => WC_Mix_and_Match_Helpers::get_supported_product_types(),
+					'query_id'             => 'wc_mnm_query_child_items_by_category',
+					'type'                 => WC_MNM_Helpers::get_supported_product_types(),
 					'category_id'          => (array) $cat_ids,
 					'orderby'              => 'title',
 					'order'                => 'ASC',
@@ -487,6 +469,8 @@ trait WC_MNM_Container_Data_Store {
 	/**
 	 * Find the MNM products a product belongs to.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  int|WC_Product  $product
 	 * @return array() - map of child item ids / Mix and Match product ids
 	 */
@@ -499,18 +483,18 @@ trait WC_MNM_Container_Data_Store {
 		// Get from cache if available.
 		$container_ids = 0 < $product_id ? wp_cache_get( 'wc-mnm-container-products-' . $product_id, 'products' ) : false;
 
-		if ( false === $container_ids ) {
+		if ( false === $container_ids && $product_id > 0 ) {
 
 			$container_ids = $wpdb->get_results(
 				$wpdb->prepare(
 					"
 				SELECT items.child_item_id, items.container_id
-				FROM {$wpdb->prefix}wc_mnm_child_items AS items 
+				FROM {$wpdb->prefix}wc_mnm_child_items AS items
 				INNER JOIN {$wpdb->prefix}posts as p ON items.product_id = p.ID
 				WHERE items.product_id = %d OR p.post_parent = %d
 				ORDER BY items.menu_order ASC",
 					$product_id,
-					$product_id
+					$product_id,
 				)
 			);
 
