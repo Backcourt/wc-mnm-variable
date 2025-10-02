@@ -1,7 +1,7 @@
 {
 	"title": "WC Mix and Match Products - Variable Mix and Match",
 	"name": "wc-mnm-variable",
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"description": "Make different sized Mix and Match packs all in once place!",
 	"main": "Gruntfile.js",
 	"license": "GPL-3.0",
