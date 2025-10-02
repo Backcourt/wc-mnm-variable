@@ -1,4 +1,4 @@
-# WooCommerce Mix and Match: Variable Mix and Match Products
+# WC Mix and Match: Variable Mix and Match Products
 
 ## Quickstart
 
