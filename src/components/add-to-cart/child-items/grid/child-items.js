@@ -14,9 +14,14 @@ const ChildItems = ( { childItems } ) => {
 	const numColumns = WC_MNM_ADD_TO_CART_VARIATION_PARAMS.num_columns;
 
 	// Get extra classes safely.
-	const extraClasses = Array.isArray( WC_MNM_ADD_TO_CART_VARIATION_PARAMS?.__experimental_grid_row_classes )
-		? WC_MNM_ADD_TO_CART_VARIATION_PARAMS.__experimental_grid_row_classes.join( ' ' )
-		: WC_MNM_ADD_TO_CART_VARIATION_PARAMS?.__experimental_grid_row_classes || '';
+	const extraClasses = Array.isArray(
+		WC_MNM_ADD_TO_CART_VARIATION_PARAMS?.__experimental_grid_row_classes
+	)
+		? WC_MNM_ADD_TO_CART_VARIATION_PARAMS.__experimental_grid_row_classes.join(
+				' '
+		  )
+		: WC_MNM_ADD_TO_CART_VARIATION_PARAMS?.__experimental_grid_row_classes ||
+		  '';
 
 	return (
 		<ul
@@ -28,7 +33,9 @@ const ChildItems = ( { childItems } ) => {
 				has-flex
 				columns-${ numColumns }
 				${ extraClasses }
-			`.trim().replace( /\s+/g, ' ' ) } // Normalize spacing.
+			`
+				.trim()
+				.replace( /\s+/g, ' ' ) } // Normalize spacing.
 		>
 			{ childItems.map( ( childItem, index ) => {
 				return (

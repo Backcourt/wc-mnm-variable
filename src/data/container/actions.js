@@ -7,8 +7,15 @@ import { useDispatch } from '@wordpress/data';
  * Internal dependencies
  */
 import TYPES from './action-types';
-const { SET_CONTAINER_ID, HYDRATE_CONTAINER, RESET_CONFIG, SET_CONTEXT, SET_CONFIG, UPDATE_QTY, VALIDATE } =
-	TYPES;
+const {
+	SET_CONTAINER_ID,
+	HYDRATE_CONTAINER,
+	RESET_CONFIG,
+	SET_CONTEXT,
+	SET_CONFIG,
+	UPDATE_QTY,
+	VALIDATE,
+} = TYPES;
 
 /**
  * Set the container ID.
@@ -18,25 +25,27 @@ const { SET_CONTAINER_ID, HYDRATE_CONTAINER, RESET_CONFIG, SET_CONTEXT, SET_CONF
 export const setContainerId =
 	( containerId ) =>
 	( { select, dispatch } ) => {
-
 		// If we are switching the variation, we will clear the config - except on first load.
-		if ( null !== select.getContainerId() && containerId !== select.getContainerId() && select.hasConfiguration() ) {
-
+		if (
+			null !== select.getContainerId() &&
+			containerId !== select.getContainerId() &&
+			select.hasConfiguration()
+		) {
 			dispatch( { type: RESET_CONFIG } );
 
 			// Notify users.
-			window.alert( WC_MNM_ADD_TO_CART_VARIATION_PARAMS.i18n_form_cleared );
+			window.alert(
+				WC_MNM_ADD_TO_CART_VARIATION_PARAMS.i18n_form_cleared
+			);
 		}
 
 		dispatch( { type: SET_CONTAINER_ID, payload: { containerId } } );
 
 		// Conditionally take actions if we have already resolved a container.
 		if ( select.hasContainer() ) {
-
 			// The resolver only dispatches HYPDATE (and therefore VALIDATE) on first resolution and we need to re-validate/update messaging on every switch.
 			dispatch( { type: VALIDATE } );
 		}
-
 	};
 
 // Set the product.
@@ -56,15 +65,14 @@ export const resetConfig =
 	};
 
 // Set the validation context.
-export const setContext =
-	(context) => {
-		return {
-			type: SET_CONTEXT,
-			payload: {
-				context,
-			},
-		};
+export const setContext = ( context ) => {
+	return {
+		type: SET_CONTEXT,
+		payload: {
+			context,
+		},
 	};
+};
 
 // Update the entire config at once.
 export const setConfig =

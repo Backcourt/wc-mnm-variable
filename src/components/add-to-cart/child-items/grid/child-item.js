@@ -19,9 +19,14 @@ const ChildItem = ( { loopClass } ) => {
 			: childItem.permalink;
 
 	// Get extra classes safely.
-	const extraClasses = Array.isArray( WC_MNM_ADD_TO_CART_VARIATION_PARAMS?.__experimental_grid_column_classes )
-		? WC_MNM_ADD_TO_CART_VARIATION_PARAMS.__experimental_grid_column_classes.join( ' ' )
-		: WC_MNM_ADD_TO_CART_VARIATION_PARAMS?.__experimental_grid_column_classes || '';
+	const extraClasses = Array.isArray(
+		WC_MNM_ADD_TO_CART_VARIATION_PARAMS?.__experimental_grid_column_classes
+	)
+		? WC_MNM_ADD_TO_CART_VARIATION_PARAMS.__experimental_grid_column_classes.join(
+				' '
+		  )
+		: WC_MNM_ADD_TO_CART_VARIATION_PARAMS?.__experimental_grid_column_classes ||
+		  '';
 
 	return (
 		<li
@@ -33,7 +38,9 @@ const ChildItem = ( { loopClass } ) => {
 				${ in_stock ? 'instock' : 'outofstock' }
 				post-${ childItem.child_id }
 				${ extraClasses }
-			`.trim().replace( /\s+/g, ' ' ) } // Normalize spacing.
+			`
+				.trim()
+				.replace( /\s+/g, ' ' ) } // Normalize spacing.
 		>
 			{ WC_MNM_ADD_TO_CART_VARIATION_PARAMS.display_thumbnails && (
 				<ProductImage

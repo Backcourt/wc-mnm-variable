@@ -15,7 +15,7 @@ import { CONTAINER_STORE_KEY } from '@data';
 
 import ProductStockStatus from './product-stock-status';
 
-const ProductQty = ({
+const ProductQty = ( {
 	disabled = false,
 	min = 0,
 	max = '',
@@ -26,18 +26,22 @@ const ProductQty = ({
 
 	const Element = element;
 
-	const { containerQty, isInStock, maxContainerSize, quantity, isFull } = useSelect(
-		( select ) => {
+	const { containerQty, isInStock, maxContainerSize, quantity, isFull } =
+		useSelect( ( select ) => {
 			return {
 				containerQty: select( CONTAINER_STORE_KEY ).getTotalQuantity(),
 				isInStock: select( CONTAINER_STORE_KEY ).isInStock(),
 				maxContainerSize:
 					select( CONTAINER_STORE_KEY ).getMaxContainerSize(),
-				quantity: select( CONTAINER_STORE_KEY ).getQty( childItem.child_id ),
-				isFull: select( CONTAINER_STORE_KEY ).getMaxContainerSize() && select( CONTAINER_STORE_KEY ).getTotalQuantity() >= select( CONTAINER_STORE_KEY ).getMaxContainerSize(),
+				quantity: select( CONTAINER_STORE_KEY ).getQty(
+					childItem.child_id
+				),
+				isFull:
+					select( CONTAINER_STORE_KEY ).getMaxContainerSize() &&
+					select( CONTAINER_STORE_KEY ).getTotalQuantity() >=
+						select( CONTAINER_STORE_KEY ).getMaxContainerSize(),
 			};
-		}
-	);
+		} );
 
 	// Update the quantity in the store.
 	const { updateQty } = useDispatch( CONTAINER_STORE_KEY, [ quantity ] );
@@ -60,7 +64,6 @@ const ProductQty = ({
 	 * @param qty Get the item quantity.
 	 */
 	const handleQuantityChange = ( qty ) => {
-
 		const newQty = validateQuantity( qty );
 
 		// Only commit to data store if the value has changed.
@@ -85,9 +88,11 @@ const ProductQty = ({
 	const errorRef = useRef( null );
 
 	// Should the item show quantity input.
-	const isSelectable = isInStock && childItem.purchasable && childItem.in_stock;
+	const isSelectable =
+		isInStock && childItem.purchasable && childItem.in_stock;
 
-	const isTabular = 'tabular' === WC_MNM_ADD_TO_CART_VARIATION_PARAMS.display_layout;
+	const isTabular =
+		'tabular' === WC_MNM_ADD_TO_CART_VARIATION_PARAMS.display_layout;
 
 	// Listen for changes to the validation errors and display.
 	useEffect( () => {
@@ -133,8 +138,7 @@ const ProductQty = ({
 		e.target.disabled = newQty <= min;
 
 		// Select the next sibling element.
-		e.target.nextElementSibling.disabled = (newQty >= max) || isFull;
-
+		e.target.nextElementSibling.disabled = newQty >= max || isFull;
 	};
 
 	/**
@@ -152,11 +156,10 @@ const ProductQty = ({
 		}
 
 		// Conditionally disable buttons.
-		e.target.disabled = (max && newQty >= max) || isFull;
+		e.target.disabled = ( max && newQty >= max ) || isFull;
 
 		// Select the previous sibling element.
 		e.target.previousElementSibling.disabled = newQty <= min;
-
 	};
 
 	/**
@@ -191,7 +194,7 @@ const ProductQty = ({
 			max = Math.min( max, maxContainerSize );
 		}
 
-		const isDecreasing   = newQty < prevQty;
+		const isDecreasing = newQty < prevQty;
 
 		// Validation.
 		switch ( true ) {
@@ -199,7 +202,6 @@ const ProductQty = ({
 			case maxContainerSize > 0 && potentialQty > maxContainerSize:
 				// Handle overfull container.
 				if ( containerQty > maxContainerSize ) {
-
 					if ( ! isDecreasing ) {
 						newQty = Math.min(
 							prevQty - ( containerQty - maxContainerSize ),
@@ -251,7 +253,6 @@ const ProductQty = ({
 
 			// Check the item quantity it not below it's max.
 			case max > 0 && currentQty > max:
-
 				if ( ! isDecreasing ) {
 					newQty = max;
 				}
@@ -285,7 +286,7 @@ const ProductQty = ({
 	if ( ! isSelectable ) {
 		if ( isTabular ) {
 			return (
-				<Element className="wc-mnm-variation__child-item-quantity product-quantity" >
+				<Element className="wc-mnm-variation__child-item-quantity product-quantity">
 					<ProductStockStatus
 						status={ childItem.availability.class }
 						availability={ childItem.availability.availability }
@@ -295,7 +296,6 @@ const ProductQty = ({
 		} else {
 			return;
 		}
-
 	}
 
 	// Required Hidden Quantity.
@@ -311,7 +311,7 @@ const ProductQty = ({
 			childItem.name
 		);
 		return (
-			<Element className="wc-mnm-variation__child-item-quantity product-quantity" >
+			<Element className="wc-mnm-variation__child-item-quantity product-quantity">
 				<p className="required-quantity child_item__quantity">
 					<Interweave tagName="span" content={ requiredText } />
 					<input
@@ -353,7 +353,9 @@ const ProductQty = ({
 						className="qty mnm-quantity wc-mnm-variation__child-item-quantity_input"
 						data-required={ false }
 						data-title={ childItem.name }
-						disabled={ isFull || ( ( max + containerQty) > maxContainerSize ) }
+						disabled={
+							isFull || max + containerQty > maxContainerSize
+						}
 						type="checkbox"
 						name={ `mnm_quantity[${ childItem.child_id }]` }
 						value={ max }

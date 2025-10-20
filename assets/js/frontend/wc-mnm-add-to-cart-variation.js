@@ -22,9 +22,9 @@
 			$form.data( 'validation_context' ) || 'add-to-cart';
 
 		// Methods.
-		self.onFoundVariation    = self.onFoundVariation.bind( self );
+		self.onFoundVariation = self.onFoundVariation.bind( self );
 		self.checkRadioVariation = self.checkRadioVariation.bind( self );
-		self.onReload            = self.onReload.bind( self );
+		self.onReload = self.onReload.bind( self );
 
 		// Events.
 		$form.on(
@@ -58,34 +58,47 @@
 		// Listen for wp.Hooks actions.
 
 		// Disabled add to cart button and stash the config on the form attributes for use when saving in admin.
-		wp.hooks.addAction( 'wc.mnm.container.container-updated', 'wc-mix-and-match', function( updatedState ) {
+		wp.hooks.addAction(
+			'wc.mnm.container.container-updated',
+			'wc-mix-and-match',
+			function ( updatedState ) {
+				self.$addToCart.toggleClass(
+					'disabled',
+					! updatedState.passesValidation
+				);
 
-			self.$addToCart.toggleClass( 'disabled', ! updatedState.passesValidation );
-
-			// Stash the config on the form as a JSON string.
-			$form[0].setAttribute( 'data-updated-config', JSON.stringify(updatedState.config) );
-		} );
+				// Stash the config on the form as a JSON string.
+				$form[ 0 ].setAttribute(
+					'data-updated-config',
+					JSON.stringify( updatedState.config )
+				);
+			}
+		);
 
 		// Add data to ajax submit when editing a container.
-		wp.hooks.addFilter( 'wc.mnm.container.update_order_item_data', 'wc-mix-and-match', function ( data ) {
-			// Parse the JSON back into an object.
-			let config = $form[0].getAttribute( 'data-updated-config' );
-			let parsed = {};
+		wp.hooks.addFilter(
+			'wc.mnm.container.update_order_item_data',
+			'wc-mix-and-match',
+			function ( data ) {
+				// Parse the JSON back into an object.
+				let config = $form[ 0 ].getAttribute( 'data-updated-config' );
+				let parsed = {};
 
-			try {
-				parsed = JSON.parse(config);
-			} catch (e) {
-				window.console.log( 'Configuration is not valid JSON', e );
+				try {
+					parsed = JSON.parse( config );
+				} catch ( e ) {
+					window.console.log( 'Configuration is not valid JSON', e );
+				}
+
+				const newData = {
+					variation_id:
+						$form[ 0 ].getAttribute( 'data-variation_id' ) || 0,
+					config: parsed,
+				};
+
+				return { ...data, ...newData };
 			}
-
-			const newData = {
-				variation_id: $form[0].getAttribute( 'data-variation_id' ) || 0,
-				config: parsed,
-			};
-
-			return { ...data, ...newData };
-		} );
-
+		);
 	};
 
 	/**
@@ -140,20 +153,28 @@
 		const form = event.data.mnmVariationForm;
 
 		wp.hooks.doAction( 'wc.mnm.onFoundVariation', {
-			'form': event.target,
-			'variation': variation,
+			form: event.target,
+			variation: variation,
 		} );
 
 		if ( variation.variation_is_visible ) {
 			const $target = form.$mnmVariation;
 
 			// Dynamically store variation ID in place that is automatically include in submit data when editing container.
-			event.currentTarget.setAttribute( 'data-variation_id', variation.variation_id );
+			event.currentTarget.setAttribute(
+				'data-variation_id',
+				variation.variation_id
+			);
 
-			const root = event.currentTarget.querySelector( '.wc-mix-and-match-root' );
+			const root = event.currentTarget.querySelector(
+				'.wc-mix-and-match-root'
+			);
 
 			if ( root ) {
-				root.setAttribute( 'data-variation_id', variation.variation_id );
+				root.setAttribute(
+					'data-variation_id',
+					variation.variation_id
+				);
 			}
 
 			if (
@@ -187,7 +208,9 @@
 			return false;
 		}
 
-		const root = event.currentTarget.querySelector( '.wc-mix-and-match-root' );
+		const root = event.currentTarget.querySelector(
+			'.wc-mix-and-match-root'
+		);
 
 		if ( root ) {
 			root.setAttribute( 'data-variation_id', '' );
@@ -279,11 +302,13 @@
 		$( document ).on(
 			'wc-mnm-initialize.variable-mix-and-match',
 			'.variable_mnm_form',
-			function (e) {
-
+			function ( e ) {
 				// If the event is from somwhere other than the main product page, initialize the variation form.
-				if ( 'undefined' !== typeof jQuery.fn.wc_variation_form && 'undefined' !== typeof $(e.target).data( 'source' ) ) {
-					$(this).wc_variation_form();
+				if (
+					'undefined' !== typeof jQuery.fn.wc_variation_form &&
+					'undefined' !== typeof $( e.target ).data( 'source' )
+				) {
+					$( this ).wc_variation_form();
 				}
 
 				$( this ).wc_mnm_variation_form();

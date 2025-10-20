@@ -11,7 +11,6 @@ import { CONTAINER_STORE_KEY } from '@data';
 import ChildItems from './child-items';
 
 const OutOfStock = () => {
-
 	// Get the child Items from the data store.
 	const { childItems, categories } = useSelect( ( select ) => {
 		return {
@@ -21,19 +20,16 @@ const OutOfStock = () => {
 	} );
 
 	return (
-
 		<>
-			<ChildItems childItems={ childItems } childCategories={ categories } />
+			<ChildItems
+				childItems={ childItems }
+				childCategories={ categories }
+			/>
 
 			<div className="wc-block-components-product-add-to-cart-unavailable outofstock">
-				{ _x(
-							'Out of stock',
-							'[Frontend]',
-							'wc-mnm-variable'
-						) }
+				{ _x( 'Out of stock', '[Frontend]', 'wc-mnm-variable' ) }
 			</div>
 		</>
-
 	);
 };
 

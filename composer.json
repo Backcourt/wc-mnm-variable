@@ -1,73 +1,73 @@
 {
-    "name": "backcourt/wc-mnm-variable",
-    "description": "Variable Mix and Match Products.",
-    "homepage": "https://github.com/backcourt/wc-mnm-variable",
-    "type": "wordpress-plugin",
-    "license": "GPL-3.0-or-later",
-    "authors": [
-        {
-            "name": "helgatheviking",
-            "email": "507025+helgatheviking@users.noreply.github.com"
-        }
-    ],
-    "support": {
-        "issues": "https://github.com/backcourt/wc-mnm-variable/issues",
-        "source": "https://github.com/backcourt/wc-mnm-variable"
-    },
-    "require": {
-        "afragen/git-updater-lite": "^2"
-    },
-    "require-dev": {
-        "brianhenryie/strauss": "^0.22.2",
-        "woocommerce/woocommerce-sniffs": "1.0.0",
-        "wp-cli/i18n-command": "^2.6"
-    },
-    "scripts": {
-        "makepot-audit": [
-            "wp --allow-root i18n make-pot . languages/wc-mnm-variable.pot --slug=wc-mnm-variable --exclude=\".github,.wordpress-org,build,deploy,node_modules,packages,vendor\" --headers='{\"Report-Msgid-Bugs-To\":\"https://github.com/backcourt/wc-mnm-variable/new\"}'"
-        ],
-        "makepot": [
-            "@makepot-audit --skip-audit"
-        ],
-        "phpcs": [
-            "phpcs . -s -p -n"
-        ],
-        "phpcs-pre-commit": [
-            "phpcs . -s -p -n"
-        ],
-        "phpcb": [
-            "phpcbf . "
-        ],
-        "prefix-namespaces": [
-            "strauss",
-            "@php composer dump-autoload"
-        ],
-        "post-install-cmd": [
-            "@prefix-namespaces"
-        ],
-        "post-update-cmd": [
-            "@prefix-namespaces"
-        ]
-    },
-    "config": {
-        "allow-plugins": {
-            "composer/installers": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
-    },
-    "extra": {
-        "scripts-description": {
-            "makepot": "Generate a .pot file for translation",
-            "makepot-audit": "Generate a .pot file for translation. Dry run.",
-            "phpcs": "Analyze code against the WordPress coding standards with PHP_CodeSniffer",
-            "phpcb": "Fix coding standards warnings/errors automatically with PHP Code Beautifier",
-            "prefix-namespaces": "Prefix namespaces of dependencies with Strauss"
-        },
-        "strauss": {
-            "target_directory": "packages",
-            "namespace_prefix": "Backcourt\\MNMVariable\\Vendor",
-            "classmap_prefix": "Backcourt_MNM_Variable_Vendor_",
-            "constant_prefix": "BCMNMVar_"
-        }
-    }
+	"name": "backcourt/wc-mnm-variable",
+	"description": "Variable Mix and Match Products.",
+	"homepage": "https://github.com/backcourt/wc-mnm-variable",
+	"type": "wordpress-plugin",
+	"license": "GPL-3.0-or-later",
+	"authors": [
+		{
+			"name": "helgatheviking",
+			"email": "507025+helgatheviking@users.noreply.github.com"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/backcourt/wc-mnm-variable/issues",
+		"source": "https://github.com/backcourt/wc-mnm-variable"
+	},
+	"require": {
+		"afragen/git-updater-lite": "^2"
+	},
+	"require-dev": {
+		"brianhenryie/strauss": "^0.22.2",
+		"woocommerce/woocommerce-sniffs": "1.0.0",
+		"wp-cli/i18n-command": "^2.6"
+	},
+	"scripts": {
+		"makepot-audit": [
+			"wp --allow-root i18n make-pot . languages/wc-mnm-variable.pot --slug=wc-mnm-variable --exclude=\".github,.wordpress-org,build,deploy,node_modules,packages,vendor\" --headers='{\"Report-Msgid-Bugs-To\":\"https://github.com/backcourt/wc-mnm-variable/new\"}'"
+		],
+		"makepot": [
+			"@makepot-audit --skip-audit"
+		],
+		"phpcs": [
+			"phpcs . -s -p -n"
+		],
+		"phpcs-pre-commit": [
+			"phpcs . -s -p -n"
+		],
+		"phpcb": [
+			"phpcbf . "
+		],
+		"prefix-namespaces": [
+			"strauss",
+			"@php composer dump-autoload"
+		],
+		"post-install-cmd": [
+			"@prefix-namespaces"
+		],
+		"post-update-cmd": [
+			"@prefix-namespaces"
+		]
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"extra": {
+		"scripts-description": {
+			"makepot": "Generate a .pot file for translation",
+			"makepot-audit": "Generate a .pot file for translation. Dry run.",
+			"phpcs": "Analyze code against the WordPress coding standards with PHP_CodeSniffer",
+			"phpcb": "Fix coding standards warnings/errors automatically with PHP Code Beautifier",
+			"prefix-namespaces": "Prefix namespaces of dependencies with Strauss"
+		},
+		"strauss": {
+			"target_directory": "packages",
+			"namespace_prefix": "Backcourt\\MNMVariable\\Vendor",
+			"classmap_prefix": "Backcourt_MNM_Variable_Vendor_",
+			"constant_prefix": "BCMNMVar_"
+		}
+	}
 }

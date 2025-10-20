@@ -12,10 +12,8 @@ import { getSetting } from '@woocommerce/settings';
 export function getContainerById( containerId ) {
 	return async ( { dispatch } ) => {
 		try {
-
 			// Only attempt to resolve if there's a product ID here.
 			if ( containerId ) {
-
 				const preloadedVariableData = getSetting(
 					'wcMNMVariableSettings',
 					[]
@@ -29,13 +27,11 @@ export function getContainerById( containerId ) {
 					container = await apiFetch( {
 						path: `/wc/store/v1/products/${ containerId }`,
 					} );
-
 				}
 
 				dispatch.hydrateContainer( container );
 
 				return container;
-
 			}
 		} catch ( error ) {
 			// @todo: Handle an error here eventually.
