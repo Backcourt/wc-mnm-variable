@@ -38,16 +38,16 @@ module.exports = {
 			},
 		],
 		'react/react-in-jsx-scope': 'off',
-        // Turned off because conflicts with the ones above and does not support aliases
-        'node/no-missing-require': 'off',
-        'node/no-extraneous-import':'off',
+		// Turned off because conflicts with the ones above and does not support aliases
+		'node/no-missing-require': 'off',
+		'node/no-extraneous-import': 'off',
 	},
 
 	settings: {
 		'import/resolver': {
-            "webpack": {
-                "config": "webpack.config.js"
-              }
-        }
+			webpack: {
+				config: 'webpack.config.js',
+			},
+		},
 	},
 };

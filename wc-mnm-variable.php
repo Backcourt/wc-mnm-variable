@@ -458,18 +458,20 @@ class WC_MNM_Variable {
 		$mnm_params = WC_Mix_and_Match()->display::get_add_to_cart_parameters();
 
 		$params = array(
-			'wc_ajax_url'                    => \WC_AJAX::get_endpoint( '%%endpoint%%' ),
-			'form_nonce'                     => wp_create_nonce( 'wc_mnm_container_form' ),
-			'i18n_form_error'                => __( 'Failed to initialize form. If this issue persists, please reload the page and try again.', 'wc-mnm-variable' ),
-			'i18n_form_cleared'              => __( 'Your chosen container size has changed so your selections have been reset.', 'wc-mnm-variable' ),
-			'i18n_selection_prompt'          => __( 'Choose %d selections', 'wc-mnm-variable' ),
-			'i18n_selection_prompt_singular' => __( 'Choose %d selection', 'wc-mnm-variable' ),
-			'display_thumbnails'             => wc_string_to_bool( get_option( 'wc_mnm_display_thumbnail', 'yes' ) ),
-			'display_short_description'      => wc_string_to_bool( get_option( 'wc_mnm_display_short_description', 'no' ) ),
-			'display_plus_minus_buttons'     => wc_string_to_bool( get_option( 'wc_mnm_display_plus_minus_buttons', 'no' ) ),
-			'display_layout'                 => is_admin() ? 'tabular' : get_option( 'wc_mnm_layout', 'tabular' ),
-			'num_columns'                    => (int) apply_filters( 'wc_mnm_grid_layout_columns', get_option( 'wc_mnm_number_columns', 3 ) ),
-			'__experimental_link_target'     => '_self', // Default link target. acceptable values: _self, _blank
+			'wc_ajax_url'                        => \WC_AJAX              :: get_endpoint( '%%endpoint%%' ),
+			'form_nonce'                         => wp_create_nonce( 'wc_mnm_container_form' ),
+			'i18n_form_error'                    => __( 'Failed to initialize form. If this issue persists, please reload the page and try again.', 'wc-mnm-variable' ),
+			'i18n_form_cleared'                  => __( 'Your chosen container size has changed so your selections have been reset.', 'wc-mnm-variable' ),
+			'i18n_selection_prompt'              => __( 'Choose %d selections', 'wc-mnm-variable' ),
+			'i18n_selection_prompt_singular'     => __( 'Choose %d selection', 'wc-mnm-variable' ),
+			'display_thumbnails'                 => wc_string_to_bool( get_option( 'wc_mnm_display_thumbnail', 'yes' ) ),
+			'display_short_description'          => wc_string_to_bool( get_option( 'wc_mnm_display_short_description', 'no' ) ),
+			'display_plus_minus_buttons'         => wc_string_to_bool( get_option( 'wc_mnm_display_plus_minus_buttons', 'no' ) ),
+			'display_layout'                     => is_admin() ? 'tabular': get_option( 'wc_mnm_layout', 'tabular' ),
+			'num_columns'                        => (int) apply_filters( 'wc_mnm_grid_layout_columns', get_option( 'wc_mnm_number_columns', 3 ) ),
+			'__experimental_grid_row_classes'    => [],
+			'__experimental_grid_column_classes' => [],
+			'__experimental_link_target'         => '_self', // Default link target. acceptable values: _self, _blank
 		);
 
 		$params = apply_filters( 'wc_mnm_variable_add_to_cart_script_parameters', wp_parse_args( $params, $mnm_params ) );

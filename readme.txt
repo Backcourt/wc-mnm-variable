@@ -1,4 +1,4 @@
-=== WooCommerce Mix and Match Products - Variable Containers ===
+=== WC Mix and Match Products - Variable Containers ===
 
 Contributors: helgatheviking
 Tags: woocommerce, product, container, boxes, kits, configurable, filter

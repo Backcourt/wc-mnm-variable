@@ -17,7 +17,11 @@ const Reset = () => {
 	const { resetConfig } = useDispatch( CONTAINER_STORE_KEY );
 
 	const handleReset = () => {
-		if ( window.confirm( WC_MNM_ADD_TO_CART_VARIATION_PARAMS.i18n_confirm_reset ) ) {
+		if (
+			window.confirm(
+				WC_MNM_ADD_TO_CART_VARIATION_PARAMS.i18n_confirm_reset
+			)
+		) {
 			resetConfig();
 		}
 	};
@@ -32,11 +36,7 @@ const Reset = () => {
 			className="mnm_reset button wp-element-button"
 			onClick={ handleReset }
 		>
-			{ _x(
-				'Clear selections',
-				'[Frontend]',
-				'wc-mnm-variable'
-			) }
+			{ _x( 'Clear selections', '[Frontend]', 'wc-mnm-variable' ) }
 		</button>
 	);
 };

@@ -22,21 +22,31 @@ const StatusUI = () => {
 	} );
 
 	return (
-		<div className={`wc-mnm-variation__status mnm_status ${passesValidation ? 'passes_validation' : 'fails_validation'}`}>
+		<div
+			className={ `wc-mnm-variation__status mnm_status ${
+				passesValidation ? 'passes_validation' : 'fails_validation'
+			}` }
+		>
 			<p className="wc-mnm-variation__status-content mnm_price">
 				<span className="price">
 					<span className="total">
-						{ _x( 'Total:', '[Frontend] "Total" price refers to the sum price of the container. Preceeds formatted price in local currency."', 'wc-mnm-mobile-styles' ) }
+						{ _x(
+							'Total:',
+							'[Frontend] "Total" price refers to the sum price of the container. Preceeds formatted price in local currency."',
+							'wc-mnm-mobile-styles'
+						) }
 					</span>
-					<ProductPrice/>
+					<ProductPrice />
 				</span>
-				<Counter/>
+				<Counter />
 			</p>
 
 			<div
 				aria-live="polite"
 				role="status"
-				className={ `wc-mnm-variation__message mnm_message woocommerce-message ${ ! passesValidation ? 'woocommerce-error' : '' }` }
+				className={ `wc-mnm-variation__message mnm_message woocommerce-message ${
+					! passesValidation ? 'woocommerce-error' : ''
+				}` }
 				style={ { display: 'block' } }
 			>
 				<ul className="wc-mnm-variation__message-content msg mnm_message_content">

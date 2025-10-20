@@ -42,9 +42,9 @@ export const getConfiguration = ( state ) => {
  * @return {obj}
  */
 export const getContainer = ( state ) => {
-	return state.containers.hasOwnProperty(state.containerId)
-    ? state.containers[state.containerId]
-    : {};
+	return state.containers.hasOwnProperty( state.containerId )
+		? state.containers[ state.containerId ]
+		: {};
 };
 
 /**
@@ -54,8 +54,8 @@ export const getContainer = ( state ) => {
  * @param int The container ID
  * @return {obj}
  */
-export const getContainerById = (state, id) => {
-	return state.containers[id];
+export const getContainerById = ( state, id ) => {
+	return state.containers[ id ];
 };
 
 /**
@@ -96,7 +96,7 @@ export const getErrorMessages = ( state ) => {
  */
 export const getMaxContainerSize = ( state ) => {
 	const container = getContainer( state );
-    return container?.extensions?.mix_and_match?.max_container_size ?? '';
+	return container?.extensions?.mix_and_match?.max_container_size ?? '';
 };
 
 /**
@@ -209,7 +209,7 @@ export const hasChildItems = ( state ) => {
  * @return bool
  */
 export const hasConfiguration = ( state ) => {
-	return Object.entries(state.config).length !== 0;
+	return Object.entries( state.config ).length !== 0;
 };
 
 /**
@@ -231,7 +231,7 @@ export const hasContainer = ( state ) => {
  */
 export const isInStock = ( state ) => {
 	const container = getContainer( state );
-	return hasContainer(state) && container.is_in_stock
+	return hasContainer( state ) && container.is_in_stock;
 };
 
 /**
@@ -252,7 +252,7 @@ export const isLoading = ( state ) => {
  */
 export const isPurchasable = ( state ) => {
 	const container = getContainer( state );
-	return hasContainer(state) && container.is_purchasable;
+	return hasContainer( state ) && container.is_purchasable;
 };
 
 /**

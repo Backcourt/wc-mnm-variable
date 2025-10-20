@@ -10,8 +10,15 @@ import { doAction } from '@wordpress/hooks';
 import DEFAULT_STATE from './default-state';
 import TYPES from './action-types';
 
-const { SET_CONTAINER_ID, HYDRATE_CONTAINER, RESET_CONFIG, SET_CONTEXT, SET_CONFIG, UPDATE_QTY, VALIDATE } =
-	TYPES;
+const {
+	SET_CONTAINER_ID,
+	HYDRATE_CONTAINER,
+	RESET_CONFIG,
+	SET_CONTEXT,
+	SET_CONFIG,
+	UPDATE_QTY,
+	VALIDATE,
+} = TYPES;
 
 import { calcTotalQuantity, selectQuantityMessage } from './utils';
 
@@ -23,35 +30,33 @@ import { calcTotalQuantity, selectQuantityMessage } from './utils';
  * @return object the updated state
  */
 const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
-
 	// Current child items from state.
-	const childItems =	state.containers[state.containerId] &&
-			typeof state.containers[state.containerId].extensions.mix_and_match !== 'undefined' &&
-			typeof state.containers[state.containerId].extensions.mix_and_match.child_items !==
-				'undefined'
-			? state.containers[state.containerId].extensions.mix_and_match.child_items
+	const childItems =
+		state.containers[ state.containerId ] &&
+		typeof state.containers[ state.containerId ].extensions
+			.mix_and_match !== 'undefined' &&
+		typeof state.containers[ state.containerId ].extensions.mix_and_match
+			.child_items !== 'undefined'
+			? state.containers[ state.containerId ].extensions.mix_and_match
+					.child_items
 			: [];
 
 	switch ( type ) {
-
 		case SET_CONTAINER_ID:
-      		return {
+			return {
 				...state,
-				containerId: payload.containerId
+				containerId: payload.containerId,
 			};
 
 		case HYDRATE_CONTAINER: {
-
-
 			return {
 				...state,
 				...{
 					containers: {
 						...state.containers,
-						[payload.container.id]: payload.container,
+						[ payload.container.id ]: payload.container,
 					},
 				},
-
 			};
 		}
 
@@ -69,45 +74,38 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 			};
 
 		case SET_CONFIG:
-
 			let payloadConfig = payload.config;
 			let newConfig = {};
 			let newSelections = [];
 
 			// Attempt to parse JSON strings (used by data attributes when editing the container in admin).
-			if (typeof payloadConfig === 'string') {
+			if ( typeof payloadConfig === 'string' ) {
+				// Parse the JSON string into a JavaScript object
+				let dataObject = JSON.parse( payloadConfig );
 
-					// Parse the JSON string into a JavaScript object
-					let dataObject = JSON.parse(payloadConfig);
-
-					// Check if parsing was successful
-					if (dataObject && typeof dataObject === 'object') {
-						payloadConfig = dataObject;
-					}
-
+				// Check if parsing was successful
+				if ( dataObject && typeof dataObject === 'object' ) {
+					payloadConfig = dataObject;
+				}
 			}
 
 			// Cast any null to empty object.
-			payloadConfig = Object(payloadConfig);
+			payloadConfig = Object( payloadConfig );
 
 			// Verify each payloadConfig id is a valid child item:
-			for (let item of childItems) {
-
+			for ( let item of childItems ) {
 				// Check if child item is in the config.
-				if (payloadConfig[item.child_id] !== undefined) {
-
-					let newQty = parseFloat(payloadConfig[item.child_id]);
+				if ( payloadConfig[ item.child_id ] !== undefined ) {
+					let newQty = parseFloat( payloadConfig[ item.child_id ] );
 
 					// Store new qty in config object.
-					newConfig[item.child_id] = newQty;
+					newConfig[ item.child_id ] = newQty;
 
 					// Push child item into selections the required number of times.
-					for (let i = 0; i < newQty; i++) {
-						newSelections.push(item);
+					for ( let i = 0; i < newQty; i++ ) {
+						newSelections.push( item );
 					}
-
 				}
-
 			}
 
 			return {
@@ -128,8 +126,7 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 			const payloadQty = parseFloat( payload.qty );
 
 			// Check if the ID is a valid child item ID.
-			if ( childItems.some(obj => obj.child_id === child_id) ) {
-
+			if ( childItems.some( ( obj ) => obj.child_id === child_id ) ) {
 				// If increasing.
 				if ( payloadQty > currentQty ) {
 					updatedSelections.push( payload.item );
@@ -146,7 +143,6 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 
 				// Update the quantity in the config object.
 				updatedConfig[ child_id ] = payloadQty;
-
 			}
 
 			return {
@@ -156,7 +152,6 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 			};
 
 		case VALIDATE:
-
 			const messages = {
 				status: [],
 				errors: [],
@@ -165,15 +160,20 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 
 			if (
 				state.containers.hasOwnProperty( state.containerId ) &&
-				state.containers[state.containerId].hasOwnProperty('type') &&
-				state.containers[state.containerId].type === 'mix-and-match-variation'
+				state.containers[ state.containerId ].hasOwnProperty(
+					'type'
+				) &&
+				state.containers[ state.containerId ].type ===
+					'mix-and-match-variation'
 			) {
 				const validationContext = state.context;
 
 				const minContainerSize =
-					state.containers[state.containerId].extensions.mix_and_match.min_container_size;
+					state.containers[ state.containerId ].extensions
+						.mix_and_match.min_container_size;
 				const maxContainerSize =
-					state.containers[state.containerId].extensions.mix_and_match.max_container_size;
+					state.containers[ state.containerId ].extensions
+						.mix_and_match.max_container_size;
 				const qtyMessage = selectQuantityMessage( totalQuantity ); // "Selected X total".
 
 				let errorMessage = '';
@@ -259,7 +259,8 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 							totalQuantity < minContainerSize ||
 							totalQuantity > maxContainerSize
 						) {
-							errorMessage = WC_MNM_ADD_TO_CART_VARIATION_PARAMS.i18n_min_max_qty_error;
+							errorMessage =
+								WC_MNM_ADD_TO_CART_VARIATION_PARAMS.i18n_min_max_qty_error;
 							errorMessage = errorMessage
 								.replace( '%max', maxContainerSize )
 								.replace( '%min', minContainerSize )
@@ -316,14 +317,14 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 			}
 
 			// @todo - calculate per-price totals.
-			const basePrice = state.containers[state.containerId].prices;
+			const basePrice = state.containers[ state.containerId ].prices;
 			const subTotal = basePrice;
 			const total = basePrice;
 
 			const validatedState = {
 				...state,
 				basePrice,
-				container: state.containers[state.containerId],
+				container: state.containers[ state.containerId ],
 				messages,
 				passesValidation: messages.errors.length === 0,
 				subTotal,

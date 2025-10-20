@@ -19,7 +19,6 @@ const ChildItem = () => {
 			: childItem.permalink;
 
 	return (
-
 		<tr
 			className={ `wc-mnm-variation__child-item mnm_item product type-product first post-${ childItem.child_id }` }
 		>

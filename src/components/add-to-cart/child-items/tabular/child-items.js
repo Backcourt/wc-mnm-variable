@@ -10,7 +10,6 @@ import { default as ChildItem } from './child-item';
 import { ChildProvider } from '@context';
 
 const ChildItems = ( { childItems } ) => {
-
 	return (
 		<table
 			cellSpacing="0"
@@ -28,6 +27,5 @@ const ChildItems = ( { childItems } ) => {
 			</tbody>
 		</table>
 	);
-
 };
 export default ChildItems;

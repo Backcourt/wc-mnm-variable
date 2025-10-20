@@ -18,9 +18,29 @@ const ChildItem = ( { loopClass } ) => {
 			? false
 			: childItem.permalink;
 
+	// Get extra classes safely.
+	const extraClasses = Array.isArray(
+		WC_MNM_ADD_TO_CART_VARIATION_PARAMS?.__experimental_grid_column_classes
+	)
+		? WC_MNM_ADD_TO_CART_VARIATION_PARAMS.__experimental_grid_column_classes.join(
+				' '
+		  )
+		: WC_MNM_ADD_TO_CART_VARIATION_PARAMS?.__experimental_grid_column_classes ||
+		  '';
+
 	return (
 		<li
-			className={ `wc-mnm-variation__child-item mnm_item product type-product ${ loopClass } ${ in_stock ? 'instock' : 'outofstock' } post-${ childItem.child_id }` }
+			className={ `
+				wc-mnm-variation__child-item
+				mnm_item
+				product type-product
+				${ loopClass }
+				${ in_stock ? 'instock' : 'outofstock' }
+				post-${ childItem.child_id }
+				${ extraClasses }
+			`
+				.trim()
+				.replace( /\s+/g, ' ' ) } // Normalize spacing.
 		>
 			{ WC_MNM_ADD_TO_CART_VARIATION_PARAMS.display_thumbnails && (
 				<ProductImage
@@ -38,7 +58,6 @@ const ChildItem = ( { loopClass } ) => {
 				element={ 'div' }
 			/>
 		</li>
-
 	);
 };
 export default ChildItem;
