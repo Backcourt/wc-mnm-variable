@@ -5,7 +5,7 @@
  * Functions for the templating system.
  *
  * @package  WooCommerce Mix and Match Variable\Functions
- * @version  1.0.0
+ * @version  2.2.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -212,7 +212,7 @@ if ( ! function_exists( 'wc_mnm_template_variation_attribute_options' ) ) {
 
 				<?php endforeach; ?>
 
-				<?php woocommerce_product_loop_end(); ?>
+				</ul>
 
 			</fieldset>
 
