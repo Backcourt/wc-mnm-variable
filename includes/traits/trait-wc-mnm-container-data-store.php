@@ -4,7 +4,7 @@
  *
  * @package  WooCommerce Mix and Match Products/Data
  * @since    1.0.0
- * @version  1.0.0
+ * @version  2.2.3
  */
 
 // Exit if accessed directly.
@@ -341,18 +341,34 @@ trait WC_MNM_Container_Data_Store {
 			// If sharing content we need to query by the parent's ID.
 			$query_container_id = $product->get_parent_id() && $product->is_sharing_content() ? $product->get_parent_id() : $product->get_id();
 
-			$child_items_data = $this->query_child_items_by_container( $query_container_id, 'ids', $force_refresh );
+			$child_items_data = $this->query_child_items_by_container( $query_container_id, 'array', $force_refresh );
 
 			if ( ! empty( $child_items_data ) && function_exists( '_prime_post_caches' ) ) {
 				_prime_post_caches( array_unique( wp_list_pluck( $child_items_data, 'mnm_id' ) ) );
 			}
 
-			foreach ( $child_items_data as $item_key => $product_id ) {
+			foreach ( $child_items_data as $item_data ) {
+
+				$product_id = $item_data['mnm_id'];
+
+				// If you generate the WC_MNM_Child_Item from the child item ID, then the props will be read from the database and container_id will be the ID of the parent variable product, which breaks things.
+				$child_item_args = array(
+					'product_id'   => $item_data['product_id'],
+					'variation_id' => $item_data['variation_id'],
+					'container_id' => $product->get_id(),
+				);
 
 				// Quietly collect and delete any dupes.
 				if ( isset( $child_items[$product_id] ) ) {
 					try {
-						$dupe = new WC_MNM_Child_Item( $item_key, $product );
+						$dupe_item_args = wp_parse_args(
+							array(
+								'container_id' => $query_container_id,
+							),
+							$child_item_args
+						);
+						$child_item_args['container_id'] = $query_container_id; // Use the queried container ID to delete the dupe.
+						$dupe = new WC_MNM_Child_Item( $dupe_item_args, $product );
 						$dupe->delete();
 					} catch ( Exception $e ) {
 						wc_get_logger()->error(
@@ -366,7 +382,7 @@ trait WC_MNM_Container_Data_Store {
 					}
 					continue;
 				}
-				$child_items[$product_id] = new WC_MNM_Child_Item( $item_key, $product );
+				$child_items[$product_id] = new WC_MNM_Child_Item( $child_item_args, $product );
 			}
 
 		}
