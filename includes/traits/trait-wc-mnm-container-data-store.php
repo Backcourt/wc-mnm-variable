@@ -341,16 +341,34 @@ trait WC_MNM_Container_Data_Store {
 			// If sharing content we need to query by the parent's ID.
 			$query_container_id = $product->get_parent_id() && $product->is_sharing_content() ? $product->get_parent_id() : $product->get_id();
 
-			$child_items_data = $this->query_child_items_by_container( $query_container_id, 'array', $force_refresh );
+			$child_items_data = $this->query_child_items_by_container( $query_container_id, 'ids', $force_refresh );
 
 			if ( ! empty( $child_items_data ) && function_exists( '_prime_post_caches' ) ) {
 				_prime_post_caches( array_unique( wp_list_pluck( $child_items_data, 'mnm_id' ) ) );
 			}
 
-			foreach ( $child_items_data as $item_data ) {
-				$child_item = new WC_MNM_Child_Item( $item_data, $product );
-				$child_items[$child_item->get_the_id()] = $child_item;
+			foreach ( $child_items_data as $item_key => $product_id ) {
+
+				// Quietly collect and delete any dupes.
+				if ( isset( $child_items[$product_id] ) ) {
+					try {
+						$dupe = new WC_MNM_Child_Item( $item_key, $product );
+						$dupe->delete();
+					} catch ( Exception $e ) {
+						wc_get_logger()->error(
+							esc_html__( 'Duplicate child items were detected, but could not be deleted.', 'woocommerce-mix-and-match-products' ),
+							array(
+								'source'  => 'wc-mix-and-match-product-save',
+								'product' => $this->get_name(),
+								'error'   => $e->getMessage(),
+							)
+						);
+					}
+					continue;
+				}
+				$child_items[$product_id] = new WC_MNM_Child_Item( $item_key, $product );
 			}
+
 		}
 
 		return $child_items;

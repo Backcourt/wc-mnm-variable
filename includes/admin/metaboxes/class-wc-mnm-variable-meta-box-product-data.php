@@ -4,7 +4,7 @@
  *
  * @package  WooCommerce Mix and Match Products/Admin/Meta-Boxes/Product
  * @since    1.0.0
- * @version  2.0.5
+ * @version  2.2.2
  */
 
 // Exit if accessed directly.
@@ -201,7 +201,7 @@ class WC_MNM_Variable_Meta_Box_Variable_Product_Data {
 			);
 
 			// Generate some data for the select2 input.
-			$child_items = 'products' === $vmnm_product_object->get_content_source( 'edit' ) ? $vmnm_product_object->get_child_items( 'edit' ) : array();
+			$child_items = self::force_read_child_items( $vmnm_product_object );
 
 			// Exclude all but simple and variation products.
 			$product_types = wc_get_product_types();
@@ -210,7 +210,7 @@ class WC_MNM_Variable_Meta_Box_Variable_Product_Data {
 			$product_types = array_keys( $product_types );
 
 			$values = array();
-			foreach ( $child_items as $child_item ) {
+			foreach ( $child_items as $i => $child_item ) {
 				if ( $child_item->get_product() ) {
 					$values[ $child_item->get_product()->get_id() ] = $child_item->get_product()->get_formatted_name();
 				}
@@ -416,7 +416,7 @@ class WC_MNM_Variable_Meta_Box_Variable_Product_Data {
 		);
 
 		// Generate some data for the select2 input.
-		$child_items = ! $variation_object->is_sharing_content( 'edit' ) && 'products' === $variation_object->get_content_source( 'edit' ) ? $variation_object->get_child_items( 'edit' ) : [];
+		$child_items = self::force_read_child_items( $variation_object );
 
 		// Exclude all but simple and variation products.
 		$product_types = wc_get_product_types();
@@ -425,6 +425,7 @@ class WC_MNM_Variable_Meta_Box_Variable_Product_Data {
 		$product_types = array_keys( $product_types );
 
 		$values = array();
+
 		foreach ( $child_items as $child_item ) {
 			if ( $child_item->get_product() ) {
 				$values[ $child_item->get_product()->get_id() ] = $child_item->get_product()->get_formatted_name();
@@ -493,7 +494,25 @@ class WC_MNM_Variable_Meta_Box_Variable_Product_Data {
 		<?php
 	}
 
+	/**
+	 * Force read the child items from the DB even when source is categories.
+	 *
+	 * @param  WC_Product_Mix_and_Match  $product
+	 * @since  2.2.2
+	 */
+	private static function force_read_child_items( $product ) {
 
+		$child_items = array();
+
+		$store_name = $product->get_parent_id() ? 'product-mix-and-match-variation' : 'product-variable-mix-and-match';
+		$data_store = WC_Data_Store::load( $store_name );
+		$source = $product->get_content_source( 'edit' );
+		$product->set_content_source( 'products' );
+		$child_items = $data_store->read_child_items( $product, true );
+		$product->set_content_source( $source );
+
+		return $child_items;
+	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -514,7 +533,7 @@ class WC_MNM_Variable_Meta_Box_Variable_Product_Data {
 				'share_content'          => true,
 				// 'share_content'             => isset( $_POST['wc_mnm_variable_share_content'] ) && 'yes' === wc_clean( $_POST['wc_mnm_variable_share_content'] ),
 				// 'priced_per_product'        => isset( $_POST['wc_mnm_variable_per_product_pricing'] ) && 'yes' === wc_clean( $_POST['wc_mnm_variable_per_product_pricing'] ),
-					'priced_per_product' => false,
+				'priced_per_product' => false,
 				'packing_mode'           => 'together',
 				'weight_cumulative'      => isset( $_POST['wc_mnm_weight_cumulative'] ) && 'cumulative' === wc_clean( $_POST['wc_mnm_weight_cumulative'] ),
 				'content_source'         => isset( $_POST['wc_mnm_variable_content_source'] ) ? wc_clean( $_POST['wc_mnm_variable_content_source'] ) : 'products',
@@ -531,8 +550,10 @@ class WC_MNM_Variable_Meta_Box_Variable_Product_Data {
 
 			if ( ! defined( 'WC_MNM_UPDATING' ) && ! defined( 'WC_MNM_NEEDS_DB_UPDATE' ) ) {
 
-				// Set child items.
-				$props['child_items'] = WC_MNM_Meta_Box_Product_Data::process_child_items_data( $product, ! empty( $_POST['wc_mnm_variable_allowed_products'] ) ? $_POST['wc_mnm_variable_allowed_products'] : [] );
+				// Set child items only if content source is products.
+				if ( 'products' === $props['content_source'] ) {
+					$props['child_items'] = WC_MNM_Meta_Box_Product_Data::process_child_items_data( $product, ! empty( $_POST['wc_mnm_variable_allowed_products'] ) ? wp_unslash( $_POST['wc_mnm_variable_allowed_products'] ) : [] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+				}
 
 				// Show a notice if the user hasn't selected any items for the container.
 				if ( 'yes' === $props['share_content'] && apply_filters( 'wc_mnm_display_empty_container_error', true, $product ) ) {
