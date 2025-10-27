@@ -59,6 +59,13 @@ class WC_MNM_Variable_Store_API {
 	 */
 	public static function extend_product_data( $product ) {
 
+		$key       = 'extend_product_data_' . $product->get_id();
+		$item_data = \WC_MNM_Cache::get( $key );
+
+		if ( ! empty( $item_data ) ) {
+			return $item_data;
+		}
+
 		$item_data = [ 'variations' => [] ];
 
 		if ( $product->is_type( 'variable-mix-and-match' ) ) {
