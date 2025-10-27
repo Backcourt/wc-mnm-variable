@@ -2,7 +2,7 @@
 
 Contributors: helgatheviking
 Tags: woocommerce, product, container, boxes, kits, configurable, filter
-Stable tag: 2.2.3
+Stable tag: 2.2.4-beta.1
 Requires PHP: 8.0
 Requires at least: 6.5
 Tested up to: 6.7
