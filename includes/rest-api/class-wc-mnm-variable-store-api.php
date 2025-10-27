@@ -6,7 +6,7 @@
  *
  * @package  WooCommerce Variable Mix and Match/Store API
  * @since    1.0.0
- * @version  1.0.0
+ * @version  2.2.4
  */
 
 use Automattic\WooCommerce\StoreApi\Schemas\V1\ProductSchema;
@@ -117,16 +117,16 @@ class WC_MNM_Variable_Store_API {
 
 		global $product;
 
-		$preloads = \WC_MNM_Cache::get( 'wcMNMVariablePreloads' );
+		$preloads = \WC_MNM_Helpers::cache_get( 'wcMNMVariablePreloads' );
 
 		if ( is_array( $preloads ) ) {
 			$preloads[] = $product->get_id();
-			\WC_MNM_Cache::set( 'wcMNMVariablePreloads', $preloads );
+			\WC_MNM_Helpers::cache_set( 'wcMNMVariablePreloads', $preloads );
 		} elseif ( null === $preloads ) {
 			$preloads = [ $product->get_id() ];
 		}
 
-		\WC_MNM_Cache::set( 'wcMNMVariablePreloads', $preloads );
+		\WC_MNM_Helpers::cache_set( 'wcMNMVariablePreloads', $preloads );
 	}
 
 	/**
@@ -136,7 +136,7 @@ class WC_MNM_Variable_Store_API {
 	 */
 	public static function enqueue_asset_data() {
 
-		$preloads = \WC_MNM_Cache::get( 'wcMNMVariablePreloads' );
+		$preloads = \WC_MNM_Helpers::cache_get( 'wcMNMVariablePreloads' );
 
 		if ( ! empty( $preloads ) && is_array( $preloads ) ) {
 
