@@ -4,7 +4,7 @@
  *
  * @package  WooCommerce Mix and Match Products/Data
  * @since    1.0.0
- * @version  2.2.3
+ * @version  2.2.4
  */
 
 // Exit if accessed directly.
@@ -543,7 +543,7 @@ trait WC_MNM_Container_Data_Store {
 				)
 			);
 
-			WP_MNM_Cache::set( $key, $container_ids );
+			WC_MNM_Cache::set( $key, $container_ids );
 
 		}
 
