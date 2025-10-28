@@ -9,7 +9,7 @@
  * Text Domain: wc-mnm-variable
  * Domain Path: /languages
  *
- * Update URI: https://www.backcourt.io/
+ * Update URI: https://www.backcourt.io
  * 
  * Requires PHP: 8.0
  *
