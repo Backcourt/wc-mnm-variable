@@ -108,8 +108,10 @@ class WC_MNM_Variable {
 		// Install product type term.
 		add_action( 'admin_init', [ $this, 'maybe_install' ] );
 
-		// Allows the selection of the new product type
-		add_filter( 'product_type_selector', [ $this, 'product_selector_filter' ] );
+		// Allows the selection of the new product type.
+		add_action( 'init', function() {
+			add_filter( 'product_type_selector', [ $this, 'product_selector_filter' ] );
+		} );
 
 		// Admin.
 		add_action( 'admin_enqueue_scripts', [ $this, 'admin_scripts' ], 20 );
