@@ -79,12 +79,8 @@ jQuery( function ( $ ) {
 				$( '.hide_if_variable-mix-and-match' ).hide();
 
 				// Handle hide/show of toggles inside VMNM panel.
-				$( '.wc_mnm_display_toggle input[type="checkbox"]' ).trigger(
-					'change'
-				);
-				$(
-					'.wc_mnm_display_toggle :input[type!="checkbox"]:checked'
-				).trigger( 'change' );
+				$( '.wc_mnm_display_toggle input[type="checkbox"]' ).trigger( 'change' );
+				$( '.wc_mnm_display_toggle :input[type!="checkbox"]:checked' ).trigger( 'change' );
 
 				$( 'input#_manage_stock' ).trigger( 'change' );
 
@@ -92,9 +88,7 @@ jQuery( function ( $ ) {
 				$( '.product_data_tabs .shipping_options ' ).show();
 
 				// Trigger enahnced category selects.
-				$( document.body ).trigger(
-					'wc-mnm-enhanced-category-select-init'
-				);
+				$( document.body ).trigger( 'wc-mnm-enhanced-category-select-init' );
 			}
 		}
 	);
@@ -107,14 +101,12 @@ jQuery( function ( $ ) {
 		'woocommerce_variations_loaded woocommerce_variations_added',
 		function () {
 			// Move the MNM fields after the pricing fields.
-			$(
-				'#variable_product_options .wc_mnm_variation_options.options_group'
-			)
+			$( '#variable_product_options .wc_mnm_variation_options.options_group' )
 				.not( '.wc_mnm_moved' )
 				.each( function () {
 					$( this )
 						.insertAfter(
-							$( this ).siblings( '.variable_pricing' )
+							$( this ).siblings( '.variable_pricing' ).last()
 						)
 						.addClass( 'wc_mnm_moved' );
 				} );
