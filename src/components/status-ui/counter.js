@@ -24,13 +24,11 @@ const Counter = () => {
 			};
 		} );
 
-	if ( ! maxContainerSize ) {
-		maxContainerSize = _x(
+	const displayMaxSize = maxContainerSize || _x(
 			'∞',
 			'[Frontend] - Infinity symbol',
 			'wc-mnm-variable'
-		);
-	}
+	);
 
 	return (
 		<span className="mnm_counter">
@@ -43,7 +41,7 @@ const Counter = () => {
 					'wc-mnm-variable'
 				),
 				totalQuantity,
-				maxContainerSize
+				displayMaxSize
 			) }
 		</span>
 	);
