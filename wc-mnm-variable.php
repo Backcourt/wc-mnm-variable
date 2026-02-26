@@ -463,7 +463,6 @@ class WC_MNM_Variable {
 			'wc_ajax_url'                        => \WC_AJAX              :: get_endpoint( '%%endpoint%%' ),
 			'form_nonce'                         => wp_create_nonce( 'wc_mnm_container_form' ),
 			'i18n_form_error'                    => __( 'Failed to initialize form. If this issue persists, please reload the page and try again.', 'wc-mnm-variable' ),
-			'i18n_form_cleared'                  => __( 'Your chosen container size has changed so your selections have been reset.', 'wc-mnm-variable' ),
 			'i18n_selection_prompt'              => __( 'Choose %d selections', 'wc-mnm-variable' ),
 			'i18n_selection_prompt_singular'     => __( 'Choose %d selection', 'wc-mnm-variable' ),
 			'display_thumbnails'                 => wc_string_to_bool( get_option( 'wc_mnm_display_thumbnail', 'yes' ) ),

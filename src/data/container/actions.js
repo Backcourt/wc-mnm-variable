@@ -25,19 +25,6 @@ const {
 export const setContainerId =
 	( containerId ) =>
 	( { select, dispatch } ) => {
-		// If we are switching the variation, we will clear the config - except on first load.
-		if (
-			null !== select.getContainerId() &&
-			containerId !== select.getContainerId() &&
-			select.hasConfiguration()
-		) {
-			dispatch( { type: RESET_CONFIG } );
-
-			// Notify users.
-			window.alert(
-				WC_MNM_ADD_TO_CART_VARIATION_PARAMS.i18n_form_cleared
-			);
-		}
 
 		dispatch( { type: SET_CONTAINER_ID, payload: { containerId } } );
 
