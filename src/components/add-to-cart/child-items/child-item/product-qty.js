@@ -130,7 +130,7 @@ const ProductQty = ( {
 	const handleMinusClick = ( e ) => {
 		const newQty = Number( quantity ) - Number( step );
 
-		if ( newQty >= min && newQty <= max ) {
+		if ( newQty >= min ) {
 			handleQuantityChange( newQty );
 		}
 
@@ -149,9 +149,7 @@ const ProductQty = ( {
 	const handlePlusClick = ( e ) => {
 		const newQty = Number( quantity ) + Number( step );
 
-		handleQuantityChange( newQty );
-
-		if ( newQty <= max && newQty >= min ) {
+		if ( newQty <= max ) {
 			handleQuantityChange( newQty );
 		}
 
