@@ -4,6 +4,7 @@
  *
  * @package WooCommerce Mix and Match Products/Data
  * @since    1.0.0
+ * @version  2.3.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,8 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Mix and Match Variation Product Data Store: Stored in CPT.
- *
- * @version  1.0.0
  */
 class WC_Product_Mix_and_Match_Variation_Data_Store_CPT extends WC_Product_Variation_Data_Store_CPT {
 
@@ -141,14 +140,14 @@ class WC_Product_Mix_and_Match_Variation_Data_Store_CPT extends WC_Product_Varia
 		// Need content_source and cat IDs in the parent data.
 		foreach ( $this->parent_props_to_meta_keys as $property => $meta_key ) {
 
-			// Get a global value for layout/location props .
+			// Get a global value for layout/location props.
 			if ( $this->is_global_prop( $product, $property ) ) {
 				$value = get_option( $this->global_props[ $property ] );
 			} else {
 				$value = get_post_meta( $parent_id, $meta_key, true );
 			}
 
-			$extended_parent_data[ $property ] = get_post_meta( $parent_id, $meta_key, true );
+			$extended_parent_data[ $property ] = $value;
 
 		}
 
