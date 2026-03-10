@@ -24,6 +24,9 @@ const Counter = () => {
 			};
 		} );
 
+	// Ensure totalQuantity is a valid number.
+	const safeTotal = isNaN( totalQuantity ) ? 0 : totalQuantity;
+
 	const displayMaxSize = maxContainerSize || _x(
 			'∞',
 			'[Frontend] - Infinity symbol',
@@ -40,7 +43,7 @@ const Counter = () => {
 					'[Frontend] Formatted total ex (2/8). %1$s is the current total and %2$s is the container maximum.',
 					'wc-mnm-variable'
 				),
-				totalQuantity,
+				safeTotal,
 				displayMaxSize
 			) }
 		</span>

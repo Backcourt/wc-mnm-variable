@@ -46,16 +46,20 @@ const ProductQty = ( {
 	// Update the quantity in the store.
 	const { updateQty } = useDispatch( CONTAINER_STORE_KEY, [ quantity ] );
 
+	// Ensure quantity is a valid number or empty string.
+	const safeQuantity = quantity === '' || quantity === undefined || isNaN( quantity ) ? '' : quantity;
+
 	// Track previous quantity so we can reset input value when not valid.
 	const [ prevQty, setPrevQty ] = useState( 0 );
-	const [ localQty, setLocalQty ] = useState( quantity );
+	const [ localQty, setLocalQty ] = useState( safeQuantity );
 
 	/**
 	 * Sync the local state quantity to changes from the data store.
 	 */
 	useEffect( () => {
-		setPrevQty( quantity );
-		setLocalQty( quantity );
+		const safeQty = quantity === '' || quantity === undefined || isNaN( quantity ) ? '' : quantity;
+		setPrevQty( safeQty );
+		setLocalQty( safeQty );
 	}, [ quantity ] );
 
 	/**
@@ -375,13 +379,16 @@ const ProductQty = ( {
 	}
 
 	// Otherwise show the quantity input.
+	// Ensure we never pass NaN to the input value.
+	const inputValue = localQty === '' || localQty === undefined || isNaN( localQty ) ? '' : localQty;
+	
 	return (
 		<Element className="wc-mnm-variation__child-item-quantity product-quantity">
 			<div className="quantity">
 				<input
 					className="wc-mnm-variation__child-item-quantity_input qty mnm-quantity input-text qty text"
 					type="number"
-					value={ localQty }
+					value={ inputValue }
 					min={ min }
 					max={ max }
 					step={ step }
@@ -404,7 +411,7 @@ const ProductQty = ( {
 				{ WC_MNM_ADD_TO_CART_VARIATION_PARAMS.display_plus_minus_buttons && (
 					<button
 						onClick={ handleMinusClick }
-						disabled={ localQty <= min }
+						disabled={ inputValue === '' || inputValue <= min }
 						type="button"
 						tabIndex="-1"
 						aria-label="{ _x( 'Reduce quantity', '[Frontend]', 'wc-mnm-variable' ) }"

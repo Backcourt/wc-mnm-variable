@@ -9,7 +9,10 @@ import { useDispatch } from '@wordpress/data';
 import TYPES from './action-types';
 const {
 	SET_CONTAINER_ID,
+	SET_VARIATION_META,
 	HYDRATE_CONTAINER,
+	HYDRATE_BASE_CHILD_ITEMS,
+	HYDRATE_CHILD_CATEGORIES,
 	RESET_CONFIG,
 	SET_CONTEXT,
 	SET_CONFIG,
@@ -35,6 +38,20 @@ export const setContainerId =
 		}
 	};
 
+/**
+ * Set variation meta from WooCommerce's found_variation event.
+ *
+ * This merges WooCommerce variation data (is_purchasable, is_in_stock, display_price, etc.)
+ * directly into the container, avoiding the need to duplicate this in the Store API.
+ *
+ * @param {Object} variationData - The variation object from WooCommerce's found_variation event.
+ */
+export const setVariationMeta =
+	( variationData ) =>
+	( { dispatch } ) => {
+		dispatch( { type: SET_VARIATION_META, payload: { variationData } } );
+	};
+
 // Set the product.
 export const hydrateContainer =
 	( container ) =>
@@ -42,6 +59,22 @@ export const hydrateContainer =
 		dispatch( { type: HYDRATE_CONTAINER, payload: { container } } );
 		dispatch( { type: VALIDATE } );
 	};
+
+// Set the base child items (shared across all variations).
+export const hydrateBaseChildItems = ( baseChildItems ) => {
+	return {
+		type: HYDRATE_BASE_CHILD_ITEMS,
+		payload: { baseChildItems },
+	};
+};
+
+// Set the child categories (shared across all variations).
+export const hydrateChildCategories = ( childCategories ) => {
+	return {
+		type: HYDRATE_CHILD_CATEGORIES,
+		payload: { childCategories },
+	};
+};
 
 // Clear the config.
 export const resetConfig =

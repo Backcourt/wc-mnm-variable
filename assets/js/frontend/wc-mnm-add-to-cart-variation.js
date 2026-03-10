@@ -157,6 +157,19 @@
 			variation: variation,
 		} );
 
+		// Store variation data globally for React to pick up.
+		// This handles the race condition where jQuery fires before React store is ready.
+		window.wcMnmVariationData = window.wcMnmVariationData || {};
+		window.wcMnmVariationData[ variation.variation_id ] = variation;
+
+		// Try to dispatch to React store if available.
+		if ( typeof wp.data !== 'undefined' ) {
+			const store = wp.data.dispatch( 'wc-mnm-variable/container' );
+			if ( store && typeof store.setVariationMeta === 'function' ) {
+				store.setVariationMeta( variation );
+			}
+		}
+
 		if ( variation.variation_is_visible ) {
 			const $target = form.$mnmVariation;
 

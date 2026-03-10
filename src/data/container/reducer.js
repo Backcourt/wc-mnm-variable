@@ -12,7 +12,10 @@ import TYPES from './action-types';
 
 const {
 	SET_CONTAINER_ID,
+	SET_VARIATION_META,
 	HYDRATE_CONTAINER,
+	HYDRATE_BASE_CHILD_ITEMS,
+	HYDRATE_CHILD_CATEGORIES,
 	RESET_CONFIG,
 	SET_CONTEXT,
 	SET_CONFIG,
@@ -20,7 +23,7 @@ const {
 	VALIDATE,
 } = TYPES;
 
-import { calcTotalQuantity, selectQuantityMessage } from './utils';
+import { calcTotalQuantity, selectQuantityMessage, mergeChildItemsWithOverrides } from './utils';
 
 /**
  * Data store reducer
@@ -30,16 +33,11 @@ import { calcTotalQuantity, selectQuantityMessage } from './utils';
  * @return object the updated state
  */
 const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
-	// Current child items from state.
-	const childItems =
-		state.containers[ state.containerId ] &&
-		typeof state.containers[ state.containerId ].extensions
-			.mix_and_match !== 'undefined' &&
-		typeof state.containers[ state.containerId ].extensions.mix_and_match
-			.child_items !== 'undefined'
-			? state.containers[ state.containerId ].extensions.mix_and_match
-					.child_items
-			: [];
+	// Get merged child items from base + variation overrides.
+	const childItems = mergeChildItemsWithOverrides(
+		state.baseChildItems,
+		state.containers[ state.containerId ]
+	);
 
 	switch ( type ) {
 		case SET_CONTAINER_ID:
@@ -49,16 +47,59 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 			};
 
 		case HYDRATE_CONTAINER: {
+			const containerId = payload.container.id;
+			// Merge with existing container data (preserves WooCommerce variation meta).
+			const existingContainer = state.containers[ containerId ] || {};
+
 			return {
 				...state,
-				...{
-					containers: {
-						...state.containers,
-						[ payload.container.id ]: payload.container,
+				containers: {
+					...state.containers,
+					[ containerId ]: {
+						...existingContainer,
+						...payload.container,
 					},
 				},
 			};
 		}
+
+		// Merge WooCommerce variation meta (all variation data) into the container.
+		case SET_VARIATION_META: {
+			const { variationData } = payload;
+			const variationId = variationData.variation_id;
+
+			// Get existing container data or create a minimal one.
+			const existingContainer = state.containers[ variationId ] || { id: variationId };
+
+			return {
+				...state,
+				containers: {
+					...state.containers,
+					[ variationId ]: {
+						...existingContainer,
+						// Spread all variation data from WooCommerce.
+						...variationData,
+						// Ensure id is set (variation_id -> id for consistency).
+						id: variationId,
+						// Map WooCommerce variation keys to our expected format for key selectors.
+						is_purchasable: variationData.is_purchasable,
+						is_in_stock: variationData.is_in_stock,
+					},
+				},
+			};
+		}
+
+		case HYDRATE_BASE_CHILD_ITEMS:
+			return {
+				...state,
+				baseChildItems: payload.baseChildItems,
+			};
+
+		case HYDRATE_CHILD_CATEGORIES:
+			return {
+				...state,
+				childCategories: payload.childCategories,
+			};
 
 		case RESET_CONFIG:
 			return {
@@ -167,13 +208,17 @@ const reducer = ( state = DEFAULT_STATE, { type, payload } ) => {
 					'mix-and-match-variation'
 			) {
 				const validationContext = state.context;
+				const container = state.containers[ state.containerId ];
 
+				// Support new format (direct properties) with backward compatibility (extensions.mix_and_match).
 				const minContainerSize =
-					state.containers[ state.containerId ].extensions
-						.mix_and_match.min_container_size;
+					container.min_container_size ??
+					container.extensions?.mix_and_match?.min_container_size ??
+					0;
 				const maxContainerSize =
-					state.containers[ state.containerId ].extensions
-						.mix_and_match.max_container_size;
+					container.max_container_size ??
+					container.extensions?.mix_and_match?.max_container_size ??
+					0;
 				const qtyMessage = selectQuantityMessage( totalQuantity ); // "Selected X total".
 
 				let errorMessage = '';

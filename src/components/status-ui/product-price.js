@@ -9,43 +9,45 @@ import { useSelect } from '@wordpress/data';
 import { CONTAINER_STORE_KEY } from '@data/container';
 
 const ProductPrice = () => {
-	const { totalPrice } = useSelect( ( select ) => {
+	const { container } = useSelect( ( select ) => {
 		return {
-			totalPrice: select( CONTAINER_STORE_KEY ).getTotal(),
+			container: select( CONTAINER_STORE_KEY ).getContainer(),
 		};
 	} );
 
-	// Generate a strikethrough for sale price.
-	if ( totalPrice.regular_price !== totalPrice.price ) {
+	// Use raw prices with wc.priceFormat.
+	if ( container?.display_price !== undefined && typeof wc?.priceFormat?.formatPrice === 'function' ) {
+		const price = container.display_price;
+		const regularPrice = container.display_regular_price;
+
+		// Show sale price with strikethrough if on sale.
+		if ( regularPrice && regularPrice !== price ) {
+			return (
+				<span className="price-amount">
+					<del aria-hidden="true">
+						<span className="woocommerce-Price-amount amount">
+							<bdi>{ wc.priceFormat.formatPrice( regularPrice ) }</bdi>
+						</span>
+					</del>
+					<ins>
+						<span className="woocommerce-Price-amount amount">
+							<bdi>{ wc.priceFormat.formatPrice( price ) }</bdi>
+						</span>
+					</ins>
+				</span>
+			);
+		}
+
 		return (
-			<span className="price">
-				<del aria-hidden="true">
-					<span className="woocommerce-Price-amount amount">
-						<bdi>
-							{ wc.priceFormat.formatPrice(
-								totalPrice.regular_price
-							) }
-						</bdi>
-					</span>
-				</del>
-				<ins>
-					<span className="woocommerce-Price-amount amount">
-						<bdi>
-							{ wc.priceFormat.formatPrice( totalPrice.price ) }
-						</bdi>
-					</span>
-				</ins>
+			<span className="price-amount">
+				<span className="woocommerce-Price-amount amount">
+					<bdi>{ wc.priceFormat.formatPrice( price ) }</bdi>
+				</span>
 			</span>
 		);
 	}
 
-	return (
-		<span className="price">
-			<span className="woocommerce-Price-amount amount">
-				<bdi>{ wc.priceFormat.formatPrice( totalPrice.price ) }</bdi>
-			</span>
-		</span>
-	);
+	return null;
 };
 
 export default ProductPrice;

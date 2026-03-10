@@ -4,24 +4,56 @@
 import { _x } from '@wordpress/i18n';
 
 /**
- * Get the categories for the container
+ * Internal dependencies
+ */
+import { mergeChildItemsWithOverrides } from './utils';
+
+/**
+ * Get the categories for the container.
+ * Categories are shared across all variations and stored at state level.
  *
  * @param {obj} state The current state.
  * @return [array]
  */
 export const getCategories = ( state ) => {
+	// New format: categories stored at state level.
+	if ( state.childCategories && state.childCategories.length > 0 ) {
+		return state.childCategories;
+	}
+	// Fallback for backward compatibility.
 	const container = getContainer( state );
 	return container?.extensions?.mix_and_match?.child_categories ?? [];
 };
 
 /**
- * Get the container's child items
+ * Get the base child items (shared across all variations).
  *
  * @param {obj} state The current state.
- * @return []{obj} An array of child item objects from the REST response.
+ * @return {Array} Base child items array.
+ */
+export const getBaseChildItems = ( state ) => {
+	return state.baseChildItems ?? [];
+};
+
+/**
+ * Get the container's child items.
+ *
+ * This merges the base child items (static data) with variation-specific
+ * quantity overrides (min_qty, max_qty, step_qty) from the current container.
+ *
+ * @param {obj} state The current state.
+ * @return []{obj} An array of child item objects with merged data.
  */
 export const getChildItems = ( state ) => {
 	const container = getContainer( state );
+	const baseChildItems = state.baseChildItems ?? [];
+
+	// If we have base child items, merge with variation overrides.
+	if ( baseChildItems.length > 0 ) {
+		return mergeChildItemsWithOverrides( baseChildItems, container );
+	}
+
+	// Fallback for backward compatibility (old data structure).
 	return container?.extensions?.mix_and_match?.child_items ?? [];
 };
 
@@ -96,6 +128,11 @@ export const getErrorMessages = ( state ) => {
  */
 export const getMaxContainerSize = ( state ) => {
 	const container = getContainer( state );
+	// New format: direct property on container.
+	if ( container?.max_container_size !== undefined ) {
+		return container.max_container_size;
+	}
+	// Fallback for backward compatibility.
 	return container?.extensions?.mix_and_match?.max_container_size ?? '';
 };
 
@@ -123,6 +160,11 @@ export const getMessages = ( state, type ) => {
  */
 export const getMinContainerSize = ( state ) => {
 	const container = getContainer( state );
+	// New format: direct property on container.
+	if ( container?.min_container_size !== undefined ) {
+		return container.min_container_size;
+	}
+	// Fallback for backward compatibility.
 	return container?.extensions?.mix_and_match?.min_container_size ?? 0;
 };
 
@@ -152,24 +194,36 @@ export const getSelections = ( state ) => {
  * Get a current subtotal
  *
  * NB: Currently Variable MNM does not support per-item pricing.
+ * The subtotal is derived from the current container's display price.
  *
  * @param {obj} state The current state.
- * @return int
+ * @return {obj} Price object with price and regular_price properties.
  */
 export const getSubTotal = ( state ) => {
-	return state.subTotal;
+	// For variable MNM without per-item pricing, subtotal equals total.
+	return getTotal( state );
 };
 
 /**
  * Get a current Total
  *
  * NB: Currently Variable MNM does not support per-item pricing.
+ * The total is derived from the current container's display price.
  *
  * @param {obj} state The current state.
- * @return int
+ * @return {obj} Price object with price and regular_price properties.
  */
 export const getTotal = ( state ) => {
-	return state.total;
+	const container = getContainer( state );
+
+	// Get price from container (set by variation meta or Store API).
+	const price = container?.display_price ?? state.total?.price ?? 0;
+	const regularPrice = container?.display_regular_price ?? state.total?.regular_price ?? price;
+
+	return {
+		price,
+		regular_price: regularPrice,
+	};
 };
 
 /**

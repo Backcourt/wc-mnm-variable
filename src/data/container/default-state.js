@@ -4,6 +4,10 @@ const DEFAULT_STATE = {
 	context: 'add-to-cart',
 	containers: {},
 	containerId: null,
+	// Base child items shared across all variations (static data like images, names, etc.).
+	baseChildItems: [],
+	// Child categories shared across all variations.
+	childCategories: [],
 	selections: [],
 	config: {},
 	totalQuantity: 0,
