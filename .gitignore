@@ -11,7 +11,6 @@ sftp-config.json
 # NPM
 /node_modules/
 npm-debug.log
-package-lock.json
 
 # Sass
 .sass-cache/
@@ -30,7 +29,6 @@ Thumbs.db
 
 # Logs
 /logs
-package-lock.json
 
 # Compiled assets
 deploy/
