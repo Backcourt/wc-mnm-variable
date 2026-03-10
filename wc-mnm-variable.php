@@ -3,7 +3,7 @@
  * Plugin Name: WC Mix and Match - Variable Mix and Match
  * Plugin URI: https://github.com/backcourt/wc-mnm-variable
  * Description: Variable mix and match product type
- * Version: 2.2.4
+ * Version: 2.3.0-beta.1
  * Author: Kathy Darling
  * Author URI: http://kathyisawesome.com/
  * Text Domain: wc-mnm-variable
@@ -40,7 +40,7 @@ if ( file_exists( __DIR__ . '/packages/autoload.php' ) ) {
 
 class WC_MNM_Variable {
 
-	const VERSION         = '2.2.4';
+	const VERSION         = '2.3.0-beta.1';
 	const REQ_WC_VERSION  = '9.4.0';
 	const REQ_MNM_VERSION = '2.8.0';
 
