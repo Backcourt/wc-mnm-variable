@@ -3,7 +3,7 @@
  * This ongoing trait will have shared calculation logic between WC_Product_Mix_and_Match and WC_Product_Mix_and_Match_Variation classes.
  *
  * @package WooCommerce Mix and Match Products\Traits
- * @version 2.0.4
+ * @version 2.3.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -1241,10 +1241,11 @@ trait WC_MNM_Container {
 	/**
 	 * Get the data attributes
 	 *
-	 * @param array $args
-	 * @return string
+	 * @param array $args Optional. Additional attributes to add or override. Default empty array.
+	 * @param bool $add_prefix Whether to prefix the data attributes with `data-` or not. Default true. @since Mix and Match 2.8.6
+	 * @return array
 	 */
-	public function get_data_attributes( $args = array() ) {
+	public function get_data_attributes( $args = array(), $add_prefix = true  ) {
 
 		$attributes = wp_parse_args(
 			$args,
@@ -1268,7 +1269,7 @@ trait WC_MNM_Container {
 		 */
 		$attributes = (array) apply_filters( 'wc_mnm_container_data_attributes', wp_parse_args( $args, $attributes ), $this );
 
-		return wc_mnm_prefix_data_attribute_keys( $attributes );
+		return $add_prefix ? wc_mnm_prefix_data_attribute_keys( $attributes ) : $attributes;
 	}
 
 
