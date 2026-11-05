@@ -1,5 +1,5 @@
-# Add build zip to GitHub releases.
-# Version: 1.2.0
+# Deploy Backcourt Mini Extension.
+# Version: 2.0.0
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 
 name: Release
@@ -15,25 +15,26 @@ jobs:
     #
     # Performs the following steps:
     # - Checks out the repository.
-    # - Sets up PHP with Composer.
-    # - Logs debug information.
+    # - Sets up PHP with Composer and WP-CLI (WP-CLI generates the .pot file).
     # - Get Composer Cache Directory.
-    # - Sets up Composer Caching..
+    # - Sets up Composer Caching.
     # - Logs debug information.
-    # - Install Composer dependencies with development dependencies.
+    # - Install Composer dependencies (prefixed with Strauss).
+    # - Generate POT file.
     # - Setup NodeJS.
-    # - Get NPM cache directory.
-    # - Sets up NPM Caching.
     # - Install NPM dependencies.
     # - Get release version.
     # - Check for Alpha release.
     # - Check for Beta release.
     # - Check for Release Candidate release.
     # - Logs debug information.
+    # - Build changelog from commits.
     # - Build release:
     #    - Pre-release.
     #    - Stable.
+    # - Verify the release zip.
     # - Add package to GitHub releases.
+    # - Clear Git Updater cache on backcourt.io.
 
     dist:
         name: 'Build distribution release.'
@@ -42,13 +43,16 @@ jobs:
             release: stable
         steps:
             - name: 'Checks out the repository.'
-              uses: 'actions/checkout@v4'
+              uses: 'actions/checkout@v7'
+              with:
+                # Full history and tags, so we can find the previous tag.
+                fetch-depth: 0
 
-            - name: 'Sets up PHP with Composer.'
+            - name: 'Sets up PHP with Composer and WP-CLI.'
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: '8.1'
-                  tools: composer
+                  php-version: '8.3'
+                  tools: composer, wp-cli
               env:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -58,10 +62,10 @@ jobs:
                   echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
             - name: 'Sets up Composer Caching.'
-              uses: 'actions/cache@v4'
+              uses: 'actions/cache@v6'
               with:
                   path: ${{ steps.composer-cache.outputs.dir }}
-                  key: ${{ runner.os }}-php-composer-build-${{ hashFiles('**/composer.lock') }}
+                  key: ${{ runner.os }}-php-composer-build-${{ hashFiles('**/composer.json', '**/composer.lock') }}
                   restore-keys: |
                       ${{ runner.os }}-php-composer-build-
 
@@ -69,39 +73,58 @@ jobs:
               run: |
                   php --version
                   composer --version
+                  wp --allow-root --version
 
-            - name: 'Install Composer dependencies with development dependencies.'
+            - name: 'Install production Composer dependencies.'
               run: |
-                  composer install --no-interaction --prefer-dist
+                  composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+            # Uses the WP-CLI installed by setup-php, which bundles the i18n command.
+            - name: "Generate POT file."
+              run: |
+                composer makepot
+
+            - name: "Verify prefixed packages."
+              run: |
+                if [ ! -f ./vendor-prefixed/autoload.php ]; then
+                  echo "::error::vendor-prefixed/autoload.php missing. Strauss did not run."
+                  exit 1
+                fi
 
             - name: 'Setup NodeJS.'
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v6
               with:
-                  node-version: '20'
-
-            - name: 'Get NPM cache directory.'
-              id: npm-cache-dir
-              run: |
-                  echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
-
-            - name: 'Sets up NPM Caching.'
-              uses: actions/cache@v4
-              with:
-                  path: ${{ steps.npm-cache-dir.outputs.dir }}
-                  key: ${{ runner.os }}-node-npm-build-${{ hashFiles('**/package-lock.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-node-npm-build-
+                  node-version: '24'
+                  node-version-file: '.nvmrc'
+                  cache: 'npm'
 
             - name: 'Install NPM dependencies.'
-              run: npm install
+              run: npm ci
 
-            - name: 'Get release version.'
+            - name: 'Get package.json values: release version, package name, and Git Updater slug.'
               run: |
-                  echo "release_tag=$(node -p -e "require('./package.json').version")" >> $GITHUB_ENV
+                  node <<'NODE'
+                  const fs = require('node:fs');
+                  const pkg = require('./package.json');
 
-            - name: 'Get release file base name.'
-              run: |
-                  echo "release_name=$(node -p -e "require('./package.json').name")" >> $GITHUB_ENV
+                  const values = {
+                      release_tag: pkg.version,
+                      release_name: pkg.name,
+                      git_updater_slug: pkg['git-updater-slug'] || pkg.name,
+                  };
+
+                  for (const [key, value] of Object.entries(values)) {
+                      if (typeof value !== 'string' || !value.trim() || /[\\r\\n]/.test(value)) {
+                          throw new Error(`Invalid package.json value for ${key}.`);
+                      }
+                  }
+
+                  fs.appendFileSync(
+                      process.env.GITHUB_ENV,
+                      Object.entries(values).map(([key, value]) => `${key}=${value}`).join('\\n') + '\\n'
+                  );
+
+                  NODE
 
             - name: 'Check for Alpha release.'
               if: ${{ contains(env.release_tag, '-alpha') }}
@@ -124,6 +147,22 @@ jobs:
                   npm --version
                   echo ${{ env.release_tag }}
                   echo ${{ env.release_status }}
+                  echo ${{ env.git_updater_slug }}
+                  
+              # Release notes are the commit subjects since the previous tag, minus version bumps.
+            - name: "Build changelog from commits."
+              env:
+                TAG: ${{ github.ref_name }}
+              run: |
+                prev=$(git describe --tags --abbrev=0 "$TAG^" 2>/dev/null || true)
+                range="${prev:+$prev..}$TAG"
+                {
+                  echo "## Changelog"
+                  echo
+                  git log "$range" --no-merges --pretty=format:'- %s' \
+                    | grep -viE '^- version bump|^- version [0-9]|^- [0-9]+\.[0-9]+\.[0-9]+' || true
+                } > release-notes.md
+                cat release-notes.md
 
             - name: 'Build release: Pre-release'
               if: ${{ env.release_status == 'pre-release' }}
@@ -135,9 +174,51 @@ jobs:
               run: |
                   npm run release
 
+            - name: 'Verify the release zip.'
+              run: |
+                  zip="./deploy/${{ env.release_name }}-${{ env.release_tag }}.zip"
+                  dir="${{ env.release_name }}"
+                  if [ ! -f "$zip" ]; then
+                    echo "::error::Release zip not found at $zip"
+                    exit 1
+                  fi
+                  files="$(unzip -Z1 "$zip")"
+                  for file in vendor-prefixed/autoload.php languages/${{ env.release_name }}.pot; do
+                    if ! echo "$files" | grep -qx "$dir/$file"; then
+                      echo "::error::$file is missing from the release zip."
+                      exit 1
+                    fi
+                  done
+                  if echo "$files" | grep -q "strauss.phar\|^$dir/vendor/\|^$dir/node_modules/"; then
+                    echo "::error::Build tools or unprefixed vendor packages found in the release zip."
+                    exit 1
+                  fi
+
             - name: 'Add package to GitHub releases.'
-              uses: softprops/action-gh-release@v2
+              uses: softprops/action-gh-release@v3
               with:
                   files: ./deploy/${{ env.release_name }}-${{ env.release_tag }}.zip
+                  body_path: ${{ env.release_notes }}
+                  prerelease: ${{ env.release_status == 'pre-release' }}
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            # Tell backcourt.io's Git Updater to drop its cached repo data so the new
+            # release is served on the next update check. The endpoint returns 200
+            # even on a bad key, so check the body for success.
+            - name: "Clear Git Updater cache."
+              if: ${{ env.release_status != 'pre-release' }}
+              env:
+                GU_KEY: ${{ secrets.BACKCOURT_GITUPDATER_KEY }}
+                # The repo slug (plugin folder name), not the Additions `folder/file.php` value.
+                GU_SLUG: ${{ env.git_updater_slug }}
+              run: |
+                echo "Clearing Git Updater cache for $GU_SLUG…"
+                response=$(curl -fsS -X POST "https://www.backcourt.io/wp-json/git-updater/v1/flush-repo-cache/" \
+                  --data-urlencode "slug=$GU_SLUG" \
+                  --data-urlencode "key=$GU_KEY")
+                echo "$response"
+                if ! echo "$response" | grep -q '"success":true'; then
+                  echo "::error::Git Updater cache flush failed."
+                  exit 1
+                fi
