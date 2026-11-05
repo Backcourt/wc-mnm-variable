@@ -15,10 +15,9 @@
 		"source": "https://github.com/backcourt/wc-mnm-variable"
 	},
 	"require": {
-		"afragen/git-updater-lite": "^2"
+		"afragen/git-updater-lite": "^3"
 	},
 	"require-dev": {
-		"brianhenryie/strauss": "^0.22.2",
 		"woocommerce/woocommerce-sniffs": "1.0.0",
 		"wp-cli/i18n-command": "^2.6"
 	},
@@ -39,7 +38,9 @@
 			"phpcbf . "
 		],
 		"prefix-namespaces": [
-			"strauss",
+			"sh -c 'test -f bin/strauss.phar || { mkdir -p bin && curl -fL -o bin/strauss.phar https://github.com/BrianHenryIE/strauss/releases/latest/download/strauss.phar; }'",
+			"@php bin/strauss.phar",
+			"@php -d memory_limit=1G bin/strauss.phar --info",
 			"@php composer dump-autoload"
 		],
 		"post-install-cmd": [
@@ -64,7 +65,7 @@
 			"prefix-namespaces": "Prefix namespaces of dependencies with Strauss"
 		},
 		"strauss": {
-			"target_directory": "packages",
+			"target_directory": "vendor-prefixed",
 			"namespace_prefix": "Backcourt\\MNMVariable\\Vendor",
 			"classmap_prefix": "Backcourt_MNM_Variable_Vendor_",
 			"constant_prefix": "BCMNMVar_"

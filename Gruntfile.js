@@ -184,6 +184,7 @@ module.exports = function ( grunt ) {
 					'!**/*.zip',
 					'!**/*.bak',
 					'!wp-assets/**',
+					'!package.json',
 					'!package-lock.json',
 					'!nyp-logo.png',
 					'!screenshots/**',

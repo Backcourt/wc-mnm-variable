@@ -34,7 +34,8 @@ use Backcourt\MNMVariable\Vendor\Fragen;
   * Add Git Updater Lite
   */
 if ( file_exists( __DIR__ . '/packages/autoload.php' ) ) {
-	require_once __DIR__ . '/packages/autoload.php';
+if ( file_exists( __DIR__ . '/vendor-prefixed/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor-prefixed/autoload.php';
 	( new Fragen\Git_Updater\Lite( __FILE__ ) )->run();
 }
 
