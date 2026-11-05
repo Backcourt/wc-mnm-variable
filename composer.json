@@ -1,5 +1,6 @@
 {
 	"name": "backcourt/wc-mnm-variable",
+	"git-updater-slug": "wc-mnm-variable",
 	"description": "Variable Mix and Match Products.",
 	"homepage": "https://github.com/backcourt/wc-mnm-variable",
 	"type": "wordpress-plugin",

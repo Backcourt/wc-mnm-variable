@@ -15,6 +15,7 @@ jobs:
     #
     # Performs the following steps:
     # - Checks out the repository.
+    # - Read package.json info.
     # - Sets up PHP with Composer and WP-CLI (WP-CLI generates the .pot file).
     # - Get Composer Cache Directory.
     # - Sets up Composer Caching.
@@ -47,6 +48,17 @@ jobs:
               with:
                 # Full history and tags, so we can find the previous tag.
                 fetch-depth: 0
+
+            - name: Read package.json info
+              id: package_info
+              run: |
+                VERSION=$(jq -r '.version' package.json)
+                NAME=$(jq -r '.name' package.json)
+                GU_SLUG=$(jq -r '."git-updater-slug" // empty' package.json)
+                GU_SLUG=${GU_SLUG:-$NAME}
+                echo "release_tag=$VERSION" >> $GITHUB_ENV
+                echo "release_name=$NAME" >> $GITHUB_ENV
+                echo "git_updater_slug=$GU_SLUG" >> $GITHUB_ENV
 
             - name: 'Sets up PHP with Composer and WP-CLI.'
               uses: shivammathur/setup-php@v2
@@ -94,37 +106,11 @@ jobs:
             - name: 'Setup NodeJS.'
               uses: actions/setup-node@v6
               with:
-                  node-version: '24'
                   node-version-file: '.nvmrc'
                   cache: 'npm'
 
             - name: 'Install NPM dependencies.'
               run: npm ci
-
-            - name: 'Get package.json values: release version, package name, and Git Updater slug.'
-              run: |
-                  node <<'NODE'
-                  const fs = require('node:fs');
-                  const pkg = require('./package.json');
-
-                  const values = {
-                      release_tag: pkg.version,
-                      release_name: pkg.name,
-                      git_updater_slug: pkg['git-updater-slug'] || pkg.name,
-                  };
-
-                  for (const [key, value] of Object.entries(values)) {
-                      if (typeof value !== 'string' || !value.trim() || /[\\r\\n]/.test(value)) {
-                          throw new Error(`Invalid package.json value for ${key}.`);
-                      }
-                  }
-
-                  fs.appendFileSync(
-                      process.env.GITHUB_ENV,
-                      Object.entries(values).map(([key, value]) => `${key}=${value}`).join('\\n') + '\\n'
-                  );
-
-                  NODE
 
             - name: 'Check for Alpha release.'
               if: ${{ contains(env.release_tag, '-alpha') }}
@@ -210,12 +196,10 @@ jobs:
               if: ${{ env.release_status != 'pre-release' }}
               env:
                 GU_KEY: ${{ secrets.BACKCOURT_GITUPDATER_KEY }}
-                # The repo slug (plugin folder name), not the Additions `folder/file.php` value.
-                GU_SLUG: ${{ env.git_updater_slug }}
               run: |
                 echo "Clearing Git Updater cache for $GU_SLUG…"
                 response=$(curl -fsS -X POST "https://www.backcourt.io/wp-json/git-updater/v1/flush-repo-cache/" \
-                  --data-urlencode "slug=$GU_SLUG" \
+                  --data-urlencode "slug=${{ env.git_updater_slug }}" \
                   --data-urlencode "key=$GU_KEY")
                 echo "$response"
                 if ! echo "$response" | grep -q '"success":true'; then
