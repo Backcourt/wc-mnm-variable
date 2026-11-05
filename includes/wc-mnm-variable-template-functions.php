@@ -5,7 +5,7 @@
  * Functions for the templating system.
  *
  * @package  WooCommerce Mix and Match Variable\Functions
- * @version  2.2.1
+ * @version  2.3.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -265,7 +265,7 @@ if ( ! function_exists( 'wc_mnm_template_edit_variable_container_order_item' ) )
 		$get_variations = count( $product->get_children() ) <= apply_filters( 'woocommerce_ajax_variation_threshold', 30, $product );
 
 		// Initialize form state based on the actual configuration of the container.
-		$configuration = WC_Mix_and_Match_Order::get_current_container_configuration( $order_item, $order );
+		$configuration = WC_MNM_Order::get_current_container_configuration( $order_item, $order );
 		$configuration = wp_list_pluck( $configuration, 'quantity' );
 
 		// Load the template.
