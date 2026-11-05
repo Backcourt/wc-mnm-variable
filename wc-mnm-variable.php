@@ -4,8 +4,8 @@
  * Plugin URI: https://github.com/backcourt/wc-mnm-variable
  * Description: Variable mix and match product type
  * Version: 2.3.0-beta.1
- * Author: Kathy Darling
- * Author URI: http://kathyisawesome.com/
+ * Author: Backcourt Development
+ * Author URI: https://www.backcourt.io/
  * Text Domain: wc-mnm-variable
  * Domain Path: /languages
  *
@@ -19,7 +19,7 @@
  * WC requires at least: 9.4.0
  * WC tested up to: 9.6.0
  *
- * Copyright: © 2025 Kathy Darling
+ * Copyright: © 2025 Backcourt Development
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
