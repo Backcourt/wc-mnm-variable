@@ -45,6 +45,7 @@ assets/css/
 # Composer
 /vendor/*
 /packages/*
+/vendor-prefixed/
 composer.lock
 
 # Temporary files
